@@ -10,6 +10,9 @@
 
     the data importer goes along
     http://svn.wp-plugins.org/wordpress-importer/trunk/wordpress-importer.php
+
+    Note that this does not run on some WXR files since WordPress creates non-valid XML if 'CDATA' part is at an article content (e.g. at javascript), see
+    http://drupal.org/node/1055310
 */
 
 require_once('WordPressParsers.php');
@@ -29,11 +32,11 @@ class WordPressImporter extends CMSImporterPlugin {
 
         $file_processed = true;
         if (!$import_data) {
-            p_newsmlHolder->setError("file processing errors");
+            $p_newsmlHolder->setError("file processing errors");
             $file_processed = false;
         }
         if (!$import_data["correct"]) {
-            p_newsmlHolder->setError($import_data["errormsg"]);
+            $p_newsmlHolder->setError($import_data["errormsg"]);
             $file_processed = false;
         }
 
@@ -59,7 +62,12 @@ class WordPressImporter extends CMSImporterPlugin {
             $item_holder->setSlugline($one_post["post_name"]);
             $item_holder->setLink($one_post["guid"]);
             $item_holder->setContent($one_post["post_content"]);
-            foreach ($one_post["terms"] as $one_term) {
+
+            $subjects = $one_post["terms"];
+            if (!$subjects) {
+                $subjects = array();
+            }
+            foreach ($subjects as $one_term) {
                 if ("category" == $one_term["domain"]) {
                     $item_holder->setSubject("WPCat:" . $one_term["slug"], htmlspecialchars($one_term["name"]));
                 }

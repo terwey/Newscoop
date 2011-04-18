@@ -4,7 +4,9 @@
 
 echo "<pre>\n";
 
-    require('WordPressParsers.php');
+    require_once('NewsMLCreator.php');
+    require_once('WordPressParsers.php');
+    require_once('WordPressImporter.php');
 
     $filename = 'kosmoblog.wordpress.short.xml';
 
@@ -13,6 +15,16 @@ echo "<pre>\n";
         exit(0);
     }
 
+    // creates the newsml file
+    if (true) {
+        $newsmler = new NewsMLCreator("/tmp/testml.txt");
+        $importer = new WordPressImporter();
+        $importer->makeImport($newsmler, $filename);
+
+        #exit(0);
+    }
+
+    // just parses and prints it out
     $parser = new WXR_Parser();
     $import_data = $parser->parse($filename);
 
