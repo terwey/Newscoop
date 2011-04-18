@@ -16,43 +16,6 @@ require_once('WordPressParsers.php');
 
 class WordPressImporter extends CMSImporterPlugin {
 
-    // text authors
-    var $authors = null;
-
-    // auxiliary functions
-    private function sanitize_user($p_userName, $p_specifier) {}
-    private function esc_html($p_text) {}
-
-    /**
-     * Retrieve authors from parsed WXR data
-     *
-     * Uses the provided author information from WXR 1.1 files
-     * or extracts info from each post for WXR 1.0 files
-     *
-     * @param array $import_data Data returned by a WXR parser
-     */
-    function get_authors_from_import( $import_data ) {
-        if ( ! empty( $import_data['authors'] ) ) {
-            $this->authors = $import_data['authors'];
-        // no author information, grab it from the posts
-        } else {
-            foreach ( $import_data['posts'] as $post ) {
-                $login = this->sanitize_user( $post['post_author'], true );
-                if ( empty( $login ) ) {
-                    printf( __( 'Failed to import author %s. Their posts will be attributed to the current user.', 'wordpress-importer' ), this->esc_html( $post['post_author'] ) );
-                    echo '<br />';
-                    continue;
-                }
-
-                if ( ! isset($this->authors[$login]) )
-                    $this->authors[$login] = array(
-                        'author_login' => $login,
-                        'author_display_name' => $post['post_author']
-                    );
-            }
-        }
-    }
-
     /**
      * Makes the import from parsed data (by WXR_Parser) via the NewsMLCreator object
      *
@@ -64,18 +27,54 @@ class WordPressImporter extends CMSImporterPlugin {
         $parser = new WXR_Parser();
         $import_data = $parser->parse($p_inputFileName);
 
-        $data_version = $import_data['version'];
-        $this->get_authors_from_import($import_data);
-        $data_posts = $import_data['posts'];
-        $data_terms = $import_data['terms'];
-        $data_categories = $import_data['categories'];
-        $data_tags = $import_data['tags'];
-        $data_base_url = esc_url($import_data['base_url']);
+        $file_processed = true;
+        if (!$import_data) {
+            p_newsmlHolder->setError("file processing errors");
+            $file_processed = false;
+        }
+        if (!$import_data["correct"]) {
+            p_newsmlHolder->setError($import_data["errormsg"]);
+            $file_processed = false;
+        }
 
+        if (!$file_processed) {
+            $p_newsmlHolder->serializeSet();
+            return false;
+        }
 
+        $copyright_info = "" . $import_data["title"] . " - " . $import_data["link"];
 
-    }
+        foreach ($import_data["posts"] as $one_post) {
+            $item_holder = $p_newsmlHolder->createItem();
+            $item_holder->setCreated();
+            $item_holder->setCopyright($copyright_info);
 
-}
+            $author_name = $one_post["post_author"];
+            if (array_key_exists($one_post["post_author"], $import_data["authors"])) {
+                $author_name = $import_data["authors"][$one_post["post_author"]]["author_display_name"];
+            }
+
+            $item_holder->setCreator($one_post["post_author"], $author_name);
+            $item_holder->setHeadline($one_post["post_title"]);
+            $item_holder->setSlugline($one_post["post_name"]);
+            $item_holder->setLink($one_post["guid"]);
+            $item_holder->setContent($one_post["post_content"]);
+            foreach ($one_post["terms"] as $one_term) {
+                if ("category" == $one_term["domain"]) {
+                    $item_holder->setSubject("WPCat:" . $one_term["slug"], htmlspecialchars($one_term["name"]));
+                }
+                if ("post_tag" == $one_term["domain"]) {
+                    $item_holder->setSubject("WPTag:" . $one_term["slug"], htmlspecialchars($one_term["name"]));
+                }
+            }
+
+            $p_newsmlHolder->appendItem($item_holder);
+        }
+
+        $p_newsmlHolder->serializeSet();
+        return true;
+    } // fn makeImport
+
+} // class WordPressImporter
 
 ?>
