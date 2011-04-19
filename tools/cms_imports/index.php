@@ -8,6 +8,7 @@ echo "<pre>\n";
     require_once('WordPressParsers.php');
     require_once('WordPressImporter.php');
 
+    //$filename = 'kosmoblog.wordpress.orig.xml';
     $filename = 'kosmoblog.wordpress.short.xml';
 
     if (!file_exists($filename)) {

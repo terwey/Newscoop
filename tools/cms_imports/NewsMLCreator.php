@@ -3,7 +3,6 @@
 /**
  * simple data-flow example
  *
- *
 
     SomePlugin::makeImport($p_newsmlHolder, $p_inputFileName) {
 
@@ -19,7 +18,7 @@
                     $item_holder = $p_newsmlHolder->createItem();
                     break;
                 "some":
-                  $item_holder->setSome();
+                    $item_holder->setSome();
                     break;
                 "another"
                     $item_holder->setAnother();
@@ -56,12 +55,15 @@
 class CMSImporterPlugin {
 
     /**
-     * Makes the data import: reads data from p_newsmlHolder, parses data, and uses p_newsmlHolder for the formatting
+     * Makes the data import: parses data from $p_inputFileName, and uses p_newsmlHolder for the formatting
      *
      * @param NewsMLCreator $p_newsmlHolder the NewsML formatter
      * @param string $p_inputFileName input file name
+     * @return bool
      */
-    public function makeImport($p_newsmlHolder, $p_inputFileName) {}
+    public function makeImport($p_newsmlHolder, $p_inputFileName) {
+        return false;
+    }
 
 } // class CMSImporterPlugin
 
@@ -70,7 +72,10 @@ class CMSImporterPlugin {
  * Holder of data of one newsItem
  */
 class NewsMLNewsItem {
-    // the data
+    // Note that we have some data as cdata, and embedded cdata shall be included correctly, see link
+    // http://stackoverflow.com/questions/223652/is-there-a-way-to-escape-a-cdata-end-token-in-xml
+
+    // the data that are required for newsml
     private $required_data = array(
         "copyright_info" => null,
         "date_created" => null,
@@ -82,61 +87,155 @@ class NewsMLNewsItem {
         "content" => null,
     );
 
+    // specifiers like categories, tags, ...
     private $subjects = array();
 
-    // setting the data
-    public function setCopyright($_copyrightInfo) {
-        $this->required_data["copyright_info"] = $_copyrightInfo;
-    }
+    // setter methods
 
+    /**
+     * Setting the copyright data
+     * @param string $p_copyrightInfo copyright holder
+     * @return bool
+     */
+    public function setCopyright($p_copyrightInfo) {
+        $this->required_data["copyright_info"] = str_replace(array("\""), array("&#34;"), $p_copyrightInfo); // shall not escape "..."
+        return true;
+    } // fn setCopyright
+
+    /**
+     * Setting the date-time data
+     * @param string $p_date
+     * @param string $p_time
+     * @param string $p_zone
+     * @return bool
+     *
+     * the xml date-time format is according to the link
+     * http://www.w3schools.com/Schema/schema_dtypes_date.asp
+     */
     public function setCreated($p_date = null, $p_time = null, $p_zone = null) {
         $date_time = "";
 
+        if ($p_date) {
+            $p_date = (string) $p_date;
+            if (!preg_match("/^[\d]{4}-[\d]{2}-[\d]{2}$/", $p_date)) {
+                return false;
+            }
+        }
+        if ($p_time) {
+            $p_time = (string) $p_time;
+            if (!preg_match("/^[\d]{2}(:[\d]{2}(:[\d]{2}(\.[\d]+)?)?)?$/", $p_time)) {
+                return false;
+            }
+        }
+        if ($p_zone) {
+            $p_zone = (string) $p_zone;
+            $zone_correct = false;
+            if ("Z" == $p_zone) {
+                $zone_correct = true;
+            }
+            if (preg_match("/^[+-]{1}[\d]{2}(:[\d]{2})?$/", $p_zone)) {
+                $zone_correct = true;
+            }
+            if (!$zone_correct) {
+                return false;
+            }
+        }
+
         if (!$p_date) {
-            $date_time = gmdate("M-d-Y\TH:i:s") . "+00:00";
+            $date_time = gmdate("Y-m-d\TH:i:s\Z");
         }
         elseif (!$p_time) {
-            $date_time = $p_date . "T00:00:00+00:00";
+            $date_time = $p_date . "T00:00:00Z";
         }
         else if (!$p_zone) {
-            $date_time = $p_date . "T" . $p_time . "+00:00";
+            $date_time = $p_date . "T" . $p_time . "Z";
         }
         else {
             $date_time = $p_date . "T" . $p_time . $p_zone;
         }
 
         $this->required_data["date_created"] = $date_time;
-    }
 
+        return true;
+    } // fn setCreated
+
+    /**
+     * Setting the creator data
+     * @param string $p_literal
+     * @param string $p_name
+     * @return bool
+     */
     public function setCreator($p_literal, $p_name) {
-        $this->required_data["creator_literal"] = $p_literal;
-        $this->required_data["creator_name"] = $p_name;
-    }
+        $this->required_data["creator_literal"] = str_replace(array("\""), array("&#34;"), $p_literal); // shall not escape "..."
+        //$this->required_data["creator_name"] = str_replace(array("[", "]"), array("&#91;", "&#93;"), $p_name); // shall not have cdata
+        $this->required_data["creator_name"] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_name); // shall not have cdata
+        return true;
+    } // fn setCreator
 
+    /**
+     * Setting the slugline
+     * @param string $p_slugline
+     * @return bool
+     */
     public function setSlugline($p_slugLine) {
-        $this->required_data["slug_line"] = $p_slugLine;
-    }
+        $this->required_data["slug_line"] = str_replace(array("&", "<", ">", "\""), array("&amp;", "&lt;", "&gt;", "&#34;"), $p_slugLine); // shall not have <tag>, shall not escape "..."
+        return true;
+    } // fn setSlugline
 
+    /**
+     * Setting the headline
+     * @param string $p_headline
+     * @return bool
+     */
     public function setHeadline($p_headLine) {
-        $this->required_data["head_line"] = $p_headLine;
-    }
+        //$this->required_data["head_line"] = str_replace(array("[", "]"), array("&#91;", "&#93;"), $p_headLine); // shall not have cdata seps
+        $this->required_data["head_line"] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_headLine); // shall not have cdata seps
+        return true;
+    } // fn setHeadline
 
+    /**
+     * Setting the link
+     * @param string $p_link
+     * @return bool
+     */
     public function setLink($p_linkUrl) {
-        $this->required_data["item_link"] = $p_linkUrl;
-    }
+        $this->required_data["item_link"] = str_replace(array("\""), array("&#34;"), $p_linkUrl); // shall not escape "..."
+        return true;
+    } // fn setLink
 
+    /**
+     * Setting the article content by itself
+     * @param string $p_text
+     * @return bool
+     */
     public function setContent($p_text) {
-        $this->required_data["content"] = $p_text;
-    }
+        $this->required_data["content"] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_text); // shall not have cdata seps
+        return true;
+    } // fn setContent
 
+    /**
+     * Setting the article content by itself
+     * @param string $p_qcode
+     * @param string $p_name
+     * @return bool
+     */
     public function setSubject($p_qcode, $p_name) {
-        $this->subjects[] = array("qcode" => $p_qcode, "name" => $p_name);
-    }
+        $this->subjects[] = array("qcode" => str_replace(array("\""), array("&#34;"), $p_qcode), // shall not escape "..."
+                                  //"name" => str_replace(array("[", "]"), array("&#91;", "&#93;"), $p_name), // shall not have cdata seps
+                                  "name" => str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_name), // shall not have cdata seps
+                                 );
+        return true;
+    } // fn setSubject
 
+    // checker methods
+
+    /**
+     * Checks whether all required data are set
+     * @return bool
+     */
     public function isFilled() {
-        foreach ($this->required_data as $one_part => $one_info) {
+        foreach ($this->required_data as $one_info) {
             if (is_null($one_info)) {
-                #echo "$one_part is $one_info!\n";
                 return false;
             }
         }
@@ -145,19 +244,44 @@ class NewsMLNewsItem {
 
     } // fn isFilled
 
+    // getter methods
 
+    /**
+     * Gets item date
+     * @return string
+     */
     public function getDate() {
         return $this->required_data["date_created"];
-    }
+    } // fn getDate
+
+    /**
+     * Gets item headline
+     * @return string
+     */
     public function getHeadline() {
         return $this->required_data["head_line"];
-    }
+    } // fn getHeadline
+
+    /**
+     * Gets item slugline
+     * @return string
+     */
     public function getSlugline() {
         return $this->required_data["slug_line"];
-    }
+    } // fn getSlugline
+
+    /**
+     * Gets item copyright
+     * @return string
+     */
     public function getCopyright() {
         return $this->required_data["copyright_info"];
-    }
+    } // fn getCopyright
+
+    /**
+     * Gets item creator
+     * @return string
+     */
     public function getCreator($p_part) {
         switch ($p_part) {
             case "literal":
@@ -167,16 +291,31 @@ class NewsMLNewsItem {
             default:
                 return "";
         }
-    }
+    } // fn getCreator
+
+    /**
+     * Gets item link
+     * @return string
+     */
     public function getLink() {
         return $this->required_data["item_link"];
-    }
+    } // getLink
+
+    /**
+     * Gets item subjects (array of categories, tags, ...)
+     * @return array
+     */
     public function getSubjects() {
         return $this->subjects;
-    }
+    } // fn getSubjects
+
+    /**
+     * Gets item content
+     * @return string
+     */
     public function getContent() {
         return $this->required_data["content"];
-    }
+    } // fn getContent
 
 } // class NewsMLNewsItem
 
@@ -198,17 +337,30 @@ class NewsMLCreator {
     // for the result output holder
     private $outputName = "";
 
+    /**
+     * Constructor
+     *
+     * @param string p_outputFileName output file name
+     */
     public function NewsMLCreator($p_outputFileName) {
         $this->outputName = $p_outputFileName;
-    }
+    } // fn NewsMLCreator
 
+    /**
+     * Sets an error state
+     *
+     * @param string $p_message
+     * @return void
+     */
     public function setError($p_message) {
         $this->state_correct = false;
         $this->error_message = $p_message;
-    }
+    } // fn setError
 
     /**
      * Creates a new newsItem
+     *
+     * @return mixed
      */
     public function createItem() {
         return new NewsMLNewsItem();
@@ -218,14 +370,13 @@ class NewsMLCreator {
      * Adds a filled newsItem to the itemSet
      *
      * @param NewsMLNewsItem $p_newsItem a filled newsItem
+     * @return bool
      */
     public function appendItem(NewsMLNewsItem $p_newsItem) {
         if (!$p_newsItem->isFilled()) {
-            #echo "item not filled\n";
             return false;
         }
 
-        #echo "item inserted\n";
         $this->itemSet[] = $p_newsItem;
 
         return true;
@@ -233,6 +384,8 @@ class NewsMLCreator {
 
     /**
      * Final operation for outputting
+     *
+     * @return bool
      */
     public function serializeSet() {
         $out_file = fopen($this->outputName, "w");
@@ -246,28 +399,20 @@ class NewsMLCreator {
             return true;
         }
 
-        // TODO: to create the newsml file
-        $curdate = gmdate("M-d-Y\TH:i:s") . "+00:00";
+        $curdate = gmdate("Y-m-d\TH:i:s\Z");
 
         $newsml_content = '';
 
+        // newsMessage beginning according to Ch16, IPTC-G2-Implementation_Guide
         $newsml_content .= '<?xml version="1.0" encoding="UTF-8" ?>
 <newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
         ../XSD/NewsML-G2/2.7/specification/NAR_1.8-spec-NewsMessage-Power.xsd">
     <header>
-        <sent>2010-10-19T11:17:00.100Z</sent>
+        <sent>' . $curdate . '</sent>
         <sender>sourcefabric.org</sender>
-        <transmitId>tag:sourcefabric.org,2011:newsml_OVE48850O-PKG</transmitId>
-        <priority>4</priority>
-        <origin>MMS_3</origin>
-        <destination>UKI</destination>
-        <channel>TVS</channel>
-        <channel>TTT</channel>
-        <channel>WWW</channel>
-        <timestamp role="received">' . $curdate . '2010-10-18T11:17:00.000Z</timestamp>
-        <timestamp role="transmitted">' . $curdate . '2010-10-19T11:17:00.100Z</timestamp>
+        <transmitId>sourcefabric.org:' . $curdate . '</transmitId>
     </header>
     <packageItem>
 ';
@@ -281,8 +426,7 @@ class NewsMLCreator {
 
         foreach ($this->itemSet as $one_item) {
             $newsml_content .= '
-        <newsItem guid="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getSlugline() . '"';
-            $newsml_content .= '
+        <newsItem guid="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getSlugline() . '"
             xmlns="http://iptc.org/std/nar/2006-10-01/"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
@@ -292,14 +436,10 @@ class NewsMLCreator {
             version="1"
             xml:lang="en-US"
             >
-            <catalogRef
-                href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
             <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
-            <rightsInfo>';
-            $newsml_content .= '
-                <copyrightHolder literal="' . $one_item->getCopyright() . '" />';
-
-            $newsml_content .= '
+            <rightsInfo>
+                <copyrightHolder literal="' . $one_item->getCopyright() . '" />
             </rightsInfo>
             <itemMeta>
                 <itemClass qcode="ninat:text" />
@@ -314,23 +454,25 @@ class NewsMLCreator {
                 <contentCreated>' . $one_item->getDate() . '</contentCreated>
                 <contentModified></contentModified>
                 <creator literal="' . $one_item->getCreator("literal") . '">
-                    <name>' . $one_item->getCreator("name") . '</name>
+                    <name><![CDATA[' . $one_item->getCreator("name") . ']]></name>
                 </creator>
                 <language tag="en-US" />';
             foreach ($one_item->getSubjects() as $one_subjects) {
             $newsml_content .= '
                 <subject qcode="' . $one_subjects["qcode"] . '">
-                    <name>' . $one_subjects["name"] . '</name>
+                    <name><![CDATA[' . $one_subjects["name"] . ']]></name>
                 </subject>';
             }
             $newsml_content .= '
                 <link rel="itemrel:original" href="' . $one_item->getLink() . '" />
                 <slugline>' . $one_item->getSlugline() . '</slugline>
-                <headline>' . $one_item->getHeadline() . '</headline>
+                <headline><![CDATA[' . $one_item->getHeadline() . ']]></headline>
             </contentMeta>
             <contentSet>
-                <inlineXML contenttype="text/html; charset=UTF-8">
+                <inlineXML contenttype="application/xhtml+xml; charset=UTF-8">
+<![CDATA[
 ' . $one_item->getContent() . '
+]]>
                 </inlineXML>
             </contentSet>
         </newsItem>';

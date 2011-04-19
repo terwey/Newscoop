@@ -1,36 +1,55 @@
 <?php
 /**
  * WordPress eXtended RSS file parser implementations
- *
- * @package WordPress
- * @subpackage Importer
+ * Note that this file is a modified file from
+ * http://svn.wp-plugins.org/wordpress-importer/trunk/parsers.php
  */
 
 /**
  * WordPress Importer class for managing parsing of WXR files.
  */
 class WXR_Parser {
-    function parse( $file ) {
+
+    /**
+     * Parses WXR data (by WXR_Parser_SimplXML)
+     *
+     * @param string $p_file file name of the wxr file
+     * @return array
+     */
+    function parse($p_file) {
 
         $parser = new WXR_Parser_SimpleXML;
-        $result = $parser->parse( $file );
+        $result = $parser->parse($p_file);
 
         return $result;
-    }
-}
+    } // fn parse
+} // class WXR_Parser
 
 /**
  * WXR Parser that makes use of the SimpleXML PHP extension.
  */
 class WXR_Parser_SimpleXML {
-    function parse($file) {
+
+    /**
+     * Parses WXR data (by SimplXML)
+     *
+     * @param string $p_file file name of the wxr file
+     * @return array
+     */
+    function parse($p_file) {
         $authors = $posts = $categories = $tags = $terms = array();
 
+        libxml_clear_errors();
         $internal_errors = libxml_use_internal_errors(true);
-        $xml = simplexml_load_file($file);
+        $xml = simplexml_load_file($p_file);
         // halt if loading produces an error
         if (!$xml) {
-            return array("correct" => false, "errormsg" => libxml_get_errors());
+            $error_msg = "";
+            foreach (libxml_get_errors() as $err_line) {
+                $error_msg .= $err_line->message;
+            }
+            libxml_clear_errors();
+            return array("correct" => false, "errormsg" => $error_msg);
         }
 
         $wxr_version = $xml->xpath('/rss/channel/wp:wxr_version');
@@ -196,5 +215,5 @@ class WXR_Parser_SimpleXML {
             'title' => $wxr_title,
             'link' => $wxr_link,
         );
-    }
-}
+    } // fn parse
+} // class WXR_Parser_SimpleXML

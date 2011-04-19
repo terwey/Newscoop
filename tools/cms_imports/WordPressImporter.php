@@ -1,5 +1,5 @@
 <?php
-/*
+/**
     The data read / parsing is done by WordPress importer
     http://wordpress.org/extend/plugins/wordpress-importer/
     licensed under GPL2+, thus it should be ok to use it
@@ -13,10 +13,13 @@
 
     Note that this does not run on some WXR files since WordPress creates non-valid XML if 'CDATA' part is at an article content (e.g. at javascript), see
     http://drupal.org/node/1055310
-*/
+ */
 
 require_once('WordPressParsers.php');
 
+/**
+ * Imports data from WordPress WXR file into NewsML file
+ */
 class WordPressImporter extends CMSImporterPlugin {
 
     /**
@@ -24,6 +27,7 @@ class WordPressImporter extends CMSImporterPlugin {
      *
      * @param NewsMLCreator $p_newsmlHolder the NewsML formatter
      * @param string $p_inputFileName input file name
+     * @return bool
      */
     public function makeImport($p_newsmlHolder, $p_inputFileName) {
 
@@ -49,7 +53,7 @@ class WordPressImporter extends CMSImporterPlugin {
 
         foreach ($import_data["posts"] as $one_post) {
             $item_holder = $p_newsmlHolder->createItem();
-            $item_holder->setCreated();
+            $item_holder->setCreated(); // can be set explicitely like ("1234-56-78", "11:22:33.000", "+01:00")
             $item_holder->setCopyright($copyright_info);
 
             $author_name = $one_post["post_author"];
