@@ -1,0 +1,50 @@
+  Work flow:
+
+A) upload page
+    0) take user email, data file, file type
+    1) check if the file is of a known format
+        * stop, write error msg if not
+    2) move the file into a directory
+    3) put path, type, email into mysql
+        * set status into 'init'
+    4) call import script
+
+B) import script
+    0) run by cron / web page
+    1) check if another script runs (probably via lock files)
+        * exit if other run (or if more than limit)
+    2) cycle over mysql queue
+        a) take (path, type, email) from mysql
+            * update row status into 'work'
+        b) exit (release lock) if no request there
+            * could be a race condition (omiting a request), thus cron runs too
+        c) make the cms->newsml conversion
+        d) remove the original file
+        e) send email to the user with download link
+        f) update row status into 'sent'
+            * or may be just delete the row
+
+C) download page
+    1) take provided file id
+    2) serve the file of that id if exists
+
+D) crons
+    a) for import scripts
+    b) for removing old filed
+
+
+Jobs info table structure:
+
+CREATE TABLE IF NOT EXISTS ConvRequests (
+    id int(10) unsigned NOT NULL AUTO_INCREMENT,
+    worker smallint NOT NULL DEFAULT 0,
+    state VARCHAR(255) NOT NULL DEFAULT "init",
+    email VARCHAR(1024) NOT NULL DEFAULT "",
+    format VARCHAR(255) NOT NULL DEFAULT "",
+    file VARCHAR(1024) NOT NULL DEFAULT "",
+    orig VARCHAR(1024) NOT NULL DEFAULT "",
+
+    PRIMARY KEY (id),
+    KEY conv_requests_worker (worker)
+);
+

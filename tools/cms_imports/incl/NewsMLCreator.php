@@ -342,7 +342,7 @@ class NewsMLCreator {
      *
      * @param string p_outputFileName output file name
      */
-    public function NewsMLCreator($p_outputFileName) {
+    public function __construct($p_outputFileName) {
         $this->outputName = $p_outputFileName;
     } // fn NewsMLCreator
 
