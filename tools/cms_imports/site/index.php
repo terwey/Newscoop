@@ -96,6 +96,12 @@ Source CMS type
 
 </form>
 </div>
+
+<div class="wxr_problems">
+Note that some WordPress sometimes creates invalid dumps, wrong dealing with cdata parts.<br />
+If conversion on a wxr file fails, you can try our <a href="wxrfixer.py">script</a> to fix that.
+</div>
+
 <div class="sourcefabric_link">
 <a href="http://www.sourcefabric.org/">Sourcefabric</a>
 </div>
