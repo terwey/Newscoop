@@ -6,4 +6,8 @@ $converter_admin = array(
     "download" => "http://www.sourcefabric.org/newscoop/import/",
 );
 
+$converter_cron = array(
+    "cleandays" => 30,
+);
+
 ?>

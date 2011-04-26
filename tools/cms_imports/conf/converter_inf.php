@@ -9,7 +9,7 @@ $converter_paths = array(
 
 $converter_runtime = array(
     "shell" => "/usr/bin/php",
-    "script" => $__converter_base . "incl/importer.php",
+    "script" => $__converter_base . "bin/importer.php",
     "conf_dir" => $__converter_base . "conf/",
     "incl_dir" => $__converter_base . "incl/",
     "plug_dir" => $__converter_base . "plugins/",
@@ -29,13 +29,6 @@ $converter_plugins = array(
 $converter_locks = array(
     "path" => "$__converter_base" . "locks/lock",
     "files" => array(),
-);
-
-$converter_admin = array(
-    "email_from" => "admin@example.net",
-    "email_to" => "admin@example.net",
-    "download" => "http://newscoop_import/",
-    "upload" => "http://newscoop_import/submit.php",
 );
 
 ?>

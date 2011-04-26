@@ -10,19 +10,30 @@
     2) Saves the submitted file into the input directory
     3) Fills job info into the database
     4) Starts the converter.
-    5) Writes an info.
+    5) Writes an output info.
 
 */
 
+// if not a post request (with file and other form data), go to the default page
 if ('post' != strtolower($_SERVER['REQUEST_METHOD'])) {
     header("Location: index.php");
     exit(0);
 }
 
+// taking configurations
 $conf_dir = dirname(dirname(__FILE__)) . "/conf/";
 require_once($conf_dir . 'converter_dba.php');
 require_once($conf_dir . 'converter_inf.php');
+require_once($conf_dir . 'converter_loc.php');
 
+/**
+ * Takes and checks parameters sent via the form
+ *
+ * @param mixed $p_formInfo
+ * @param mixed $p_knownFormats
+ * @param mixed $p_formValues
+ * @return boolean
+ */
 function take_form_params($p_formInfo, $p_knownFormats, &$p_formValues = null) {
     if (!is_array($p_formValues)) {
         return false;
@@ -56,7 +67,6 @@ function take_form_params($p_formInfo, $p_knownFormats, &$p_formValues = null) {
         return false;
     }
 
-    //if (!preg_match("/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+\.[a-zA-Z0-9_-]+$/", $f_email)) {}
     if (!preg_match("/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+$/", $f_email)) {
         $p_formValues["message"] = "email addressed not valid";
         return false;
@@ -86,8 +96,16 @@ function take_form_params($p_formInfo, $p_knownFormats, &$p_formValues = null) {
     $p_formValues['file_tmp'] = $file_tmp_name;
 
     return true;
-}
+} // fn take_form_params
 
+/**
+ * Saves the uploaded file for next processing
+ *
+ * @param mixed $p_paths
+ * @param mixed $p_formValues
+ * @param mixed $p_fileInfo
+ * @return boolean
+ */
 function save_uploaded_file($p_paths, $formValues, &$p_fileInfo = null) {
     if (!is_array($p_fileInfo)) {
         return false;
@@ -115,8 +133,16 @@ function save_uploaded_file($p_paths, $formValues, &$p_fileInfo = null) {
     $p_fileInfo["local_name"] = $local_name;
 
     return true;
-}
+} // fn save_uploaded_file
 
+/**
+ * Saves the job information into database
+ *
+ * @param mixed $p_dbAccess
+ * @param mixed $p_formValues
+ * @param mixed $p_fileInfo
+ * @return boolean
+ */
 function set_import_info($p_dbAccess, $formValues, $p_fileInfo) {
 
     $f_email = $formValues["email"];
@@ -158,8 +184,14 @@ function set_import_info($p_dbAccess, $formValues, $p_fileInfo) {
 
     return true;
 
-}
+} // fn set_import_info
 
+/**
+ * Starts the conversion process itself
+ *
+ * @param mixed $p_runtimeInfo
+ * @return boolean
+ */
 function start_converter($p_runtimeInfo) {
 
     $script_shell = $p_runtimeInfo["shell"];
@@ -167,57 +199,61 @@ function start_converter($p_runtimeInfo) {
     $conf_dir = $p_runtimeInfo["conf_dir"];
     $log_file = $p_runtimeInfo["log_file"];
 
+    // we have just a one worker process by default
     $worker = 1;
 
     try {
         passthru("$script_shell $script_name $conf_dir $worker >> $log_file 2>&1 &");
     }
     catch (Exception $exc) {
-        var_dump($exc);
         return false;
     }
 
     return true;
-}
+} // start_converter
 
+// what form data to get/check
 $formInfo = array(
     'email' => 'useremail',
     'file' => 'cmsfile',
     'format' => 'cmsformat',
 );
 
+// formats that have their plugins
 $knownFormats = array();
 foreach ($converter_plugins as $one_plug => $one_plug_info) {
     $knownFormats[$one_plug] = true;
 }
 
+// holder variables
 $formValues = array(
     'message' => "",
 );
 $fileInfo = array();
-$got_params = true;
 
+// try to take the sent data
+$got_params = true;
 $res = take_form_params($formInfo, $knownFormats, $formValues);
 if (!$res) {
     $got_params = false;
-    // echo "wrong params";
 }
 
+// save the file if data correct
 if ($res) {
     $res = save_uploaded_file($converter_paths, $formValues, $fileInfo);
-    // if (!$res) {echo "can not save file";}
 }
 
+// sets conversion request info into database
 if ($res) {
     $res = set_import_info($converter_db_access, $formValues, $fileInfo);
-    // if (!$res) {echo "can not set db";}
 }
 
+// finally start the converter process
 if ($res) {
     $res = start_converter($converter_runtime);
-    // if (!$res) {echo "can not start job";}
 }
 
+// write the output info if submit was correct
 if ($res) {
     echo '
 <html>
@@ -244,6 +280,7 @@ You will be informed by email when the conversion is finished.
     exit(0);
 }
 
+// write error info if something got wrong
 echo '
 <html>
 <head>

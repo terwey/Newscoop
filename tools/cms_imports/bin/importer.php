@@ -11,21 +11,22 @@
     2) cycles over jobs available:
         a) takes the first free job from database, assignes it to itself
         b) proceeds the conversion according to the taken data
-        c) sends notification to the user/owner and to the admin
-        d) sets that job as processed in the database
+        c) sets that job as processed in the database
+        d) sends notification to the user/owner and to the admin
     3) releases its lock
 
 */
 
-
+// we need 2 parametrers: conf directory and worker id
 $conf_dir = "";
 if (3 > count($argv)) {
     exit(1);
 }
 
 $conf_dir = $argv[1];
-require_once($conf_dir .'converter_dba.php');
+require_once($conf_dir . 'converter_dba.php');
 require_once($conf_dir . 'converter_inf.php');
+require_once($conf_dir . 'converter_loc.php');
 
 $worker = (int) $argv[2];
 if (0 >= $worker) {
@@ -34,8 +35,13 @@ if (0 >= $worker) {
 
 set_time_limit(0);
 
-// $p_lockInfo: path, (files: $p_worker)
-// $p_worker - int
+/**
+ * Takes the lock so that this is the only working process (of the worker id)
+ *
+ * @param mixed $p_lockInfo: path, (files: $p_worker)
+ * @param int $p_worker - int
+ * @return boolean
+ */
 function take_lock(&$p_lockInfo, $p_worker) {
 
     $lock_file_path = $p_lockInfo["path"] . "$p_worker";
@@ -74,16 +80,24 @@ function take_lock(&$p_lockInfo, $p_worker) {
     $p_lockInfo["files"][$p_worker] = $lfh;
 
     return true;
-}
+} // fn take_lock
 
-// $p_lockInfo: files: $p_worker
-// $p_worker - int
+/**
+ * Free the previously got lock
+ *
+ * @param mixed $p_lockInfo: files: $p_worker
+ * @param int $p_worker - int
+ * @return boolean
+ */
 function release_lock(&$p_lockInfo, $p_worker) {
     if (!array_key_exists("files", $p_lockInfo)) {
         return false;
     }
 
     $lfh = $p_lockInfo["files"][$p_worker];
+    if (null === $lfh) {
+        return true;
+    }
 
     try {
         flock($lfh, LOCK_UN);
@@ -96,17 +110,21 @@ function release_lock(&$p_lockInfo, $p_worker) {
     $p_lockInfo["files"][$p_worker] = null;
 
     return true;
-}
+} // release_lock
 
-// $p_dbAccess: host, user, pwd, dbname
-// $p_worker - int
-// $p_jobInfo: (id, email, format, file, orig)
+/**
+ * Choose a job request
+ *
+ * @param mixed $p_dbAccess: host, user, pwd, dbname
+ * @param int $p_worker - int
+ * @param mixed $p_jobInfo: (id, email, format, file, orig)
+ * @return boolean
+ */
 function take_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
     if (!is_array($p_jobInfo)) {
         return false;
     }
 
-    // $reqStrUpd = "UPDATE ConvRequests SET worker = :worker, state = 'work' WHERE id = (SELECT id FROM ConvRequests WHERE worker = 0 ORDER BY id ASC LIMIT 1)";
     $reqStrUpd = "UPDATE ConvRequests SET worker = :worker, state = 'work' WHERE id = (SELECT id FROM (SELECT id FROM ConvRequests WHERE worker = 0 AND state = 'init' ORDER BY id ASC LIMIT 1) AS conv_alias)";
     $reqStrSel = "SELECT id, email, format, file, orig FROM ConvRequests WHERE worker = :worker ORDER BY id ASC LIMIT 1";
 
@@ -185,11 +203,16 @@ function take_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
     $p_jobInfo["state"] = 'work';
 
     return true;
-}
+} // take_conv_info
 
-// $p_dbAccess: host, user, pwd, dbname
-// $p_worker - int
-// $p_jobInfo: id
+/**
+ * Update info on the processed job request
+ *
+ * @param mixed $p_dbAccess: host, user, pwd, dbname
+ * @param int $p_worker - int
+ * @param mixed $p_jobInfo: id
+ * @return boolean
+ */
 function update_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
 
     $reqStrUpd = "UPDATE ConvRequests SET state = :state, worker = :worker WHERE id = :id";
@@ -229,12 +252,17 @@ function update_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
     }
 
     return true;
-}
+} // fn update_conv_info
 
-// $p_pathsInfo: output_dir, input_dir
-// $p_runtimeInfo: incl_dir, plug_dir
-// $p_pluginsInfo: $format: required_files, class_name
-// $p_jobInfo: format, name, (state)
+/**
+ * Do the conversion itself
+ *
+ * @param mixed $p_pathsInfo: output_dir, input_dir
+ * @param mixed $p_runtimeInfo: incl_dir, plug_dir
+ * @param mixed $p_pluginsInfo: $format: required_files, class_name
+ * @param mixed $p_jobInfo: format, name, (state)
+ * @return boolean
+ */
 function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, &$p_jobInfo) {
     $p_jobInfo["state"] = 'failed';
     $format = $p_jobInfo["format"];
@@ -293,10 +321,15 @@ function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, &$p_jobInf
 
     $p_jobInfo["state"] = 'done';
     return true;
-}
+} // run_conversion
 
-// $p_pathsInfo: input_dir
-// $p_jobInfo: file
+/**
+ * Clean the uploaded file
+ *
+ * @param mixed $p_pathsInfo: input_dir
+ * @param mixed $p_jobInfo: file
+ * @return boolean
+ */
 function remove_original($p_pathsInfo, $p_jobInfo) {
     $dir_input = $p_pathsInfo["input_dir"];
     $local_name = $p_jobInfo["file"];
@@ -311,11 +344,16 @@ function remove_original($p_pathsInfo, $p_jobInfo) {
     }
 
     return true;
-}
+} // remove_original
 
-// $p_pathsInfo: output_dir
-// $p_adminInfo: email
-// $p_jobInfo: id, email, format, file, orig
+/**
+ * Make email notices on the conversion
+ *
+ * @param mixed $p_pathsInfo: output_dir
+ * @param mixed $p_adminInfo: email
+ * @param mixed $p_jobInfo: id, email, format, file, orig
+ * @return boolean
+ */
 function send_notifications($p_pathsInfo, $p_adminInfo, $p_jobInfo) {
     $cur_date = gmdate("Y-m-d H:i:s");
 
@@ -385,42 +423,53 @@ datetime:   ' . $cur_date . '
     }
 
     return true;
-}
+} // fn send_notifications
 
+/**
+ * Assure that the file lock was released
+ *
+ * @return void
+ */
+function do_at_exit() {
+    global $converter_locks, $worker;
+    release_lock($converter_locks, $worker);
+} // fn do_at_exit
+
+register_shutdown_function('do_at_exit');
+
+// assure we are the only running worker (of the worker id)
 $locked = take_lock($converter_locks, $worker);
 if (!$locked) {
     exit(1);
 }
 
-$job_info = array();
-
 $converted = 0;
 
 while(true) {
+    $job_info = array();
 
+    // choose a job request
     $taken = take_conv_info($converter_db_access, $worker, $job_info);
     if (!$taken) {
         break;
     }
 
+    // run the conversion itself
     $res = run_conversion($converter_paths, $converter_runtime, $converter_plugins, $job_info);
-
-    if (true) {
-        $res = send_notifications($converter_paths, $converter_admin, $job_info);
-    }
-
-    if (true) {
-        $res = update_conv_info($converter_db_access, $worker, $job_info);
-    }
-
     if ($res) {
         $converted += 1;
     }
 
-    $res = remove_original($converter_paths, $job_info);
+    // update the request info
+    update_conv_info($converter_db_access, $worker, $job_info);
+
+    // email notices, remove uploaded file
+    send_notifications($converter_paths, $converter_admin, $job_info);
+    remove_original($converter_paths, $job_info);
 
 }
 
+// allow to run next workers
 release_lock($converter_locks, $worker);
 
 $exit_val = 1;

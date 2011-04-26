@@ -1,8 +1,21 @@
 <?php
 
+/*
+
+  The default way is to present form for file uploading.
+  The data are sent to the 'submit.php' that prepares and triggers a job.
+
+  If the 'newsml' parameter is present, requested converted file is served.
+
+*/
+
+// taking configurations
 $conf_dir = dirname(dirname(__FILE__)) . "/conf/";
 require_once($conf_dir . 'converter_dba.php');
 require_once($conf_dir . 'converter_inf.php');
+require_once($conf_dir . 'converter_loc.php');
+// this is the handler of the form data
+$upload_url = "submit.php";
 
 // was this a request for the converted file
 if (array_key_exists("newsml", $_REQUEST)) {
@@ -21,12 +34,12 @@ if (array_key_exists("newsml", $_REQUEST)) {
         }
     }
 
+    // serving the requested file if available
     try {
         if ($correct) {
             $fh = fopen($file_path, 'rb');
             header("Content-Type: text/xml");
             header("Content-Length: " . filesize($file_path));
-            //header("Content-Disposition: attachment; filename=\"$file_id.xml\"");
             header("Content-Disposition: attachment; filename=\"newscoop-$file_id.xml\"");
             fpassthru($fh);
             fclose($fh);
@@ -36,6 +49,7 @@ if (array_key_exists("newsml", $_REQUEST)) {
         $correct = false;
     }
 
+    // if the requested file is not available
     if (!$correct) {
         echo '
 <html>
@@ -60,7 +74,7 @@ The requested NewsML file was not found.
     exit(0);
 }
 
-// a form for cms file upload
+// a form for cms file upload; the standard way here
 
         echo '
 <html>
@@ -74,7 +88,7 @@ The requested NewsML file was not found.
 Import into Newscoop NewsML
 </div>
 <div class="newsml_import_form">
-<form enctype="multipart/form-data" action="' . $converter_admin["upload"] . '" method="POST">
+<form enctype="multipart/form-data" action="' . $upload_url . '" method="POST">
 <input type="hidden" name="cmsformat" value="wxr" />
 <input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
 
@@ -98,8 +112,8 @@ Source CMS type
 </div>
 
 <div class="wxr_problems">
-Note that some WordPress sometimes creates invalid dumps, wrong dealing with cdata parts.<br />
-If conversion on a wxr file fails, you can try our <a href="wxrfixer.py">script</a> to fix that.
+Note that sometimes WordPress creates invalid dumps (on cdata parts).<br />
+If converting a wxr file fails, you can try an auxiliary <a href="wxrfixer.py">script</a> to fix that.
 </div>
 
 <div class="sourcefabric_link">

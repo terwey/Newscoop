@@ -4,9 +4,9 @@
 
 echo "<pre>\n";
 
-    require_once('NewsMLCreator.php');
-    require_once('WordPressParsers.php');
-    require_once('WordPressImporter.php');
+    require_once('../incl/NewsMLCreator.php');
+    require_once('../plugins/wxr/WordPressParsers.php');
+    require_once('../plugins/wxr/WordPressImporter.php');
 
     //$filename = 'kosmoblog.wordpress.orig.xml';
     $filename = 'kosmoblog.wordpress.test.xml';
