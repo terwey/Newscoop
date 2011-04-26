@@ -3,13 +3,13 @@
 $__converter_base = dirname(dirname(__FILE__)) . "/";
 
 $converter_paths = array(
-    "input_dir" = $__converter_base . "inputs/",
-    "output_dir" = $__converter_base . "outputs/",
+    "input_dir" => $__converter_base . "inputs/",
+    "output_dir" => $__converter_base . "outputs/",
 );
 
 $converter_runtime = array(
     "shell" => "/usr/bin/php",
-    "script" => $__converter_base . "incl/converter.php",
+    "script" => $__converter_base . "incl/importer.php",
     "conf_dir" => $__converter_base . "conf/",
     "incl_dir" => $__converter_base . "incl/",
     "plug_dir" => $__converter_base . "plugins/",
@@ -34,8 +34,8 @@ $converter_locks = array(
 $converter_admin = array(
     "email_from" => "admin@example.net",
     "email_to" => "admin@example.net",
-    "download" => "http://newscoop/conversion/",
-    "upload" => "http://newscoop/conversion/submit.php",
+    "download" => "http://newscoop_import/",
+    "upload" => "http://newscoop_import/submit.php",
 );
 
 ?>

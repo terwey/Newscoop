@@ -14,11 +14,16 @@
 
 */
 
+if ('post' != strtolower($_SERVER['REQUEST_METHOD'])) {
+    header("Location: index.php");
+    exit(0);
+}
+
 $conf_dir = dirname(dirname(__FILE__)) . "/conf/";
 require_once($conf_dir . 'converter_dba.php');
 require_once($conf_dir . 'converter_inf.php');
 
-function take_form_params($p_formInfo, $p_knownFormats, @$p_formValues = null) {
+function take_form_params($p_formInfo, $p_knownFormats, &$p_formValues = null) {
     if (!is_array($p_formValues)) {
         return false;
     }
@@ -31,34 +36,54 @@ function take_form_params($p_formInfo, $p_knownFormats, @$p_formValues = null) {
     $f_email = "";
     $f_format = "";
     if (!array_key_exists($email_field, $_REQUEST)) {
+        $p_formValues["message"] = "email addressed not provided";
         return false;
     }
     if (!array_key_exists($format_field, $_REQUEST)) {
-        return false;
-    }
-    $f_email = (string) $_REQUEST[$p_emailField];
-    $f_format = (string) strtolower($_REQUEST[$p_formatField]);
-
-    if (!preg_match("/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+\.[a-zA-Z0-9_-]+$/", $f_email)) {
+        $p_formValues["message"] = "file format not provided";
         return false;
     }
 
-    if (!in_array($f_format, $p_knownFormats)) {
+    $f_email = (string) $_REQUEST[$email_field];
+    if (!$f_email) {
+        $p_formValues["message"] = "email addressed not provided";
+        return false;
+    }
+
+    $f_format = (string) strtolower($_REQUEST[$format_field]);
+    if (!$f_format) {
+        $p_formValues["message"] = "file format not provided";
+        return false;
+    }
+
+    //if (!preg_match("/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+\.[a-zA-Z0-9_-]+$/", $f_email)) {}
+    if (!preg_match("/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+$/", $f_email)) {
+        $p_formValues["message"] = "email addressed not valid";
+        return false;
+    }
+
+    if (!array_key_exists($f_format, $p_knownFormats)) {
+        $p_formValues["message"] = "file format not known";
         return false;
     }
 
     // checking file
     if (!array_key_exists($file_field, $_FILES)) {
+        $p_formValues["message"] = "cms file not provided";
         return false;
     }
 
     $file_orig_name = $_FILES[$file_field]['name'];
     $file_tmp_name = $_FILES[$file_field]['tmp_name'];
+    if (empty($file_orig_name)) {
+        $p_formValues["message"] = "cms file not provided";
+        return false;
+    }
 
     $p_formValues['email'] = $f_email;
     $p_formValues['format'] = $f_format;
     $p_formValues['file_orig'] = $file_orig_name;
-    $p_formValues['file_tmp'] = $file_orig_name;
+    $p_formValues['file_tmp'] = $file_tmp_name;
 
     return true;
 }
@@ -101,8 +126,8 @@ function set_import_info($p_dbAccess, $formValues, $p_fileInfo) {
 
     $reqStr = "INSERT INTO ConvRequests (state, email, format, file, orig) VALUES ('init', :email, :format, :file, :orig)";
 
-    $db_user = $p_dbAccess['host'];
-    $db_host = $p_dbAccess['user'];
+    $db_host = $p_dbAccess['host'];
+    $db_user = $p_dbAccess['user'];
     $db_pwd = $p_dbAccess['pwd'];
     $db_name = $p_dbAccess['dbname'];
 
@@ -148,6 +173,7 @@ function start_converter($p_runtimeInfo) {
         passthru("$script_shell $script_name $conf_dir $worker >> $log_file 2>&1 &");
     }
     catch (Exception $exc) {
+        var_dump($exc);
         return false;
     }
 
@@ -161,25 +187,35 @@ $formInfo = array(
 );
 
 $knownFormats = array();
-foreach ($converter_plugins as $one_plug) {
-    $knownFormats[] = $one_plug;
+foreach ($converter_plugins as $one_plug => $one_plug_info) {
+    $knownFormats[$one_plug] = true;
 }
 
-$formValues = array();
+$formValues = array(
+    'message' => "",
+);
 $fileInfo = array();
+$got_params = true;
 
 $res = take_form_params($formInfo, $knownFormats, $formValues);
+if (!$res) {
+    $got_params = false;
+    // echo "wrong params";
+}
 
 if ($res) {
     $res = save_uploaded_file($converter_paths, $formValues, $fileInfo);
+    // if (!$res) {echo "can not save file";}
 }
 
 if ($res) {
     $res = set_import_info($converter_db_access, $formValues, $fileInfo);
+    // if (!$res) {echo "can not set db";}
 }
 
 if ($res) {
     $res = start_converter($converter_runtime);
+    // if (!$res) {echo "can not start job";}
 }
 
 if ($res) {
@@ -187,16 +223,20 @@ if ($res) {
 <html>
 <head>
 <title>Newscoop CMS conversion</title>
+<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
 </head>
 <body>
-<div style="width:90%,margin-left:auto,margin-right:auto">
-<p>
+<div class="conversion_submit_done">
+
+<div class="conversion_submit_done_info">
 The CMS file was submitted for Newscoop NewsML conversion.
 You will be informed by email when the conversion is finished.
-</p>
-<p>
-Welcome to the <a href="http://www.sourcefabric.org/">Sourcefabric</a> site.
-</p>
+</div>
+
+<div class="import_back_link">
+<a href="index.php">back</a>
+</div>
+
 </div>
 </body>
 </html>
@@ -208,15 +248,29 @@ echo '
 <html>
 <head>
 <title>Newscoop CMS conversion</title>
+<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
 </head>
 <body>
-<div style="width:90%,margin-left:auto,margin-right:auto">
-<p>
+<div class="conversion_submit_failed">
+
+<div class="conversion_submit_failed_info">
 Unfortunately, the CMS file could not be processed.
-</p>
-<p>
-<a href="http://www.sourcefabric.org/">Sourcefabric</a>
-</p>
+</div>
+';
+
+if ((!$got_params) && ($formValues["message"])) {
+    echo '
+<div class="conversion_submit_failed_reason">
+' . $formValues["message"] . '
+</div>
+';
+}
+
+echo '
+<div class="import_back_link">
+<a href="index.php">back</a>
+</div>
+
 </div>
 </body>
 </html>

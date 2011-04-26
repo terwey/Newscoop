@@ -38,14 +38,17 @@ set_time_limit(0);
 // $p_worker - int
 function take_lock(&$p_lockInfo, $p_worker) {
 
-    $lock_file_path = $p_lockInfo["path"]; . "$p_worker";
+    $lock_file_path = $p_lockInfo["path"] . "$p_worker";
 
     $lfh = null;
 
     try {
-        $lfh = fopen($lock_file_path, "r+");
+        $lfh = fopen($lock_file_path, "a+");
     }
     catch (Exception $exc) {
+        return false;
+    }
+    if (!$lfh) {
         return false;
     }
 
@@ -103,7 +106,8 @@ function take_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
         return false;
     }
 
-    $reqStrUpd = "UPDATE ConvRequests SET worker = :worker, state = 'work' WHERE id = (SELECT id FROM ConvRequests WHERE worker = 0 ORDER BY id ASC LIMIT 1)";
+    // $reqStrUpd = "UPDATE ConvRequests SET worker = :worker, state = 'work' WHERE id = (SELECT id FROM ConvRequests WHERE worker = 0 ORDER BY id ASC LIMIT 1)";
+    $reqStrUpd = "UPDATE ConvRequests SET worker = :worker, state = 'work' WHERE id = (SELECT id FROM (SELECT id FROM ConvRequests WHERE worker = 0 AND state = 'init' ORDER BY id ASC LIMIT 1) AS conv_alias)";
     $reqStrSel = "SELECT id, email, format, file, orig FROM ConvRequests WHERE worker = :worker ORDER BY id ASC LIMIT 1";
 
     $got_info = false;
@@ -113,8 +117,8 @@ function take_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
     $conv_file = "";
     $conv_orig = "";
 
-    $db_user = $p_dbAccess['host'];
-    $db_host = $p_dbAccess['user'];
+    $db_host = $p_dbAccess['host'];
+    $db_user = $p_dbAccess['user'];
     $db_pwd = $p_dbAccess['pwd'];
     $db_name = $p_dbAccess['dbname'];
 
@@ -178,6 +182,7 @@ function take_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
     $p_jobInfo["format"] = $conv_format;
     $p_jobInfo["file"] = $conv_file;
     $p_jobInfo["orig"] = $conv_orig;
+    $p_jobInfo["state"] = 'work';
 
     return true;
 }
@@ -187,14 +192,18 @@ function take_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
 // $p_jobInfo: id
 function update_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
 
-    $reqStrUpd = "UPDATE ConvRequests SET state = 'done', worker = -1 WHERE id = :id";
+    $reqStrUpd = "UPDATE ConvRequests SET state = :state, worker = :worker WHERE id = :id";
 
-    $db_user = $p_dbAccess['host'];
-    $db_host = $p_dbAccess['user'];
+    $db_host = $p_dbAccess['host'];
+    $db_user = $p_dbAccess['user'];
     $db_pwd = $p_dbAccess['pwd'];
     $db_name = $p_dbAccess['dbname'];
 
     $job_id = $p_jobInfo["id"];
+    $job_state = $p_jobInfo["state"];
+    if (!$job_state) {
+        $job_state = "failed";
+    }
 
     try {
         $dbh = new PDO(
@@ -205,7 +214,9 @@ function update_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
         );
         $sthUpd = $dbh->prepare($reqStrUpd);
 
-        $sthUpd->bindValue(':id', (string) $job_id, PDO::PARAM_INT);
+        $sthUpd->bindValue(':state', (string) $job_state, PDO::PARAM_STR);
+        $sthUpd->bindValue(':worker', (-1 * (int) $p_worker), PDO::PARAM_INT);
+        $sthUpd->bindValue(':id', (int) $job_id, PDO::PARAM_INT);
         $res = $sthUpd->execute();
         if (!$res) {
             return false;
@@ -223,8 +234,9 @@ function update_conv_info($p_dbAccess, $p_worker, &$p_jobInfo) {
 // $p_pathsInfo: output_dir, input_dir
 // $p_runtimeInfo: incl_dir, plug_dir
 // $p_pluginsInfo: $format: required_files, class_name
-// $p_jobInfo: format, name
-function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, $p_jobInfo) {
+// $p_jobInfo: format, name, (state)
+function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, &$p_jobInfo) {
+    $p_jobInfo["state"] = 'failed';
     $format = $p_jobInfo["format"];
 
     if (!array_key_exists($format, $p_pluginsInfo)) {
@@ -242,7 +254,7 @@ function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, $p_jobInfo
 
     $dir_output = $p_pathsInfo["output_dir"];
     $dir_input = $p_pathsInfo["input_dir"];
-    $local_name = $p_jobInfo["name"];
+    $local_name = $p_jobInfo["file"];
 
     $path_input = $dir_input . $local_name;
     $path_output = $dir_output . $local_name;
@@ -250,7 +262,7 @@ function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, $p_jobInfo
     try {
         if ($req_files) {
             foreach ($req_files as $one_req) {
-                require_once($plug_dir . $format . $one_req);
+                require_once($plug_dir . $format . "/" . $one_req);
             }
         }
     }
@@ -279,6 +291,18 @@ function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, $p_jobInfo
         return false;
     }
 
+    $p_jobInfo["state"] = 'done';
+    return true;
+}
+
+// $p_pathsInfo: input_dir
+// $p_jobInfo: file
+function remove_original($p_pathsInfo, $p_jobInfo) {
+    $dir_input = $p_pathsInfo["input_dir"];
+    $local_name = $p_jobInfo["file"];
+
+    $path_input = $dir_input . $local_name;
+
     try {
         unlink($path_input);
     }
@@ -289,34 +313,82 @@ function run_conversion($p_pathsInfo, $p_runtimeInfo, $p_pluginsInfo, $p_jobInfo
     return true;
 }
 
+// $p_pathsInfo: output_dir
 // $p_adminInfo: email
-// $p_jobInfo: (id, email, format, file, orig)
-function send_notifications($p_adminInfo, $p_jobInfo) {
+// $p_jobInfo: id, email, format, file, orig
+function send_notifications($p_pathsInfo, $p_adminInfo, $p_jobInfo) {
+    $cur_date = gmdate("Y-m-d H:i:s");
+
+    $processed = false;
+    $conv_state = "failed";
+    if ('done' == $p_jobInfo['state']) {
+        $processed = true;
+        $conv_state = "done";
+    }
+
+
+
     $to_user = $p_jobInfo["email"];
     $subject_user = "Newscoop conversion processed";
-    $message_user = '
-Your file \'' . $p_jobInfo["orig"] . '\' has been converted into NewsML.
-It is available at ' . $p_adminInfo["download"] . '?newsml=' . $p_jobInfo["id"] . '
+    $message_user = '';
+
+    $file_link = $p_adminInfo["download"] . '?newsml=' . $p_jobInfo["file"];
+
+    if ($processed) {
+        $message_user .= '
+The file \'' . $p_jobInfo["orig"] . '\' has been converted into NewsML.
+It is available at ' . $file_link . '
+';
+    }
+    else {
+        $message_user .= '
+The file \'' . $p_jobInfo["orig"] . '\' could not be converted into NewsML.
 ';
 
+        $dir_output = $p_pathsInfo["output_dir"];
+        $local_name = $p_jobInfo["file"];
+        $path_output = $dir_output . $local_name;
+        if (file_exists($path_output) && filesize($path_output)) {
+            $message_user .= '
+Error information may be found at ' . $file_link . '
+';
+        }
+
+    }
+
     $to_admin = $p_adminInfo["email_to"];
-    $subject_admin = "CMS conversion processed";
+    $mail_headers = 'From: ' . $p_adminInfo["email_from"]; // . "\r\n"
+
+    $subject_admin = "";
+    if ($processed) {
+        $subject_admin = "CMS conversion processed";
+    }
+    else {
+        $subject_admin = "CMS conversion failed";
+    }
     $message_admin = '
-conversion:
+Conversion
 job/db id:  ' . $p_jobInfo["id"] . '
 user email: ' . $p_jobInfo["email"] . '
 cms format: ' . $p_jobInfo["format"] . '
 original:   ' . $p_jobInfo["orig"] . '
-converted:  ' . $p_jobInfo["file"] . '
+local:      ' . $p_jobInfo["file"] . '
+state:      ' . $conv_state . '
+datetime:   ' . $cur_date . '
 ';
 
-    mail($to_user, $subject_user, $message_user);
-    mail($to_admin, $subject_admin, $message_admin);
+    if (!mail($to_user, $subject_user, $message_user, $mail_headers)) {
+        echo "[$cur_date] job id: " . $p_jobInfo["id"] . ", can not send email to $to_user\n";
+    }
+    if(!mail($to_admin, $subject_admin, $message_admin, $mail_headers)) {
+        echo "[$cur_date] job id: " . $p_jobInfo["id"] . ", can not send email to $to_admin\n";
+    }
 
+    return true;
 }
 
-$res = take_lock($converter_locks, $worker);
-if (!$res) {
+$locked = take_lock($converter_locks, $worker);
+if (!$locked) {
     exit(1);
 }
 
@@ -324,27 +396,28 @@ $job_info = array();
 
 $converted = 0;
 
-while($res) {
+while(true) {
 
-    if ($res) {
-        $res = take_conv_info($converter_db_access, $worker, $job_info);
+    $taken = take_conv_info($converter_db_access, $worker, $job_info);
+    if (!$taken) {
+        break;
+    }
+
+    $res = run_conversion($converter_paths, $converter_runtime, $converter_plugins, $job_info);
+
+    if (true) {
+        $res = send_notifications($converter_paths, $converter_admin, $job_info);
+    }
+
+    if (true) {
+        $res = update_conv_info($converter_db_access, $worker, $job_info);
     }
 
     if ($res) {
         $converted += 1;
     }
 
-    if ($res) {
-        $res = run_conversion($converter_paths, $converter_runtime, $converter_plugins, $job_info);
-    }
-
-    if ($res) {
-        $res = send_notifications($converter_admin, $job_info);
-    }
-
-    if ($res) {
-        $res = update_conv_info($converter_db_access, $worker, $job_info);
-    }
+    $res = remove_original($converter_paths, $job_info);
 
 }
 

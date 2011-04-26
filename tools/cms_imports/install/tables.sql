@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS ConvRequests (
     format VARCHAR(255) NOT NULL DEFAULT "",
     file VARCHAR(1024) NOT NULL DEFAULT "",
     orig VARCHAR(1024) NOT NULL DEFAULT "",
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id),
     KEY conv_requests_worker (worker)

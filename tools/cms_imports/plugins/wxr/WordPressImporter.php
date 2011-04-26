@@ -51,6 +51,8 @@ class WordPressImporter extends CMSImporterPlugin {
 
         $copyright_info = "" . $import_data["title"] . " - " . $import_data["link"];
 
+        $categories_by_slug = $import_data["categories_by_slug"];
+
         foreach ($import_data["posts"] as $one_post) {
             $item_holder = $p_newsmlHolder->createItem();
             $item_holder->setCreated(); // can be set explicitely like ("1234-56-78", "11:22:33.000", "+01:00")
@@ -72,8 +74,27 @@ class WordPressImporter extends CMSImporterPlugin {
                 $subjects = array();
             }
             foreach ($subjects as $one_term) {
+                // note that categories are hierarchical
                 if ("category" == $one_term["domain"]) {
-                    $item_holder->setSubject("WPCat:" . $one_term["slug"], htmlspecialchars($one_term["name"]));
+                    $cat_path = $cat_slug_run = $cat_slug = $one_term["slug"];
+                    $cat_slug_used = array(
+                        $cat_slug_run => true,
+                    );
+                    while (true) {
+                        // if no info on the category, no path to it
+                        if (!array_key_exists($cat_slug_run, $categories_by_slug)) {
+                            break;
+                        }
+                        // taking the parent of the current running category
+                        $cat_slug_run = $categories_by_slug[$cat_slug_run]["category_parent"];
+                        // not to cycle if some wrong data at the document
+                        if ((!$cat_slug_run) || (array_key_exists($cat_slug_run, $cat_slug_used))) {
+                            break;
+                        }
+                        $cat_path = $cat_slug_run . "/" . $cat_path;
+                        $cat_slug_used[] = $cat_slug_run;
+                    }
+                    $item_holder->setSubject("WPCat:" . $cat_path, htmlspecialchars($one_term["name"]));
                 }
                 if ("post_tag" == $one_term["domain"]) {
                     $item_holder->setSubject("WPTag:" . $one_term["slug"], htmlspecialchars($one_term["name"]));

@@ -37,7 +37,7 @@ class WXR_Parser_SimpleXML {
      * @return array
      */
     function parse($p_file) {
-        $authors = $posts = $categories = $tags = $terms = array();
+        $authors = $posts = $categories = $categories_by_slug = $tags = $terms = array();
 
         libxml_clear_errors();
         $internal_errors = libxml_use_internal_errors(true);
@@ -89,13 +89,16 @@ class WXR_Parser_SimpleXML {
         // grab cats, tags and terms
         foreach ($xml->xpath('/rss/channel/wp:category') as $term_arr) {
             $t = $term_arr->children($namespaces['wp']);
-            $categories[] = array(
+            $one_cat_slug = (string) $t->category_nicename;
+            $one_cat_data = array(
                 'term_id' => (int) $t->term_id,
-                'category_nicename' => (string) $t->category_nicename,
+                'category_nicename' => $one_cat_slug,
                 'category_parent' => (string) $t->category_parent,
                 'cat_name' => (string) $t->cat_name,
                 'category_description' => (string) $t->category_description
             );
+            $categories[] = $one_cat_data;
+            $categories_by_slug[$one_cat_slug] = $one_cat_data;
         }
 
         foreach ($xml->xpath('/rss/channel/wp:tag') as $term_arr) {
@@ -208,6 +211,7 @@ class WXR_Parser_SimpleXML {
             'authors' => $authors,
             'posts' => $posts,
             'categories' => $categories,
+            'categories_by_slug' => $categories_by_slug,
             'tags' => $tags,
             'terms' => $terms,
             'base_url' => $base_url,
