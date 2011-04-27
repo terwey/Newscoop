@@ -22,6 +22,11 @@ require_once($conf_dir . 'converter_loc.php');
  * @return boolean
  */
 function remove_old_files($p_pathsInfo, $p_days) {
+    $p_days = (int) $p_days;
+    if (0 >= $p_days) {
+        return true;
+    }
+
     $dir_output = $p_pathsInfo["output_dir"];
 
     $dir_arr =  scandir($dir_output);
@@ -66,6 +71,10 @@ function remove_old_files($p_pathsInfo, $p_days) {
  * @return boolean
  */
 function clean_database($p_dbAccess, $p_days) {
+    $p_days = (int) $p_days;
+    if (0 >= $p_days) {
+        return true;
+    }
 
     $reqStr = "DELETE FROM ConvRequests WHERE CAST(created AS DATE) < (select DATE_SUB(curdate(), INTERVAL :created DAY))";
 
@@ -101,11 +110,12 @@ function clean_database($p_dbAccess, $p_days) {
 } // fn clean_database
 
 // taking the threshold interval
-$age_days = $converter_cron["cleandays"];
+$age_days_fs = $converter_cron["fsclean"];
+$age_days_db = $converter_cron["dbclean"];
 
 // running the cleaning itself
-$res1 = remove_old_files($converter_paths, $age_days);
-$res2 = clean_database($converter_db_access, $age_days);
+$res1 = remove_old_files($converter_paths, $age_days_fs);
+$res2 = clean_database($converter_db_access, $age_days_db);
 
 if ($res1 && $res2) {
     exit(0);

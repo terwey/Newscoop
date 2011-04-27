@@ -13,7 +13,7 @@ $converter_runtime = array(
     "conf_dir" => $__converter_base . "conf/",
     "incl_dir" => $__converter_base . "incl/",
     "plug_dir" => $__converter_base . "plugins/",
-    "log_file" => $__converter_base . "logs/convert.log",
+    "log_dir" => $__converter_base . "logs/",
 );
 
 $converter_plugins = array(

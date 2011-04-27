@@ -23,10 +23,10 @@ function start_converter($p_runtimeInfo) {
     $script_shell = $p_runtimeInfo["shell"];
     $script_name = $p_runtimeInfo["script"];
     $conf_dir = $p_runtimeInfo["conf_dir"];
-    $log_file = $p_runtimeInfo["log_file"];
+    $log_file = $p_runtimeInfo["log_dir"] . "convert_cron.log";
 
-    // we have just a one worker process by default
-    $worker = 1;
+    // we have one worker process for cron by default
+    $worker = 2;
 
     try {
         passthru("$script_shell $script_name $conf_dir $worker >> $log_file 2>&1 &");

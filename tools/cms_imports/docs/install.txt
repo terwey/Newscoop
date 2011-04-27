@@ -1,0 +1,25 @@
+
+The directory structure of this conversion tool has to be copied to a working server.
+* 'site' directory is for web serving, it shall be set as the www root directory,
+  other directories should not be served by web server
+* 'plugions' directory contains php files for particular original cms formats
+* 'incl', 'bin' directories contain work files that are being included and/or run
+* 'conf' is for site configuration:
+    * copy converter_loc_blank.php, converter_dba_blank.php into
+      copy converter_loc.php, converter_dba.php and fill in your info
+* 'inputs', 'locks', 'logs', 'outputs' are runtime directories,
+  they have to be writable by both web server and cron jobs
+
+
+Database access shall be set at converter_dba.php, it is mysql accessed via pdo.
+The required tables can be created via the 'tables.sql' file.
+
+Cron jobs:
+* bin/periodicclean.php
+    shall be called e.g. once a day to remove old files and db info
+* bin/periodicruns.php
+    shall be called frequently, e.g. each 10min to assure that no jobs are pending
+
+
+
+

@@ -1,0 +1,37 @@
+  Work flow:
+
+A) upload page
+    0) take user email, data file, file type
+    1) check if the file is of a known format
+    2) move the file into a directory
+    3) put path, type, email into mysql
+        * set status into 'init'
+    4) call import script
+
+B) import script
+    0) run by cron / web page
+    1) check if another script runs (via lock files)
+        * exit if other run (or if more than limit)
+    2) cycle over mysql queue
+        a) take (path, type, email) from mysql
+            * update row status into 'work'
+        b) exit (release lock) if no request there
+            * could omiting a request theoretically, thus cron runs too
+        c) make the cms->newsml conversion
+        d) update row status into 'sent'
+        e) send email to the user with download link
+        f) remove the original file
+
+C) download page
+    1) take provided file id
+    2) serve the file of that id if exists
+
+D) crons
+    a) for import scripts
+    b) for removing old filed and old db rows
+
+
+Note that the count of concurrent running scripts is limited to two,
+one from web server, one from cron. This can be changed, if requested.
+
+
