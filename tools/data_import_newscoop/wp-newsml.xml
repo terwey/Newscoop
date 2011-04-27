@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+		../XSD/NewsML-G2/2.7/specification/NAR_1.8-spec-NewsMessage-Power.xsd">
+	<header>
+		<sent>2011-04-12T11:17:00.100Z</sent>
+		<sender>sourcefabric.org</sender>
+		<transmitId>tag:sourcefabric.org,2011:newsml_OVE48850O-PKG</transmitId>
+		<origin>SFODIS_WPWXR</origin>
+	</header>
+	<packageItem>
+		<itemRef residref="urn:newsml:sourcefabric.org:20111125T1205:CITY-LIFE-BENEFICIAL" />
+		<itemRef residref="urn:newsml:sourcefabric.org:20110120T1223:ABC-DE-FGH" />
+	</packageItem>
+	<itemSet>
+		<newsItem guid="urn:newsml:sourcefabric.org:20111125T1205:CITY-LIFE-BENEFICIAL"
+			xmlns="http://iptc.org/std/nar/2006-10-01/"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+				../specification/NAR_1.8-spec-All-Core.xsd"
+			standard="NewsML-G2"
+			standardversion="2.7"
+			version="1"
+			xml:lang="en-US"
+			>
+			<catalogRef
+				href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+			<catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+			<rightsInfo>
+				<copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+			</rightsInfo>
+			<itemMeta>
+				<itemClass qcode="ninat:text" />
+				<provider literal="Newscoop Online Data Import Service" />
+				<versionCreated>2010-10-19T16:25:32-05:00</versionCreated>
+				<pubStatus qcode="stat:usable" />
+				<service qcode="svc:WPE">
+					<name>Word Press WXR</name>
+				</service>
+			</itemMeta>
+			<contentMeta>
+				<contentCreated>2008-11-25</contentCreated>
+				<contentModified></contentModified>
+				<creator literal="jakubgornicki">
+					<name>Jakub Górnicki</name>
+				</creator>
+				<language tag="en-US" />
+				<subject qcode="WPCat:ameryka-pd">
+					<name>Ameryka Pd</name>
+				</subject>
+				<subject qcode="WPCat:chile">
+					<name>Chile</name>
+				</subject>
+				<subject qcode="WPTag:biblioteka">
+					<name>biblioteka</name>
+				</subject>
+				<link rel="itemrel:original" href="http://old.kosmoblog.com/relacja-z-kolejnej-podrozy-tym-razem-chile/" />
+				<slugline>relacja-z-kolejnej-podrozy-tym-razem-chile</slugline>
+				<headline>Relacja z kolejnej podróży - tym razem Chile</headline>
+			</contentMeta>
+			<contentSet>
+				<inlineXML contenttype="application/nitf+xml">
+					<nitf xmlns="http://iptc.org/std/NITF/2006-10-18/">
+						<body>
+							<body.head>
+								<hedline>
+									<hl1>Relacja z kolejnej podróży - tym razem Chile</hl1>
+								</hedline>
+
+								<byline>
+									<byttl>By Gay Focker</byttl>
+								</byline>
+							</body.head>
+							<body.content>
+								<a href="http://kosmoblog2.files.wordpress.com/2010/05/10-05-05-10-santiago-84-scaled-1000.jpg"><img class="aligncenter" title="Chile" src="http://jakubgornicki.smugmug.com/Travel/Chile/100505-10-Santiago/100505-10-Santiago-84/889123454_FWfzT-L.jpg" alt="" width="800" height="534" />
+</a>
+
+								<p>Bardzo chciałem pisać na bieżąco ale dostęp do Internetu był bardzo skomplikowany podczas mojego pobytu, więc postanowiłem opisać całość teraz - już spokojnie i przez najbliższy tydzień, wszystkie wpisy dotyczyć będą Chile.</p>
+
+								<p>Po 13 godzinach lotu, ostatnie 60 minut spędziłem przyklejony do szyby. Nigdy tego nie robie, jakoś boję się wyssania ;) ale tym razem widok był naprawdę przedni. Chmury, które wyglądają jak jeziora, osadzają się między szczytami Andów. Szczególne wrażenie jest gdy samolot opuszcza się w jedno z takich "jeziorek" by zejść pasmo niżej i rozpocząć podchodzenie do lądowania. Ciekawy moment ;)</p>
+								<p style="text-align: left;">Filmik 1:</p>
+								<p style="text-align: center;"><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="640" height="385" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="src" value="http://www.youtube.com/v/gW3bgCahU40&amp;hl=pl_PL&amp;fs=1" /><param name="allowfullscreen" value="true" /><embed type="application/x-shockwave-flash" width="640" height="385" src="http://www.youtube.com/v/gW3bgCahU40&amp;hl=pl_PL&amp;fs=1" allowscriptaccess="always" allowfullscreen="true"></embed></object></p>
+
+								<p style="text-align: left;">Filmik 2:</p>
+								<p style="text-align: center;"><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="640" height="385" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="src" value="http://www.youtube.com/v/hAQxjA5Wnsc&amp;hl=pl_PL&amp;fs=1" /><param name="allowfullscreen" value="true" /><embed type="application/x-shockwave-flash" width="640" height="385" src="http://www.youtube.com/v/hAQxjA5Wnsc&amp;hl=pl_PL&amp;fs=1" allowscriptaccess="always" allowfullscreen="true"></embed></object></p>
+
+								<p style="text-align: left;">Pełna lista szczytów w Chile dostępna jest tutaj: <a href="http://en.wikipedia.org/wiki/List_of_mountains_in_Chile">http://en.wikipedia.org/wiki/List_of_mountains_in_Chile</a></p>
+							</body.content>
+						</body>
+					</nitf>
+				</inlineXML>
+			</contentSet>
+		</newsItem>
+		<newsItem guid="urn:newsml:sourcefabric.org:20110120T1223:ABC-DE-FGH"
+		        xmlns="http://iptc.org/std/nar/2006-10-01/"
+		        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		        xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+		                ../specification/NAR_1.8-spec-All-Core.xsd"
+		        standard="NewsML-G2"
+		        standardversion="2.7"
+		        version="1"
+		        xml:lang="en-US"
+		        >
+		        <catalogRef
+		                href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+		        <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+		        <rightsInfo>
+		                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+		        </rightsInfo>
+		        <itemMeta>
+		                <itemClass qcode="ninat:text" />
+		                <provider literal="Newscoop Online Data Import Service" />
+		                <versionCreated>2010-10-19T16:25:32-05:00</versionCreated>
+		                <pubStatus qcode="stat:usable" />
+		                <service qcode="svc:WPE">
+		                        <name>Word Press WXR</name>
+		                </service>
+		        </itemMeta>
+		        <contentMeta>
+		                <contentCreated>2008-11-25</contentCreated>
+		                <contentModified></contentModified>
+		                <creator literal="jakubgornicki">
+		                        <name>Jakub Górnicki</name>
+		                </creator>
+		                <language tag="en-US" />
+		                <subject qcode="WPCat:ameryka-pd">
+		                        <name>Ameryka Pd</name>
+		                </subject>
+		                <subject qcode="WPCat:chile">
+		                        <name>Chile</name>
+		                </subject>
+		                <subject qcode="WPTag:biblioteka">
+		                        <name>biblioteka</name>
+		                </subject>
+		                <link rel="itemrel:original" href="http://old.kosmoblog.com/relacja-z-kolejnej-podrozy-tym-razem-chile/" />
+		                <slugline>relacja-z-kolejnej-podrozy-tym-razem-chile</slugline>
+		                <headline>Relacja z kolejnej podróży - tym razem Chile</headline>
+		        </contentMeta>
+		        <contentSet>
+		                <inlineXML contenttype="application/nitf+xml">
+		                        <nitf xmlns="http://iptc.org/std/NITF/2006-10-18/">
+		                                <body>
+		                                        <body.head>
+		                                                <hedline>
+		                                                        <hl1>Relacja z kolejnej podróży - tym razem Chile</hl1>
+		                                                </hedline>
+
+		                                                <byline>
+		                                                        <byttl>By Gay Focker</byttl>
+		                                                </byline>
+		                                        </body.head>
+		                                        <body.content>
+		                                                <a href="http://kosmoblog2.files.wordpress.com/2010/05/10-05-05-10-santiago-84-scaled-1000.jpg"><img class="aligncenter" title="Chile" src="http://jakubgornicki.smugmug.com/Travel/Chile/100505-10-Santiago/100505-10-Santiago-84/889123454_FWfzT-L.jpg" alt="" width="800" height="534" /></a>
+
+		                                                <p>Bardzo chciałem pisać na bieżąco ale dostęp do Internetu był bardzo skomplikowany podczas mojego pobytu, więc postanowiłem opisać całość teraz - już spokojnie i przez najbliższy tydzień, wszystkie wpisy dotyczyć będą Chile.</p>
+
+		                                                <p>Po 13 godzinach lotu, ostatnie 60 minut spędziłem przyklejony do szyby. Nigdy tego nie robie, jakoś boję się wyssania ;) ale tym razem widok był naprawdę przedni. Chmury, które wyglądają jak jeziora, osadzają się między szczytami Andów. Szczególne wrażenie jest gdy samolot opuszcza się w jedno z takich "jeziorek" by zejść pasmo niżej i rozpocząć podchodzenie do lądowania. Ciekawy moment ;)</p>
+		                                                <p style="text-align: left;">Filmik 1:</p>
+		                                                <p style="text-align: center;"><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="640" height="385" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="src" value="http://www.youtube.com/v/gW3bgCahU40&amp;hl=pl_PL&amp;fs=1" /><param name="allowfullscreen" value="true" /><embed type="application/x-shockwave-flash" width="640" height="385" src="http://www.youtube.com/v/gW3bgCahU40&amp;hl=pl_PL&amp;fs=1" allowscriptaccess="always" allowfullscreen="true"></embed></object></p>
+
+		                                                <p style="text-align: left;">Filmik 2:</p>
+		                                                <p style="text-align: center;"><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="640" height="385" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="src" value="http://www.youtube.com/v/hAQxjA5Wnsc&amp;hl=pl_PL&amp;fs=1" /><param name="allowfullscreen" value="true" /><embed type="application/x-shockwave-flash" width="640" height="385" src="http://www.youtube.com/v/hAQxjA5Wnsc&amp;hl=pl_PL&amp;fs=1" allowscriptaccess="always" allowfullscreen="true"></embed></object></p>
+
+		                                                <p style="text-align: left;">Pełna lista szczytów w Chile dostępna jest tutaj: <a href="http://en.wikipedia.org/wiki/List_of_mountains_in_Chile">http://en.wikipedia.org/wiki/List_of_mountains_in_Chile</a></p>
+		                                        </body.content>
+		                                </body>
+		                        </nitf>
+		                </inlineXML>
+		        </contentSet>
+		</newsItem>
+	</itemSet>
+</newsMessage>
