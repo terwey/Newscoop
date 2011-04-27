@@ -80,6 +80,7 @@ class WordPressImporter extends CMSImporterPlugin {
                     $cat_slug_used = array(
                         $cat_slug_run => true,
                     );
+                    $cat_name_arr = array($one_term["name"]);
                     while (true) {
                         // if no info on the category, no path to it
                         if (!array_key_exists($cat_slug_run, $categories_by_slug)) {
@@ -93,11 +94,13 @@ class WordPressImporter extends CMSImporterPlugin {
                         }
                         $cat_path = $cat_slug_run . "/" . $cat_path;
                         $cat_slug_used[] = $cat_slug_run;
+                        $cat_name_arr[] = $categories_by_slug[$cat_slug_run]["cat_name"];
                     }
-                    $item_holder->setSubject("WPCat:" . $cat_path, htmlspecialchars($one_term["name"]));
+                    $cat_name_arr = array_reverse($cat_name_arr);
+                    $item_holder->setSubject("Category:path:" . $cat_path, json_encode($cat_name_arr));
                 }
                 if ("post_tag" == $one_term["domain"]) {
-                    $item_holder->setSubject("WPTag:" . $one_term["slug"], htmlspecialchars($one_term["name"]));
+                    $item_holder->setSubject("Tag:item:" . $one_term["slug"], $one_term["name"]);
                 }
             }
 

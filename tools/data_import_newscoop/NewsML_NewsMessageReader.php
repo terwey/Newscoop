@@ -35,11 +35,12 @@ class NewsML_NewsMessageReader implements IFeedReader
         if (!$node) {
             return NULL;
         }
-	var_dump($node); exit;
+        // var_dump($node); exit;
+        return $node;
 
-        return (object)array(
-            'guid' => (string) $node->attributes()->guid,
-        );
+        //return (object)array(
+        //    'guid' => (string) $node->attributes()->guid,
+        //);
     }
 
     public function getHeader()
@@ -51,4 +52,5 @@ class NewsML_NewsMessageReader implements IFeedReader
     {
         return $root->getName() == 'newsMessage';
     }
+
 }
