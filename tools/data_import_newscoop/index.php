@@ -38,7 +38,7 @@ for ($mind = 0; $mind < $msg_count; $mind++) {
 $ret = $newsfeed->getAttributes($subjects);
 echo json_encode($subjects);
 echo "\n\n\n";
-var_dump($subjects);
+//var_dump($subjects);
 //exit(0);
 
 //echo count($nf->itemSet->newsItem);

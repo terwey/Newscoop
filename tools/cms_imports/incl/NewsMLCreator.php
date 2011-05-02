@@ -75,6 +75,10 @@ class NewsMLNewsItem {
     // Note that we have some data as cdata, and embedded cdata shall be included correctly, see link
     // http://stackoverflow.com/questions/223652/is-there-a-way-to-escape-a-cdata-end-token-in-xml
 
+    private $content_texts = array();
+    private $content_images = array();
+    private $content_videos = array();
+
     // the data that are required for newsml
     private $required_data = array(
         "copyright_info" => null,
@@ -208,9 +212,47 @@ class NewsMLNewsItem {
      * @param string $p_text
      * @return bool
      */
-    public function setContent($p_text) {
-        $this->required_data["content"] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_text); // shall not have cdata seps
-        return true;
+    public function setContent($p_type, $p_content) {
+        $content_array = null;
+        if ("text" == $p_type) {
+            $content_array = &$this->content_texts;
+        }
+        if ("images" == $p_type) {
+            $content_array = &$this->content_images;
+        }
+        if ("videos" == $p_type) {
+            $content_array = &$this->content_videos;
+        }
+
+        if (is_null($content_array)) {
+            return false;
+        }
+
+        //if ("text" == $p_type) {
+        //    $this->contnet_texts[] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_content); // shall not have cdata seps
+        //    $this->required_data["content"] = true;
+        //    return true;
+        //}
+
+        //if ("images" == $p_type) {
+            if (is_array($p_content)) {
+                foreach ($p_content as $one_content) {
+                    $use_content = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $one_content); // shall not have cdata seps;
+                    if (!in_array($use_content, $content_array)) {
+                        $content_array[] = $use_content;
+                    }
+                }
+            }
+            else {
+                $use_content = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $p_content); // shall not have cdata seps;
+                if (!in_array($use_content, $content_array)) {
+                    $content_array[] = $use_content;
+                }
+            }
+            return true;
+        //}
+
+        //return false;
     } // fn setContent
 
     /**
@@ -309,12 +351,40 @@ class NewsMLNewsItem {
         return $this->subjects;
     } // fn getSubjects
 
+
+    public function getContentType() {
+        $has_texts = count($this->content_texts) ? 1 : 0;
+        $has_images = count($this->content_images) ? 1 : 0;
+        $has_videos = count($this->content_videos) ? 1 : 0;
+
+        $has_contents = $has_texts + $has_images + $has_videos;
+        if (1 < $has_contents) {
+            return "composite";
+        }
+        if ((0 == $has_contents) || $has_texts) {
+            return "text";
+        }
+        if ($has_images) {
+            return "picture";
+        }
+        if ($has_images) {
+            return "video";
+        }
+
+        return "text";
+    }
+
     /**
      * Gets item content
      * @return string
      */
-    public function getContent() {
-        return $this->required_data["content"];
+    public function getContent($p_type) {
+        if ("text" == $p_type) {
+            return $this->content_texts;
+        }
+        //return $this->required_data["content"];
+
+        return array();
     } // fn getContent
 
 } // class NewsMLNewsItem
@@ -442,7 +512,7 @@ class NewsMLCreator {
                 <copyrightHolder literal="' . $one_item->getCopyright() . '" />
             </rightsInfo>
             <itemMeta>
-                <itemClass qcode="ninat:text" />
+                <itemClass qcode="ninat:' . $one_item->getContentType() . '" />
                 <provider literal="Newscoop Online Data Import Service" />
                 <versionCreated>' . $one_item->getDate() . '</versionCreated>
                 <pubStatus qcode="stat:usable" />
@@ -471,7 +541,13 @@ class NewsMLCreator {
             <contentSet>
                 <inlineXML contenttype="application/xhtml+xml; charset=UTF-8">
 <![CDATA[
-' . $one_item->getContent() . '
+';
+        $text_array = $one_item->getContent("text");
+        if (count($text_array)) {
+            $newsml_content .= $text_array[0];
+        }
+
+        $newsml_content .= '
 ]]>
                 </inlineXML>
             </contentSet>
