@@ -10,9 +10,11 @@
 /**
  * NewsML Package Reader class
  */
+/* packageItem is an info just a part of newsMessage, does not contain messages, and is not a top element
 class NewsML_PackageItemReader implements IFeedReader
 {
     /** @var SimpleXMLElement */
+/*
     private $root;
 
     public function __construct(SimpleXMLElement $root)
@@ -37,8 +39,9 @@ class NewsML_PackageItemReader implements IFeedReader
         );
     }
 
-    public static function canRead(SimpleXMLElement $root)
+    public static function CanRead(SimpleXMLElement $root)
     {
         return $root->getName() == 'packageItem';
     }
 }
+*/

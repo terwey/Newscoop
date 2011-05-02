@@ -127,7 +127,7 @@ class NewsMLFeed
     {
         return $this->getReader()->count();
     }
- 
+
     /**
      * Get FeedReader object for the feed.
      *
@@ -137,14 +137,18 @@ class NewsMLFeed
     {
         if (!$this->reader) {
             $xml = $this->getXML();
-            if (NewsML_NewsMessageReader::canRead($xml)) {
+            if (NewsML_NewsMessageReader::CanRead($xml)) {
                 $this->reader = new NewsML_NewsMessageReader($xml);
-            } else if (RSSReader::canRead($xml)) {
+            } else if (NewsML_NewsItemReader::CanRead($xml)) {
+                $this->reader = new NewsML_NewsItemReader($xml);
+/* No other readers now. We deal with the NewsML format.
+            } else if (RSSReader::CanRead($xml)) {
                 $this->reader = new RSSReader($xml);
-            } else if (AtomReader::canRead($xml)) {
+            } else if (AtomReader::CanRead($xml)) {
                 $this->reader = new AtomReader($xml);
             } else {
                 $this->reader = new NullReader($xml);
+*/
             }
         }
         return $this->reader;
@@ -164,7 +168,7 @@ class NewsMLFeed
         } else {
             return new SimpleXMLElement('');
         }
-	}
+    }
 
     /**
      * Get XML element for the feed from cache.
@@ -181,7 +185,7 @@ class NewsMLFeed
             }
         }
     }
- 
+
     /**
      * Get XML element from the feed from the live URL.
      * Will cache XML data to disk.
@@ -212,136 +216,19 @@ class NewsMLFeed
     }
 
     /**
-     * Subjects of the given message feed node.
+     * Subjects of the given message feed.
      *
      * @return mixed
      */
-    public static function GetSubjects($node)
+    public function getAttributes(&$holder, $sort = true)
     {
-        // can we load subjects from somewhere
-        if (!$node) {
-            return NULL;
-        }
-        $news_items = null;
-        try {
-            $news_items = $node->itemSet->newsItem;
-        }
-        catch (Exception $exc) {
-            $news_items = null;
-        }
-        if (!$news_items) {
-            return null;
+        $ret = $this->getReader()->getAttributes($holder, $sort);
+        if (!$ret) {
+            return false;
         }
 
-        // holder of the results
-        $subjects_holder = array();
-        $known_conns = array("path" => "tree", "item" => "plain"); // 'path' subjs form a tree, 'item' subjs form a plain structure
-        // TODO: what if the same subject type has various connectivity types
+        return true;
+    } // fn getAttributeSet
 
-        // walking over news messages
-        foreach ($news_items as $one_news) {
-            if (!$one_news->contentMeta->subject) {
-                continue;
-            }
-
-            // walking over subjects of one message
-            foreach ($one_news->contentMeta->subject as $one_subj) {
-                // what is type of this subject
-                $attrs = explode(":", (string) $one_subj->attributes());
-                if (3 != count($attrs)) {
-                    continue;
-                }
-
-                $attrs_cms = $attrs[0]; // cms type of the subject
-                $attrs_con = $attrs[1]; // connection type of the type
-                $attrs_lit = $attrs[2]; // slug name of the subject
-
-                $one_name = (string) $one_subj->name;
-
-                // what is the subject connectivity type
-                $conn_type = "plain";
-                if (array_key_exists($attrs_con, $known_conns)) {
-                    $conn_type = $known_conns[$attrs_con];
-                }
-
-                // setting the subjects holder
-                if (!array_key_exists($attrs_cms, $subjects_holder)) {
-                    $subjects_holder[$attrs_cms] = array("type" => $conn_type, "nodes" => array());
-                }
-
-                $subj_nodes = &$subjects_holder[$attrs_cms]["nodes"];
-
-                // plain subjects
-                if ("plain" == $conn_type) {
-                    if (!array_key_exists($attrs_lit, $subj_nodes)) {
-                        $subj_nodes[$attrs_lit] = $one_name;
-                    }
-                    continue;
-                }
-
-                // tree subjects
-                // trying to take cat (outer) names from json
-                $one_name_arr = null;
-                try {
-                    $one_name_arr = json_decode($one_name);
-                }
-                catch (Exception $exc) {
-                    $one_name_arr = null;
-                }
-
-                // taking literal (inner) names
-                $attrs_sec_arr = explode("/", $attrs_lit);
-                $attrs_sec_names = array();
-
-                // do inner and outer names fit together
-                $path_len = count($attrs_sec_arr);
-                $paths_fit = false;
-                if (is_array($one_name_arr) && (count($one_name_arr) == $path_len)) {
-                    $paths_fit = true;
-                }
-
-                // put outer names along inner names of the current path
-                for ($ind = 0; $ind < $path_len; $ind++) {
-                    $one_name_part = null;
-                    if ($paths_fit && is_string($one_name_arr[$ind])) {
-                        $one_name_part = $one_name_arr[$ind];
-                    }
-                    $attrs_sec_names[] = $one_name_part;
-                }
-
-                if (!$paths_fit) {
-                    $attrs_sec_names[$path_len - 1] = $one_name;
-                }
-
-                // put the current path names into the tree of overall categories
-                $tree_depth = -1;
-                $tree_part = &$subj_nodes;
-                foreach ($attrs_sec_arr as $one_cat) {
-                    $tree_depth += 1;
-                    $cur_name = $attrs_sec_names[$tree_depth];
-
-                    if (array_key_exists($one_cat, $tree_part)) {
-                        if (!$tree_part[$one_cat]["name"]) {
-                            $tree_part[$one_cat]["name"] = $cur_name;
-                        }
-
-                        $tree_part = &$tree_part[$one_cat]["nodes"];
-                        continue;
-                    }
-                    $tree_part[$one_cat] = array("name" => $cur_name, "nodes" => array());
-                    ksort($tree_part, SORT_STRING);
-                    $tree_part = &$tree_part[$one_cat]["nodes"];
-                }
-            }
-        }
-
-        foreach ($subjects_holder as $subj_name => $subj_vals) {
-            if ("plain" == $subj_vals["type"]) {
-                ksort($subjects_holder[$subj_name]["nodes"], SORT_STRING);
-            }
-        }
-
-        return $subjects_holder;
-    } // fn GetSubjects
 
 }

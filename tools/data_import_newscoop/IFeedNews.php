@@ -10,30 +10,38 @@
 namespace NewsML;
 
 /*
- * NewsML reader Interface
+ * NewsML one news item Interface
  */
-interface IFeedReader
+interface IFeedNews
 {
     /**
      * Create reader from SimpleXMLElement.
      *
      * @param SimpleXMLElement $root
      */
-   // public function __construct(\SimpleXMLElement $root);
+    // public function __construct(\SimpleXMLElement $root);
 
     /**
      * Get single node.
      *
      * @return array or null
      */
-    public function item($index);
+    public function getSlugLine();
 
     /**
      * Get number of items.
      *
      * @return int
      */
-    public function count();
+    public function getHeadLine();
+
+    public function getContentText();
+    public function getLink();
+    public function getCreator();
+    public function getService();
+    public function getCopyright();
+    public function getNewsID();
+    //public function ();
 
     /**
      * Can this reader understand the XML file?
@@ -41,7 +49,7 @@ interface IFeedReader
      * @param SimpleXMLElement $root
      * @return bool
      */
-    //public static function CanRead(\SimpleXMLElement $root);
+    // public static function CanRead(\SimpleXMLElement $root);
 
 
     /**
@@ -49,7 +57,7 @@ interface IFeedReader
      *
      * @return mixed
      */
-    //public function getAttributes(array &$holder, $sort);
+    // public function getAttributes(array &$holder, $sort);
 
 
 }

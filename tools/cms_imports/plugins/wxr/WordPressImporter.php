@@ -69,6 +69,15 @@ class WordPressImporter extends CMSImporterPlugin {
             $item_holder->setLink($one_post["guid"]);
             $item_holder->setContent($one_post["post_content"]);
 
+            //$content_type = "text";
+            //$content_text = $one_post["post_content"];
+            //if ("" == trim($content_text)) {
+            //    if (trim($one_post["guid"])) {
+            //        $content_type = "picture";
+            //    }
+            //}
+
+
             $subjects = $one_post["terms"];
             if (!$subjects) {
                 $subjects = array();
@@ -97,10 +106,10 @@ class WordPressImporter extends CMSImporterPlugin {
                         $cat_name_arr[] = $categories_by_slug[$cat_slug_run]["cat_name"];
                     }
                     $cat_name_arr = array_reverse($cat_name_arr);
-                    $item_holder->setSubject("Category:path:" . $cat_path, json_encode($cat_name_arr));
+                    $item_holder->setSubject("Path:Category#" . $cat_path, json_encode($cat_name_arr));
                 }
                 if ("post_tag" == $one_term["domain"]) {
-                    $item_holder->setSubject("Tag:item:" . $one_term["slug"], $one_term["name"]);
+                    $item_holder->setSubject("Item:Tag#" . $one_term["slug"], $one_term["name"]);
                 }
             }
 
