@@ -22,6 +22,31 @@ require_once('WordPressParsers.php');
  */
 class WordPressImporter extends CMSImporterPlugin {
 
+    private function getImageTypeByName($p_path) {
+        $name_arr = explode(".", (string) $p_path);
+        $name_arr_last = count($name_arr) - 1;
+        if (0 >= $name_arr_last) {
+            return "image/*";
+        }
+        $name_suffix = strtolower($name_arr[$name_arr_last]);
+        if (in_array($name_suffix, array("jpg", "jpeg"))) {
+            return "image/jpeg";
+        }
+        if (in_array($name_suffix, array("gif"))) {
+            return "image/gif";
+        }
+        if (in_array($name_suffix, array("png"))) {
+            return "image/png";
+        }
+        if (in_array($name_suffix, array("tif", "tiff"))) {
+            return "image/tiff";
+        }
+        if (in_array($name_suffix, array("svg"))) {
+            return "xml/svg";
+        }
+        return "image/*";
+    } // fn getImageTypeByName
+
     /**
      * Auxiliary function for saving a (temporary) file
      *
@@ -30,7 +55,7 @@ class WordPressImporter extends CMSImporterPlugin {
      */
     private function getCacheFilename($p_fileUrl) {
         return sys_get_temp_dir() . '/' . md5($p_fileUrl) . '.img.cache';
-    }
+    } // fn getCacheFilename
 
     /**
      * Tries to get info an image of the provided url
@@ -63,7 +88,7 @@ class WordPressImporter extends CMSImporterPlugin {
             return false;
         }
         return false;
-    }
+    } // fn tryGetImage
 
     /**
      * Makes the import from parsed data (by WXR_Parser) via the NewsMLCreator object
@@ -138,7 +163,7 @@ class WordPressImporter extends CMSImporterPlugin {
                                 $item_pictures_usage[] = $pm_value;
                                 $img_info = $this->tryGetImage($pm_value);
                                 if (!$img_info) {
-                                    $img_info = array("href" => $pm_value);
+                                    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
                                     $item_pictures_other[] = $img_info;
                                     continue;
                                 }
@@ -158,7 +183,7 @@ class WordPressImporter extends CMSImporterPlugin {
                         $item_pictures_usage[] = $pm_value;
                         $img_info = $this->tryGetImage($pm_value);
                         if (!$img_info) {
-                            $img_info = array("href" => $pm_value);
+                            $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
                             $item_pictures_other[] = $img_info;
                         }
                         else {
@@ -176,9 +201,34 @@ class WordPressImporter extends CMSImporterPlugin {
             if (!$text_empty) {
                 if (preg_match_all("/<img(?:[^<>]+)src=\"((?:http(?:s)?|ftp(?:s)?)\:\/\/[^<>\s\"]+)\"(?:[^<>]*)>/i", $content_text, $img_matches, PREG_PATTERN_ORDER)) {
                     if (is_array($img_matches[1])) {
+                        $img_attrs = array();
+                        foreach ($img_matches[0] as $one_img) {
+                            $got_title = preg_match("/title=\"([^\"]+)\"/i", $one_img, $one_img_title);
+                            $got_width = preg_match("/width=\"([^\"]+)\"/i", $one_img, $one_img_width);
+                            $got_height = preg_match("/height=\"([^\"]+)\"/i", $one_img, $one_img_height);
+                            $got_class = preg_match("/class=\"([^\"]*)thumbnail([^\"]*)\"/i", $one_img);
+                            $one_img_attrs = array();
+                            if ($got_title) {
+                                $one_img_attrs["title"] = $one_img_title[1];
+                            }
+                            if ($got_width) {
+                                $one_img_attrs["width"] = $one_img_width[1];
+                            }
+                            if ($got_height) {
+                                $one_img_attrs["height"] = $one_img_height[1];
+                            }
+                            if ($got_class) {
+                                $one_img_attrs["class"] = "thumbnail";
+                            }
+                            $img_attrs[] = $one_img_attrs;
+                        }
+                        $img_rank = -1;
                         foreach ($img_matches[1] as $one_img) {
+                            $img_rank += 1;
                             if (!in_array($one_img, $item_pictures_usage)) {
-                                $img_info = array("href" => $one_img);
+                                $img_info = $img_attrs[$img_rank];
+                                $img_info["href"] = $one_img;
+                                $img_info["type"] = $this->getImageTypeByName($one_img);
                                 $item_pictures[] = $img_info;
                                 $item_pictures_usage[] = $img_info;
                             }
