@@ -77,7 +77,7 @@ class NewsMLNewsItem {
 
     private $content_texts = array();
     private $content_images = array();
-    private $content_videos = array();
+    // private $content_videos = array();
 
     // the data that are required for newsml
     private $required_data = array(
@@ -213,45 +213,109 @@ class NewsMLNewsItem {
      * @return bool
      */
     public function setContent($p_type, $p_content) {
+        //echo "inside set c.: any\n";
+        //var_dump($p_content);
+
         $content_array = null;
-        if ("text" == $p_type) {
+        //if (in_array($p_type, array("text", "texts"))) {
+        //    $content_array = &$this->content_texts;
+        //}
+        //if (in_array($p_type, array("image", "images", "picture", "pictures"))) {
+        //    $content_array = &$this->content_images;
+        //}
+        //if (in_array($p_type, array("video", "videos"))) {
+        //    $content_array = &$this->content_videos;
+        //}
+
+        //if (is_null($content_array)) {
+        //    return false;
+        //}
+
+        //$this->required_data["content"] = true;
+
+        $cont_used = false;
+
+        if (in_array($p_type, array("text", "texts"))) {
             $content_array = &$this->content_texts;
+
+            if (!is_array($p_content)) {
+                $p_content = array($p_content);
+            }
+            foreach ($p_content as $one_text) {
+                $content_array[] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $one_text); // shall not have cdata seps
+                $this->required_data["content"] = true;
+                $cont_used = true;
+            }
         }
-        if ("images" == $p_type) {
+
+        if (in_array($p_type, array("image", "images", "picture", "pictures"))) {
+            //echo "inside set c.: images\n";
+            //var_dump($p_content);
+
             $content_array = &$this->content_images;
-        }
-        if ("videos" == $p_type) {
-            $content_array = &$this->content_videos;
-        }
 
-        if (is_null($content_array)) {
-            return false;
-        }
-
-        //if ("text" == $p_type) {
-        //    $this->contnet_texts[] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_content); // shall not have cdata seps
-        //    $this->required_data["content"] = true;
-        //    return true;
-        //}
-
-        //if ("images" == $p_type) {
-            if (is_array($p_content)) {
-                foreach ($p_content as $one_content) {
-                    $use_content = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $one_content); // shall not have cdata seps;
-                    if (!in_array($use_content, $content_array)) {
-                        $content_array[] = $use_content;
-                    }
-                }
+            //echo "inside set c.: images 00\n";
+            if (!is_array($p_content)) {
+                return false;
             }
-            else {
-                $use_content = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $p_content); // shall not have cdata seps;
-                if (!in_array($use_content, $content_array)) {
-                    $content_array[] = $use_content;
-                }
+            //echo "inside set c.: images 01\n";
+            if (empty($p_content)) {
+                return false;
             }
-            return true;
-        //}
+            //echo "inside set c.: images 02\n";
+            $single_image = false;
+            //echo "inside set c.: images 03\n";
+            if (array_key_exists("href", $p_content)) {
+                $single_image = true;
+            }
+            //echo "inside set c.: images 04\n";
+            if ($single_image) {
+                $p_content = array($p_content);
+            }
 
+            //echo "inside set c.: images 05\n";
+            //var_dump($p_content);
+            foreach ($p_content as $one_image) {
+                //echo "\none image 0\n";
+                //var_dump($one_image);
+
+                if (!is_array($one_image)) {
+                    continue;
+                }
+                //echo "\none image 1\n";
+                if (!array_key_exists("href", $one_image)) {
+                    continue;
+                }
+                //echo "\none image 2\n";
+
+                $img_href = str_replace(array("\""), array("&#34;"), (string) $one_image["href"]); // shall not escape "..."
+
+                $img_width = (array_key_exists("width", $one_image)) ? (0 + (int) $one_image["width"]) : 0;
+                $img_height = (array_key_exists("height", $one_image)) ? (0 + (int) $one_image["height"]) : 0;
+                $img_size = (array_key_exists("size", $one_image)) ? (0 + (int) $one_image["size"]) : 0;
+                $img_type = (array_key_exists("type", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["type"]) : "image/*";
+                $img_colors = (array_key_exists("colors", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["colors"]) : "colsp:AdobeRGB";
+
+                $use_image = array("href" => $img_href, "width" => $img_width, "height" => $img_height, "size" => $img_size, "type" => $img_type, "colors" => $img_colors);
+                $content_array[] = $use_image;
+                //if (!in_array($use_content, $img_used)) {
+                //    $content_array[] = $use_content;
+                //}
+
+                $this->required_data["content"] = true;
+                $cont_used = true;
+
+            }
+            //else {
+            //    $use_content = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $p_content); // shall not have cdata seps;
+            //    if (!in_array($use_content, $content_array)) {
+            //        $content_array[] = $use_content;
+            //    }
+            //}
+            //return true;
+        }
+
+        return $cont_used;
         //return false;
     } // fn setContent
 
@@ -355,9 +419,10 @@ class NewsMLNewsItem {
     public function getContentType() {
         $has_texts = count($this->content_texts) ? 1 : 0;
         $has_images = count($this->content_images) ? 1 : 0;
-        $has_videos = count($this->content_videos) ? 1 : 0;
+        //$has_videos = count($this->content_videos) ? 1 : 0;
 
-        $has_contents = $has_texts + $has_images + $has_videos;
+        //$has_contents = $has_texts + $has_images + $has_videos;
+        $has_contents = $has_texts + $has_images;
         if (1 < $has_contents) {
             return "composite";
         }
@@ -367,9 +432,9 @@ class NewsMLNewsItem {
         if ($has_images) {
             return "picture";
         }
-        if ($has_images) {
-            return "video";
-        }
+        //if ($has_videos) {
+        //    return "video";
+        //}
 
         return "text";
     }
@@ -379,12 +444,16 @@ class NewsMLNewsItem {
      * @return string
      */
     public function getContent($p_type) {
-        if ("text" == $p_type) {
+        if (in_array($p_type, array("text", "texts"))) {
             return $this->content_texts;
         }
         //return $this->required_data["content"];
 
-        return array();
+        if (in_array($p_type, array("image", "images", "picture", "pictures"))) {
+            return $this->content_images;
+        }
+
+        return null;
     } // fn getContent
 
 } // class NewsMLNewsItem
@@ -538,18 +607,41 @@ class NewsMLCreator {
                 <slugline>' . $one_item->getSlugline() . '</slugline>
                 <headline><![CDATA[' . $one_item->getHeadline() . ']]></headline>
             </contentMeta>
-            <contentSet>
+            <contentSet>';
+        $text_array = $one_item->getContent("text");
+        $image_array = $one_item->getContent("picture");
+        if (empty($text_array) && (empty($image_array))) {
+            $newsml_content .= '
+                <inlineXML contenttype="application/xhtml+xml; charset=UTF-8">
+<![CDATA[]]>
+                </inlineXML>';
+        }
+        foreach ($text_array as $one_text) {
+            $newsml_content .= '
                 <inlineXML contenttype="application/xhtml+xml; charset=UTF-8">
 <![CDATA[
-';
-        $text_array = $one_item->getContent("text");
-        if (count($text_array)) {
-            $newsml_content .= $text_array[0];
-        }
-
-        $newsml_content .= '
+' . $one_text . '
 ]]>
-                </inlineXML>
+                </inlineXML>';
+        }
+        foreach ($image_array as $one_image) {
+            $img_url = $one_image["href"];
+            $img_width = $one_image["width"];
+            $img_height = $one_image["height"];
+            $img_size = $one_image["size"];
+            $img_type = $one_image["type"];
+            $img_colors = $one_image["colors"];
+            $newsml_content .= '
+                <remoteContent
+                        href="' . $img_url . '"
+                        rendition="rnd:web"
+                        size="' . $img_size . '"
+                        contenttype="' . $img_type . '"
+                        width="' . $img_width . '"
+                        height="' . $img_height . '"
+                        colourspace="' . $img_colors . '" />';
+        }
+        $newsml_content .= '
             </contentSet>
         </newsItem>';
 

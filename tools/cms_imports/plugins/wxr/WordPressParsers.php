@@ -152,6 +152,10 @@ class WXR_Parser_SimpleXML {
             $post['post_password'] = (string) $wp->post_password;
             $post['is_sticky'] = (int) $wp->is_sticky;
 
+            if (isset($item->link)) {
+                $post['link'] = (string) $item->link;
+            }
+
             if (isset($wp->attachment_url)) {
                 $post['attachment_url'] = (string) $wp->attachment_url;
             }
