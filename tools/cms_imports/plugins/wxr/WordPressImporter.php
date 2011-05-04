@@ -79,7 +79,7 @@ class WordPressImporter extends CMSImporterPlugin {
             $img_spec["height"] = $image_info[1];
             $img_spec["size"] = filesize($img_path);
             $img_spec["type"] = $image_info["mime"];
-            $img_spec["colors"] = "channels=" . $image_info["channels"] . ";bits:" . $image_info["bits"];
+            $img_spec["colors"] = "" . $image_info["channels"] . "channels;" . $image_info["bits"] . "bits";
             unlink($img_path);
 
             return $img_spec;
@@ -89,6 +89,137 @@ class WordPressImporter extends CMSImporterPlugin {
         }
         return false;
     } // fn tryGetImage
+
+
+    private function takeAttachedImages($p_post) {
+        # we search for all the attached images, and take them as different versions of a single image
+        # up to now, the only seen situation was about a single image there (with different versions/sources),
+        # since the attachment_url (see below) is a single one (at most), it should be the general case
+
+        $item_pictures = array();
+        $item_pictures_usage = array();
+        //$item_pictures_other = array();
+        //$item_videos = array();
+
+        $version_rank = 0;
+
+        // this probably contains real links for the attachment_url links
+        if (array_key_exists('postmeta', $p_post)) {
+            $post_metas = $p_post['postmeta'];
+            if (is_array($post_metas)) {
+                foreach ($post_metas as $one_pm) {
+                    $pm_value = trim($one_pm['value']);
+                    if (preg_match("/^(?:http(?:s)?|ftp(?:s)?)\:\/\/[^<>\s\"]+\.(?:jpg|jpeg|gif|png|tif|tiff|svg)$/i", $pm_value)) {
+                        if (!in_array($pm_value, $item_pictures_usage)) {
+                            $item_pictures_usage[] = $pm_value;
+                            //$img_info = $this->tryGetImage($pm_value);
+                            //if (!$img_info) {
+                            //    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
+                            //    $item_pictures_other[] = $img_info;
+                            //    continue;
+                            //}
+                            //$img_info["href"] = $pm_value;
+                            //$item_pictures[] = $img_info;
+                            $version_rank += 1;
+                            $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value), "version" => $version_rank);
+                            $item_pictures[] = $img_info;
+                        }
+                    }
+                }
+            }
+        }
+
+        // empty wp posts shall not contain multiplied pictures,
+        // but we take them as different versions of a single image
+        //if ((!$text_empty) || (empty($item_pictures))) {
+            if (array_key_exists('attachment_url', $p_post)) {
+                $pm_value = $p_post['attachment_url'];
+                if (!in_array($pm_value, $item_pictures_usage)) {
+                    $item_pictures_usage[] = $pm_value;
+                    //$img_info = $this->tryGetImage($pm_value);
+                    //if (!$img_info) {
+                    //    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
+                    //    $item_pictures_other[] = $img_info;
+                    //}
+                    //else {
+                    //    $img_info["href"] = $pm_value;
+                    //    $item_pictures[] = $img_info;
+                    //}
+                    $version_rank += 1;
+                    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value), "version" => $version_rank);
+                    $item_pictures[] = $img_info;
+                }
+            }
+        //}
+
+        //if ($text_empty && empty($item_pictures) && (!empty($item_pictures_other))) {
+        //    $item_pictures[] = $item_pictures_other[0];
+        //}
+
+        // the result is either the empty set or several (usually two) versions of a single image
+        $return_array = array();
+        if (!empty($item_pictures)) {
+            $return_array[] = $item_pictures;
+        }
+
+        return $return_array;
+    }
+
+    private function takeInnerImages($p_post) {
+
+        # here we take each image as a (single-versioned) image by itself, since they can have different attributes
+        $return_array = array();
+
+        $content_text = $p_post["post_content"];
+        $text_empty = false;
+        if ("" == trim($content_text)) {
+            $text_empty = true;
+        }
+
+        if (!$text_empty) {
+            if (preg_match_all("/<img(?:[^<>]+)src=\"((?:http(?:s)?|ftp(?:s)?)\:\/\/[^<>\s\"]+)\"(?:[^<>]*)>/i", $content_text, $img_matches, PREG_PATTERN_ORDER)) {
+                if (is_array($img_matches[1])) {
+                    $img_attrs = array();
+                    foreach ($img_matches[0] as $one_img) {
+                        $got_title = preg_match("/title=\"([^\"]+)\"/i", $one_img, $one_img_title);
+                        $got_width = preg_match("/width=\"([^\"]+)\"/i", $one_img, $one_img_width);
+                        $got_height = preg_match("/height=\"([^\"]+)\"/i", $one_img, $one_img_height);
+                        $got_class = preg_match("/class=\"([^\"]*)thumbnail([^\"]*)\"/i", $one_img);
+                        $one_img_attrs = array();
+                        if ($got_title) {
+                            $one_img_attrs["title"] = $one_img_title[1];
+                        }
+                        if ($got_width) {
+                            $one_img_attrs["width"] = $one_img_width[1];
+                        }
+                        if ($got_height) {
+                            $one_img_attrs["height"] = $one_img_height[1];
+                        }
+                        if ($got_class) {
+                            $one_img_attrs["class"] = "thumbnail";
+                        }
+                        $one_img_attrs["version"] = 1;
+                        $img_attrs[] = $one_img_attrs;
+                    }
+                    $img_rank = -1;
+                    foreach ($img_matches[1] as $one_img) {
+                        $img_rank += 1;
+                        //if (!in_array($one_img, $item_pictures_usage)) {
+                            $img_info = $img_attrs[$img_rank];
+                            $img_info["href"] = $one_img;
+                            $img_info["type"] = $this->getImageTypeByName($one_img);
+                            $return_array[] = array($img_info);
+                            //$item_pictures[] = $img_info;
+                            //$item_pictures_usage[] = $img_info;
+                        //}
+                    }
+                }
+            }
+        }
+
+        return $return_array;
+    }
+
 
     /**
      * Makes the import from parsed data (by WXR_Parser) via the NewsMLCreator object
@@ -122,6 +253,34 @@ class WordPressImporter extends CMSImporterPlugin {
         $categories_by_slug = $import_data["categories_by_slug"];
 
         foreach ($import_data["posts"] as $one_post) {
+            # firstly, we need to take all the images links to know whether we shall create a single newsItem or several newsItems from a single post
+            # single newsItem for: having a text and no image, or having a single (even when with several versions) image and no text
+            # several pieces of newsItem: for having both text and image(s)
+
+            $image_list_meta = $this->takeAttachedImages($one_post);
+            $image_list_text = $this->takeInnerImages($one_post);
+
+
+            // how to deal with this post
+            $content_type = "text"; // just a text (no images) or nothing (text pretending then)
+            $content_text = $one_post["post_content"];
+            $text_empty = false;
+            if ("" == trim($content_text)) {
+                $text_empty = true;
+            }
+            if (!empty($image_list_meta)) {
+                if ($text_empty) {
+                    $content_type = "picture"; // this is for no text (and thus no inner images), but having an (attached) image
+                }
+                else {
+                    $content_type = "composite"; // having both text and (usually inner) images
+                }
+            }
+            if (!empty($image_list_text)) {
+                $content_type = "composite"; // having both text (it is there when having images inside that text) and (usually inner) images
+            }
+
+            // creating the main newsItem ('text' for text/composite posts, 'picture' for (attached) image posts)
             $item_holder = $p_newsmlHolder->createItem();
             $item_holder->setCreated(); // can be set explicitely like ("1234-56-78", "11:22:33.000", "+01:00")
             $item_holder->setCopyright($copyright_info);
@@ -140,103 +299,7 @@ class WordPressImporter extends CMSImporterPlugin {
             }
             $item_holder->setLink($orig_link);
 
-            $item_pictures = array();
-            $item_pictures_usage = array();
-            $item_pictures_other = array();
-            //$item_videos = array();
-
-            $content_type = "text";
-            $content_text = $one_post["post_content"];
-            $text_empty = false;
-            if ("" == trim($content_text)) {
-                $text_empty = true;
-            }
-
-            // this probably contains real links for the attachment_url links
-            if (array_key_exists('postmeta', $one_post)) {
-                $post_metas = $one_post['postmeta'];
-                if (is_array($post_metas)) {
-                    foreach ($post_metas as $one_pm) {
-                        $pm_value = trim($one_pm['value']);
-                        if (preg_match("/^(?:http(?:s)?|ftp(?:s)?)\:\/\/[^<>\s\"]+\.(?:jpg|jpeg|gif|png|tif|tiff|svg)$/i", $pm_value)) {
-                            if (!in_array($pm_value, $item_pictures_usage)) {
-                                $item_pictures_usage[] = $pm_value;
-                                $img_info = $this->tryGetImage($pm_value);
-                                if (!$img_info) {
-                                    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
-                                    $item_pictures_other[] = $img_info;
-                                    continue;
-                                }
-                                $img_info["href"] = $pm_value;
-                                $item_pictures[] = $img_info;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // empty wp posts shall not contain multiplied pictures
-            if ((!$text_empty) || (empty($item_pictures))) {
-                if (array_key_exists('attachment_url', $one_post)) {
-                    $pm_value = $one_post['attachment_url'];
-                    if (!in_array($pm_value, $item_pictures_usage)) {
-                        $item_pictures_usage[] = $pm_value;
-                        $img_info = $this->tryGetImage($pm_value);
-                        if (!$img_info) {
-                            $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
-                            $item_pictures_other[] = $img_info;
-                        }
-                        else {
-                            $img_info["href"] = $pm_value;
-                            $item_pictures[] = $img_info;
-                        }
-                    }
-                }
-            }
-
-            if ($text_empty && empty($item_pictures) && (!empty($item_pictures_other))) {
-                $item_pictures[] = $item_pictures_other[0];
-            }
-
-            if (!$text_empty) {
-                if (preg_match_all("/<img(?:[^<>]+)src=\"((?:http(?:s)?|ftp(?:s)?)\:\/\/[^<>\s\"]+)\"(?:[^<>]*)>/i", $content_text, $img_matches, PREG_PATTERN_ORDER)) {
-                    if (is_array($img_matches[1])) {
-                        $img_attrs = array();
-                        foreach ($img_matches[0] as $one_img) {
-                            $got_title = preg_match("/title=\"([^\"]+)\"/i", $one_img, $one_img_title);
-                            $got_width = preg_match("/width=\"([^\"]+)\"/i", $one_img, $one_img_width);
-                            $got_height = preg_match("/height=\"([^\"]+)\"/i", $one_img, $one_img_height);
-                            $got_class = preg_match("/class=\"([^\"]*)thumbnail([^\"]*)\"/i", $one_img);
-                            $one_img_attrs = array();
-                            if ($got_title) {
-                                $one_img_attrs["title"] = $one_img_title[1];
-                            }
-                            if ($got_width) {
-                                $one_img_attrs["width"] = $one_img_width[1];
-                            }
-                            if ($got_height) {
-                                $one_img_attrs["height"] = $one_img_height[1];
-                            }
-                            if ($got_class) {
-                                $one_img_attrs["class"] = "thumbnail";
-                            }
-                            $img_attrs[] = $one_img_attrs;
-                        }
-                        $img_rank = -1;
-                        foreach ($img_matches[1] as $one_img) {
-                            $img_rank += 1;
-                            if (!in_array($one_img, $item_pictures_usage)) {
-                                $img_info = $img_attrs[$img_rank];
-                                $img_info["href"] = $one_img;
-                                $img_info["type"] = $this->getImageTypeByName($one_img);
-                                $item_pictures[] = $img_info;
-                                $item_pictures_usage[] = $img_info;
-                            }
-                        }
-                    }
-                }
-            }
-
+/*
             $set_content_text = false;
             $content_text_trimmed = trim($content_text);
             if (!empty($content_text_trimmed)) {
@@ -245,12 +308,16 @@ class WordPressImporter extends CMSImporterPlugin {
             if (empty($item_pictures) && empty($item_videos)) {
                 $set_content_text = true;
             }
-            if ($set_content_text) {
+*/
+            //if ($set_content_text) {
+            if (("text" == $content_type) || ("composite" == $content_type)) {
                 $item_holder->setContent("text", $content_text);
             }
 
-            if (!empty($item_pictures)) {
-                $item_holder->setContent("images", $item_pictures);
+            //if (!empty($item_pictures)) {
+            if ("picture") {
+                //$item_holder->setContent("images", $item_pictures);
+                $item_holder->setContent("images", $image_list_meta[0]);
             }
 
             $subjects = $one_post["terms"];
@@ -289,6 +356,43 @@ class WordPressImporter extends CMSImporterPlugin {
             }
 
             $p_newsmlHolder->appendItem($item_holder);
+
+            if ("composite" == $content_type) {
+                $image_rank = 0;
+
+                //foreach ($image_list_meta) {
+                //    ;
+                //}
+                foreach ($image_list_text as $one_img_set) {
+                    if (empty($one_img_set)) {
+                        continue;
+                    }
+
+                    $item_holder = $p_newsmlHolder->createItem();
+                    $item_holder->setCreated(); // can be set explicitely like ("1234-56-78", "11:22:33.000", "+01:00")
+                    $item_holder->setCopyright($copyright_info);
+
+                    $item_holder->setCreator($one_post["post_author"], $author_name);
+                    $item_holder->setHeadline($one_post["post_title"]);
+
+                    // we need to modify the guid
+                    $image_rank += 1;
+                    $slugline_image = $one_post["post_name"] . "#image-" . $image_rank;
+                    // set the slugline to contain the image spec, since the slugline is used for message id
+                    $item_holder->setSlugline($slugline_image);
+                    $item_holder->setLink($orig_link);
+
+                    $item_holder->setContent("images", $one_img_set);
+
+                    if (array_key_exists("title", $one_img_set[0])) {
+                        $img_title = $one_img_set[0]["title"];
+                        $item_holder->setSubject("Image:Title", $img_title);
+                    }
+
+                    $p_newsmlHolder->appendItem($item_holder);
+                }
+            }
+
         }
 
         $p_newsmlHolder->serializeSet();

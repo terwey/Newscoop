@@ -231,7 +231,6 @@ class NewsMLNewsItem {
         }
 
         if (in_array($p_type, array("image", "images", "picture", "pictures"))) {
-            // TODO: to put image title somewhere, if available
 
             $content_array = &$this->content_images;
 
@@ -266,8 +265,18 @@ class NewsMLNewsItem {
                 $img_type = (array_key_exists("type", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["type"]) : "image/*";
                 $img_colors = (array_key_exists("colors", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["colors"]) : "colsp:AdobeRGB";
                 $img_class = (array_key_exists("class", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["class"]) : "web";
+                $img_version = (array_key_exists("version", $one_image)) ? (0 + (int) $one_image["version"]) : 0;
 
-                $use_image = array("href" => $img_href, "width" => $img_width, "height" => $img_height, "size" => $img_size, "type" => $img_type, "colors" => $img_colors, "class" => $img_class);
+                $use_image = array(
+                    "href" => $img_href,
+                    "width" => $img_width,
+                    "height" => $img_height,
+                    "size" => $img_size,
+                    "type" => $img_type,
+                    "colors" => $img_colors,
+                    "class" => $img_class,
+                    "version" => $img_version,
+                );
                 $content_array[] = $use_image;
 
                 $this->required_data["content"] = true;
@@ -600,7 +609,8 @@ class NewsMLCreator {
                         contenttype="' . $img_type . '"
                         width="' . $img_width . '"
                         height="' . $img_height . '"
-                        colourspace="' . $img_colors . '" />';
+                        version="' . $img_version . '"
+                        colourspace="colsp:' . $img_colors . '" />';
         }
         $newsml_content .= '
             </contentSet>
