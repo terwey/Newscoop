@@ -141,14 +141,6 @@ class NewsMLFeed
                 $this->reader = new NewsML_NewsMessageReader($xml);
             } else if (NewsML_NewsItemReader::CanRead($xml)) {
                 $this->reader = new NewsML_NewsItemReader($xml);
-/* No other readers now. We deal with the NewsML format.
-            } else if (RSSReader::CanRead($xml)) {
-                $this->reader = new RSSReader($xml);
-            } else if (AtomReader::CanRead($xml)) {
-                $this->reader = new AtomReader($xml);
-            } else {
-                $this->reader = new NullReader($xml);
-*/
             }
         }
         return $this->reader;
@@ -228,7 +220,5 @@ class NewsMLFeed
         }
 
         return true;
-    } // fn getAttributeSet
-
-
+    }
 }

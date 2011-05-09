@@ -13,12 +13,11 @@ echo "\n<pre>\n";
 
 include('NewsMLFeed.php');
 
-//$feed = new Feed('http://feeds.feedburner.com/linuxtoday/linux?format=xml');
-//$newsfeed = new NewsMLFeed('http://172.16.0.1/nodis/wp-newsml.xml');
+$newsfeed = new NewsMLFeed('http://172.16.0.1/newnodis/wp-newsml.xml');
 //$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/wp-newsml.xml');
 //$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110427T180924Z4db85bd438456');
 //$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110502T075616Z4dbe63a0c022c');
-$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110502T134353Z4dbeb5199bd6d');
+//$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110502T134353Z4dbeb5199bd6d');
 
 
 //var_dump($newsfeed->next()); exit;

@@ -65,18 +65,18 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
             return false;
         }
 
-        $known_conns = array("path" => "tree", "item" => "plain"); // 'path' subjs form a tree, 'item' subjs form a plain structure
+        $known_conns = array('path' => 'tree', 'item' => 'plain'); // 'path' subjs form a tree, 'item' subjs form a plain structure
         // holder of the results
         $subjects_holder = &$p_subjectsHolder;
         if (empty($subjects_holder)) {
-            $subjects_holder = array("tree" => array(), "plain" => array());
+            $subjects_holder = array('tree' => array(), 'plain' => array());
         }
 
         // walking over subjects of one message
         foreach ($this->root->contentMeta->subject as $one_subj) {
             // what is type of this subject
             $attrs = $one_subj->attributes();
-            $attrs_qcode = $attrs["qcode"];
+            $attrs_qcode = $attrs['qcode'];
             if (empty($attrs_qcode)) {
                 continue;
             }
@@ -88,15 +88,15 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
 
             $attrs_con = strtolower($attrs_arr[0]); // connection type of the type
             // what is the subject connectivity type
-            $conn_type = "plain";
+            $conn_type = 'plain';
             if (array_key_exists($attrs_con, $known_conns)) {
                 $conn_type = $known_conns[$attrs_con];
             }
 
             $attrs_dsc = $attrs_arr[1];
-            $attrs_cms = "__default"; // (default) cms type of the subject
+            $attrs_cms = '__default'; // (default) cms type of the subject
             $attrs_lit = $attrs_dsc; // slug name of the subject (if w/o name)
-            $attrs_dsc_arr = explode("#", (string) $attrs_dsc);
+            $attrs_dsc_arr = explode('#', (string) $attrs_dsc);
             if (2 == count($attrs_dsc_arr)) {
                 $attrs_cms = $attrs_dsc_arr[0]; // cms type of the subject
                 $attrs_lit = $attrs_dsc_arr[1]; // slug name of the subject
@@ -106,13 +106,13 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
 
             // setting the subjects holder
             if (!array_key_exists($attrs_cms, $subjects_holder[$conn_type])) {
-                $subjects_holder[$conn_type][$attrs_cms] = array("nodes" => array());
+                $subjects_holder[$conn_type][$attrs_cms] = array('nodes' => array());
             }
 
-            $subj_nodes = &$subjects_holder[$conn_type][$attrs_cms]["nodes"];
+            $subj_nodes = &$subjects_holder[$conn_type][$attrs_cms]['nodes'];
 
             // plain subjects
-            if ("plain" == $conn_type) {
+            if ('plain' == $conn_type) {
                 if (!array_key_exists($attrs_lit, $subj_nodes)) {
                     $subj_nodes[$attrs_lit] = $one_name;
                 }
@@ -130,7 +130,7 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
             }
 
             // taking literal (inner) names
-            $attrs_sec_arr = explode("/", $attrs_lit);
+            $attrs_sec_arr = explode('/', $attrs_lit);
             $attrs_sec_names = array();
 
             // do inner and outer names fit together
@@ -161,16 +161,16 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
                 $cur_name = $attrs_sec_names[$tree_depth];
 
                 if (array_key_exists($one_cat, $tree_part)) {
-                    if (!$tree_part[$one_cat]["name"]) {
-                        $tree_part[$one_cat]["name"] = $cur_name;
+                    if (!$tree_part[$one_cat]['name']) {
+                        $tree_part[$one_cat]['name'] = $cur_name;
                     }
 
-                    $tree_part = &$tree_part[$one_cat]["nodes"];
+                    $tree_part = &$tree_part[$one_cat]['nodes'];
                     continue;
                 }
-                $tree_part[$one_cat] = array("name" => $cur_name, "nodes" => array());
+                $tree_part[$one_cat] = array('name' => $cur_name, 'nodes' => array());
                 ksort($tree_part, SORT_STRING);
-                $tree_part = &$tree_part[$one_cat]["nodes"];
+                $tree_part = &$tree_part[$one_cat]['nodes'];
             }
         }
 
@@ -214,7 +214,7 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         //    return null;
         //}
 
-        return $attrs["href"];
+        return $attrs['href'];
     }
 
     public function getCreator() {
@@ -241,7 +241,7 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         $copyright = $this->root->rightsInfo->copyrightHolder;
         $attrs = $copyright->attributes();
 
-        return $attrs["literal"];
+        return $attrs['literal'];
     }
 
     public function getNewsID() {
@@ -256,6 +256,4 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
 
         return (string) $attrs->guid;
     }
-
-
 }

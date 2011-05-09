@@ -36,6 +36,4 @@ interface IFeedCommon
      * @return mixed
      */
     public function getAttributes(&$holder, $sort);
-
-
 }

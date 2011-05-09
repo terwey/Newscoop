@@ -522,15 +522,15 @@ class NewsMLCreator {
         <sender>sourcefabric.org</sender>
         <transmitId>sourcefabric.org:' . $curdate . '</transmitId>
     </header>
-    <packageItem>
+    <itemSet>
+        <packageItem>
 ';
 
         foreach ($this->itemSet as $one_item) {
-            $newsml_content .= '        <itemRef residref="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getSlugline() . '" />' . "\n";
+            $newsml_content .= '            <itemRef residref="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getSlugline() . '" />' . "\n";
         }
 
-        $newsml_content .= '    </packageItem>
-    <itemSet>';
+        $newsml_content .= '        </packageItem>';
 
         foreach ($this->itemSet as $one_item) {
             $newsml_content .= '

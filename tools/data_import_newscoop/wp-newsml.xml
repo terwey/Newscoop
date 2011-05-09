@@ -9,11 +9,11 @@
 		<transmitId>tag:sourcefabric.org,2011:newsml_OVE48850O-PKG</transmitId>
 		<origin>SFODIS_WPWXR</origin>
 	</header>
-	<packageItem>
-		<itemRef residref="urn:newsml:sourcefabric.org:20111125T1205:CITY-LIFE-BENEFICIAL" />
-		<itemRef residref="urn:newsml:sourcefabric.org:20110120T1223:ABC-DE-FGH" />
-	</packageItem>
 	<itemSet>
+		<packageItem>
+			<itemRef residref="urn:newsml:sourcefabric.org:20111125T1205:CITY-LIFE-BENEFICIAL" />
+			<itemRef residref="urn:newsml:sourcefabric.org:20110120T1223:ABC-DE-FGH" />
+		</packageItem>
 		<newsItem guid="urn:newsml:sourcefabric.org:20111125T1205:CITY-LIFE-BENEFICIAL"
 			xmlns="http://iptc.org/std/nar/2006-10-01/"
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
