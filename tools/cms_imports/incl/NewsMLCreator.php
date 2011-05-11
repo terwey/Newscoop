@@ -75,12 +75,18 @@ class NewsMLNewsItem {
     // Note that we have some data as cdata, and embedded cdata shall be included correctly, see link
     // http://stackoverflow.com/questions/223652/is-there-a-way-to-escape-a-cdata-end-token-in-xml
 
+    private $asset_item = false;
+    private $asset_item_type = "";
+    private $asset_item_rank = 0;
+
     private $content_texts = array();
     private $content_images = array();
     // private $content_videos = array();
+    private $image_links = array();
 
     // the data that are required for newsml
     private $required_data = array(
+        "unique_name" => null,
         "copyright_info" => null,
         "date_created" => null,
         "creator_literal" => null,
@@ -91,10 +97,60 @@ class NewsMLNewsItem {
         "content" => null,
     );
 
+    private $other_data = array(
+        "title" => null,
+    );
+
     // specifiers like categories, tags, ...
     private $subjects = array();
 
     // setter methods
+
+    /**
+     * Setting the item to be an asset of another item
+     * @param string $p_assetType type of the asset
+     * @return bool
+     */
+    public function becomeAsset($p_assetType, $p_assetRank) {
+        if (!empty($this->image_links)) {
+            //echo "having some image links?\n";
+            return false; // the assets here are just simple items; use grouping for more complex connections
+        }
+
+        $known_asset_types = array("image" => "picture", "picture" => "picture");
+        if (!array_key_exists($p_assetType, $known_asset_types)) {
+            //echo "unknown asset type?\n";
+            return false;
+        }
+        if (!is_numeric($p_assetRank)) {
+            //echo "unknown asset rank?\n";
+            return false;
+        }
+        $p_assetRank = intval($p_assetRank);
+        if (0 >= $p_assetRank) {
+            //echo "non-positive asset rank?\n";
+            return false;
+        }
+
+        $this->asset_item = true;
+        $this->asset_item_type = $known_asset_types[$p_assetType];
+        $this->asset_item_rank = $p_assetRank;
+
+        return true;
+    }
+
+    /**
+     * Setting the unique name
+     * @param string $p_uniqueName name for guid creation
+     * @return bool
+     */
+    public function setUniqueName($p_uniqueName) {
+        //if ($this->asset_item) {
+        //    return false;
+        //}
+        $this->required_data["unique_name"] = str_replace(array("\"", ":", "$"), array("&#34;", "&#58;", "&#36;"), $p_uniqueName); // shall not escape "...", and w/o ':', '/';
+        return true;
+    }
 
     /**
      * Setting the copyright data
@@ -151,7 +207,7 @@ class NewsMLNewsItem {
         elseif (!$p_time) {
             $date_time = $p_date . "T00:00:00Z";
         }
-        else if (!$p_zone) {
+        elseif (!$p_zone) {
             $date_time = $p_date . "T" . $p_time . "Z";
         }
         else {
@@ -182,7 +238,8 @@ class NewsMLNewsItem {
      * @return bool
      */
     public function setSlugline($p_slugLine) {
-        $this->required_data["slug_line"] = str_replace(array("&", "<", ">", "\""), array("&amp;", "&lt;", "&gt;", "&#34;"), $p_slugLine); // shall not have <tag>, shall not escape "..."
+        //$this->required_data["slug_line"] = str_replace(array("&", "<", ">", "\""), array("&amp;", "&lt;", "&gt;", "&#34;"), $p_slugLine); // shall not have <tag>, shall not escape "..."
+        $this->required_data["slug_line"] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_slugLine); // shall not have cdata seps
         return true;
     } // fn setSlugline
 
@@ -206,6 +263,28 @@ class NewsMLNewsItem {
         $this->required_data["item_link"] = str_replace(array("\""), array("&#34;"), $p_linkUrl); // shall not escape "..."
         return true;
     } // fn setLink
+
+    /**
+     * Setting the link to an image
+     * @param string $p_imageRank
+     * @return bool
+     */
+    public function setImageLink($p_imageRank) {
+        if ($this->asset_item) {
+            return false; // the assets here are just simple items; use grouping for more complex connections
+        }
+
+        if (!is_numeric($p_imageRank)) {
+            return false;
+        }
+        $p_imageRank = intval($p_imageRank);
+        if (0 >= $p_imageRank) {
+            return false;
+        }
+        //$this->image_links[] = str_replace(array("\""), array("&#34;"), $p_imageRel); // shall not escape "..."
+        $this->image_links[] = $p_imageRank;
+        return true;
+    } // fn setImageLink
 
     /**
      * Setting the article content by itself
@@ -257,14 +336,14 @@ class NewsMLNewsItem {
                     continue;
                 }
 
-                $img_href = str_replace(array("\""), array("&#34;"), (string) $one_image["href"]); // shall not escape "..."
+                $img_href = str_replace(array("\""), array("&#34;"), (string) $one_image["href"]); // shall not escape "...", some w/o ':' too
 
                 $img_width = (array_key_exists("width", $one_image)) ? (0 + (int) $one_image["width"]) : 0;
                 $img_height = (array_key_exists("height", $one_image)) ? (0 + (int) $one_image["height"]) : 0;
                 $img_size = (array_key_exists("size", $one_image)) ? (0 + (int) $one_image["size"]) : 0;
                 $img_type = (array_key_exists("type", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["type"]) : "image/*";
-                $img_colors = (array_key_exists("colors", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["colors"]) : "colsp:AdobeRGB";
-                $img_class = (array_key_exists("class", $one_image)) ? str_replace(array("\""), array("&#34;"), (string) $one_image["class"]) : "web";
+                $img_colors = (array_key_exists("colors", $one_image)) ? str_replace(array("\"", ":"), array("&#34;", "&#58;"), (string) $one_image["colors"]) : "AdobeRGB";
+                $img_class = (array_key_exists("class", $one_image)) ? str_replace(array("\"", ":"), array("&#34;", "&#58;"), (string) $one_image["class"]) : "web";
                 $img_version = (array_key_exists("version", $one_image)) ? (0 + (int) $one_image["version"]) : 0;
 
                 $use_image = array(
@@ -289,18 +368,28 @@ class NewsMLNewsItem {
     } // fn setContent
 
     /**
-     * Setting the article content by itself
+     * Setting the article specifiers
      * @param string $p_qcode
      * @param string $p_name
      * @return bool
      */
     public function setSubject($p_qcode, $p_name) {
+        //$this->subjects[] = array("qcode" => str_replace(array("\"", ":", "/"), array("&#34;", "&#58;", "&#47;"), $p_qcode), // shall not escape "...", and w/o ':', '/';
         $this->subjects[] = array("qcode" => str_replace(array("\""), array("&#34;"), $p_qcode), // shall not escape "..."
                                   //"name" => str_replace(array("[", "]"), array("&#91;", "&#93;"), $p_name), // shall not have cdata seps
                                   "name" => str_replace(array("]]>"), array("]]]]><![CDATA[>"), $p_name), // shall not have cdata seps
                                  );
         return true;
     } // fn setSubject
+
+    /**
+     * Setting the item title, used e.g. for images
+     * @return bool
+     */
+    public function setTitle($p_title) {
+        $this->other_data["title"] = str_replace(array("]]>"), array("]]]]><![CDATA[>"), (string) $p_title);
+        return true;
+    }
 
     // checker methods
 
@@ -309,8 +398,9 @@ class NewsMLNewsItem {
      * @return bool
      */
     public function isFilled() {
-        foreach ($this->required_data as $one_info) {
+        foreach ($this->required_data as $one_key => $one_info) {
             if (is_null($one_info)) {
+                //echo "$one_key not filled\n";
                 return false;
             }
         }
@@ -322,11 +412,24 @@ class NewsMLNewsItem {
     // getter methods
 
     /**
+     * Gets the name used for guid
+     * @return string
+     */
+    public function getUniqueName() {
+        $uname = (string) $this->required_data["unique_name"];
+        if ($this->asset_item) {
+            $uname .= "$" . $this->asset_item_type . "-" . $this->asset_item_rank;
+        }
+
+        return $uname;
+    }
+
+    /**
      * Gets item date
      * @return string
      */
     public function getDate() {
-        return $this->required_data["date_created"];
+        return (string) $this->required_data["date_created"];
     } // fn getDate
 
     /**
@@ -334,7 +437,7 @@ class NewsMLNewsItem {
      * @return string
      */
     public function getHeadline() {
-        return $this->required_data["head_line"];
+        return (string) $this->required_data["head_line"];
     } // fn getHeadline
 
     /**
@@ -342,7 +445,7 @@ class NewsMLNewsItem {
      * @return string
      */
     public function getSlugline() {
-        return $this->required_data["slug_line"];
+        return (string) $this->required_data["slug_line"];
     } // fn getSlugline
 
     /**
@@ -350,7 +453,7 @@ class NewsMLNewsItem {
      * @return string
      */
     public function getCopyright() {
-        return $this->required_data["copyright_info"];
+        return (string) $this->required_data["copyright_info"];
     } // fn getCopyright
 
     /**
@@ -360,9 +463,9 @@ class NewsMLNewsItem {
     public function getCreator($p_part) {
         switch ($p_part) {
             case "literal":
-                return $this->required_data["creator_literal"];
+                return (string) $this->required_data["creator_literal"];
             case "name":
-                return $this->required_data["creator_name"];
+                return (string) $this->required_data["creator_name"];
             default:
                 return "";
         }
@@ -373,8 +476,26 @@ class NewsMLNewsItem {
      * @return string
      */
     public function getLink() {
-        return $this->required_data["item_link"];
+        return (string) $this->required_data["item_link"];
     } // getLink
+
+    /**
+     * Gets item links
+     * @return array
+     */
+    public function getLinks() {
+        if ($this->asset_item) {
+            return array();
+        }
+
+        $links = array();
+        $common_itemrel = "urn:newsml:sourcefabric.org:" . $this->getDate() . ":" . $this->getUniqueName();
+        foreach ($this->image_links as $one_image_rank) {
+            $one_itemrel = $common_itemrel . '$image-' . $one_image_rank;
+            $links[] = array("itemrel_relation" => 'dependsOn', "itemrel_type" => 'residref', "itemrel_value" => (string) $one_itemrel);
+        }
+        return $links;
+    } // getLinks
 
     /**
      * Gets item subjects (array of categories, tags, ...)
@@ -384,7 +505,10 @@ class NewsMLNewsItem {
         return $this->subjects;
     } // fn getSubjects
 
-
+    /**
+     * Gets item payload type
+     * @return string
+     */
     public function getContentType() {
         $has_texts = count($this->content_texts) ? 1 : 0;
         $has_images = count($this->content_images) ? 1 : 0;
@@ -410,7 +534,7 @@ class NewsMLNewsItem {
 
     /**
      * Gets item content
-     * @return string
+     * @return mixed
      */
     public function getContent($p_type) {
         if (in_array($p_type, array("text", "texts"))) {
@@ -424,6 +548,14 @@ class NewsMLNewsItem {
 
         return null;
     } // fn getContent
+
+    /**
+     * Gets item title
+     * @return string
+     */
+    public function getTitle() {
+        return (string) $this->other_data["title"];
+    }
 
 } // class NewsMLNewsItem
 
@@ -475,6 +607,22 @@ class NewsMLCreator {
     } // fn createItem
 
     /**
+     * Creates a new newsItem
+     *
+     * @return mixed
+     */
+/*
+    public function createItemAsset($p_assetType) {
+        $known_asset_types = array("image", "picture");
+        if (!in_array($p_assetType, $known_asset_types)) {
+            return null;
+        }
+
+        return new NewsMLNewsItem();
+    } // fn createItem
+*/
+
+    /**
      * Adds a filled newsItem to the itemSet
      *
      * @param NewsMLNewsItem $p_newsItem a filled newsItem
@@ -482,6 +630,7 @@ class NewsMLCreator {
      */
     public function appendItem(NewsMLNewsItem $p_newsItem) {
         if (!$p_newsItem->isFilled()) {
+            echo "is not filled?\n";
             return false;
         }
 
@@ -527,14 +676,14 @@ class NewsMLCreator {
 ';
 
         foreach ($this->itemSet as $one_item) {
-            $newsml_content .= '            <itemRef residref="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getSlugline() . '" />' . "\n";
+            $newsml_content .= '            <itemRef residref="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getUniqueName() . '" />' . "\n";
         }
 
         $newsml_content .= '        </packageItem>';
 
         foreach ($this->itemSet as $one_item) {
             $newsml_content .= '
-        <newsItem guid="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getSlugline() . '"
+        <newsItem guid="urn:newsml:sourcefabric.org:' . $one_item->getDate() . ':' . $one_item->getUniqueName() . '"
             xmlns="http://iptc.org/std/nar/2006-10-01/"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
@@ -556,7 +705,15 @@ class NewsMLCreator {
                 <pubStatus qcode="stat:usable" />
                 <service qcode="svc:WPI">
                     <name>Word Press Import</name>
-                </service>
+                </service>';
+
+            $one_title = $one_item->getTitle();
+            if (0 < strlen($one_title)) {
+                $newsml_content .= '
+                <title><![CDATA[' . $one_title . ']]></title>';
+            }
+
+            $newsml_content .= '
             </itemMeta>
             <contentMeta>
                 <contentCreated>' . $one_item->getDate() . '</contentCreated>
@@ -566,14 +723,24 @@ class NewsMLCreator {
                 </creator>
                 <language tag="en-US" />';
             foreach ($one_item->getSubjects() as $one_subjects) {
-            $newsml_content .= '
+                $newsml_content .= '
                 <subject qcode="' . $one_subjects["qcode"] . '">
                     <name><![CDATA[' . $one_subjects["name"] . ']]></name>
                 </subject>';
-            }
+                }
             $newsml_content .= '
-                <link rel="itemrel:original" href="' . $one_item->getLink() . '" />
-                <slugline>' . $one_item->getSlugline() . '</slugline>
+                <link rel="itemrel:original" href="' . $one_item->getLink() . '" />';
+
+            foreach ($one_item->getLinks() as $one_item_link) {
+                $one_item_rel_relation = $one_item_link["itemrel_relation"]; // e.g. original, dependson, picture, ...
+                $one_item_rel_type = $one_item_link["itemrel_type"]; // e.g. href, residref, ...
+                $one_item_rel_value = $one_item_link["itemrel_value"]; // e.g. http://..., urn:newsml:sourcefabric.org:..., ...
+                $newsml_content .= '
+                <link rel="itemrel:' . $one_item_rel_relation . '" ' . $one_item_rel_type . '="' . $one_item_rel_value . '" />';
+                }
+
+            $newsml_content .= '
+                <slugline><![CDATA[' . $one_item->getSlugline() . ']]></slugline>
                 <headline><![CDATA[' . $one_item->getHeadline() . ']]></headline>
             </contentMeta>
             <contentSet>';
@@ -601,6 +768,7 @@ class NewsMLCreator {
             $img_type = $one_image["type"];
             $img_colors = $one_image["colors"];
             $img_class = $one_image["class"];
+            $img_version = $one_image["version"];
             $newsml_content .= '
                 <remoteContent
                         href="' . $img_url . '"

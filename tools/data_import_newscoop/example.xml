@@ -1,0 +1,1756 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+        ../XSD/NewsML-G2/2.7/specification/NAR_1.8-spec-NewsMessage-Power.xsd">
+    <header>
+        <sent>2011-05-11T18:55:40Z</sent>
+        <sender>sourcefabric.org</sender>
+        <transmitId>sourcefabric.org:2011-05-11T18:55:40Z</transmitId>
+    </header>
+    <itemSet>
+        <packageItem>
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:wrocilem-z-wegier-i-bedzie-sie-dzialo-na-blogu-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-ot-rodzina-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-jubiler-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-juz-po-raz-ostatni-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-klucznik-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-juz-po-raz-ostatni-3" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-1-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-bezdomna-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-gdzie-jesc-w-santiago-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-co-goruje-nad-santiago-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-wywrozmy-sobie-przyszlosc-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-jezus-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-streetwalk-czesc-2-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sceny-z-chile-szachisci-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:twarza-w-twarz-z-ksiedzem-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-streetwalk-czesc-1-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:statystyczny-polak-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-wywrozmy-sobie-przyszlosc-3" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:plaza-de-italia-w-santiago-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:videopresentation-of-ceasefireliberia-com-gv2010-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:panel-o-chilijskiej-blogosferze-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bosco-uganda-accepting-breaking-borders-award-at-gv2010-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:nagroda-breaking-borders-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:breaking-borders-award-for-the-philippines-center-for-investigative-journalism-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:wywiad-z-arcybiskupem-johnem-baptistem-odama-o-bosco-w-ugandzie-video-2" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bylem-gosciem-x-poranka-z-pr" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bylem-gosciem-x-poranka-z-pr$picture-1" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze$picture-1" />
+            <itemRef residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze$picture-2" />
+        </packageItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:wrocilem-z-wegier-i-bedzie-sie-dzialo-na-blogu-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/wrocilem-z-wegier-i-bedzie-sie-dzialo-na-blogu/wrocilem-z-wegier-i-bedzie-sie-dzialo-na-blogu-2/" />
+                <slugline><![CDATA[wrocilem-z-wegier-i-bedzie-sie-dzialo-na-blogu-2]]></slugline>
+                <headline><![CDATA[Wróciłem z Węgier i będzie się działo na blogu]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/QHiFkqui9oMGn1mOS7lu5QXa1mzfntAMcKrbOFtZprtKifNlYreK50yTnR8V/IMG_6917.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/img_6917-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-ot-rodzina-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-ot-rodzina/foto-z-chile-ot-rodzina-2/" />
+                <slugline><![CDATA[foto-z-chile-ot-rodzina-2]]></slugline>
+                <headline><![CDATA[Foto z Chile: Ot. Rodzina]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/3xe6i8SQq89Cf8WiZipNE5dgjVNjhTRQlOZvd0o4qYRlhqFMyi0gQ5PNE0h8/10.05.05-10-Santiago-331.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-331-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-jubiler-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/chile-portrety-jubiler/chile-portrety-jubiler-2/" />
+                <slugline><![CDATA[chile-portrety-jubiler-2]]></slugline>
+                <headline><![CDATA[Chile: Portrety - "Jubiler"]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/2sYeaEJY0ERPUchIC5UfHJBdB8arbxlQV6SPizaRhXeL0UZU2qgvmJ0Y4mDr/10.05.05-10-Santiago-121.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-121-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-juz-po-raz-ostatni-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-dewocjonalia-juz-po-raz-ostatni/foto-z-chile-dewocjonalia-juz-po-raz-ostatni-2/" />
+                <slugline><![CDATA[foto-z-chile-dewocjonalia-juz-po-raz-ostatni-2]]></slugline>
+                <headline><![CDATA[Foto z Chile: Dewocjonalia (już po raz ostatni)]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/iPqyBEGP6DRP0HWYCW3gZna9T27dC7V9Jrv0lyEZa2Q03X69Bn41bOn77ccJ/10.05.05-10-Santiago-235.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-235-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-klucznik-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/chile-portrety-klucznik/chile-portrety-klucznik-2/" />
+                <slugline><![CDATA[chile-portrety-klucznik-2]]></slugline>
+                <headline><![CDATA[Chile: Portrety - "Klucznik"]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/0KPKuja2YkU9HoOwZlDoEACFNV79ip7XaORQqdZQcLqq5Tn35UVb85CPyTqB/10.05.05-10-Santiago-393.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-393-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-juz-po-raz-ostatni-3"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-dewocjonalia-juz-po-raz-ostatni/foto-z-chile-dewocjonalia-juz-po-raz-ostatni-3/" />
+                <slugline><![CDATA[foto-z-chile-dewocjonalia-juz-po-raz-ostatni-3]]></slugline>
+                <headline><![CDATA[Foto z Chile: Dewocjonalia (już po raz ostatni)]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/j2BI6gNHyiY1KpsPTFqQAVzTepIu0MzL8F5dSCcUJId0L3VwOXG3ekuYHfyk/10.05.05-10-Santiago-236.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-236-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-1-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/chile-portrety-1/chile-portrety-1-2/" />
+                <slugline><![CDATA[chile-portrety-1-2]]></slugline>
+                <headline><![CDATA[Chile: Portrety - 1]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/5rUk1xSEe2SIzh62fxY7WVrbnJiOwUrguY9kHVloII979Iz3A5Uzx61iooEc/10.05.05-10-Santiago-294.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-294-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-portrety-bezdomna-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/chile-portrety-bezdomna/chile-portrety-bezdomna-2/" />
+                <slugline><![CDATA[chile-portrety-bezdomna-2]]></slugline>
+                <headline><![CDATA[Chile: Portrety - "Bezdomna"]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/fj872IvUtUBYda8idvIr3NwaBtHbLKm7SwLr9XzDyaARdzeZ6CdJwvU9x9DH/10.05.05-10-Santiago-171.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-171-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-gdzie-jesc-w-santiago-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/chile-gdzie-jesc-w-santiago/chile-gdzie-jesc-w-santiago-2/" />
+                <slugline><![CDATA[chile-gdzie-jesc-w-santiago-2]]></slugline>
+                <headline><![CDATA[Chile: Gdzie jeść w Santiago]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/hmx3zzJDJUIkeuVXgxy78xCqBuRIIMIw8gxjSyQgd2DlKqaKcEn3T8L46h5Y/10.05.05-10-Santiago-78.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-78-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:chile-co-goruje-nad-santiago-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/chile-co-goruje-nad-santiago/chile-co-goruje-nad-santiago-2/" />
+                <slugline><![CDATA[chile-co-goruje-nad-santiago-2]]></slugline>
+                <headline><![CDATA[Chile: Co góruje nad Santiago]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/qcGZJvM6LeFfXx7kNANy7tpEqjy0tp6zVroREuG5IwpJ91PFz5FvZQ6YhfWi/10.05.05-10-Santiago-3.jpg.scaled.500.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/W0DSQM3hI8Jcv0N4EA4uijRLHM27vHGzeFTyS5Tpg4RZmQSqR9iTXNCGpqXo/10.05.05-10-Santiago-482.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-3-scaled-500.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="3"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-wywrozmy-sobie-przyszlosc-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-wywrozmy-sobie-przyszlosc/foto-z-chile-wywrozmy-sobie-przyszlosc-2/" />
+                <slugline><![CDATA[foto-z-chile-wywrozmy-sobie-przyszlosc-2]]></slugline>
+                <headline><![CDATA[Foto z Chile: Wywróżmy sobie przyszłość]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/Cg2IPDe71sWX5C95qyfLHcNf8aJKlzc56MnSqKS7vZvTvJ2o8khS4tQexhmB/10.05.05-10-Santiago-505.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-505-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-jezus-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-jezus/foto-z-chile-jezus-2/" />
+                <slugline><![CDATA[foto-z-chile-jezus-2]]></slugline>
+                <headline><![CDATA[Foto z Chile: Jezus]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/IWWabrxksaktEinjzmAIrD5GRREWoL33AoWBEARFrQLIeQISiNSIRidKdHtM/10.05.05-10-Santiago-444.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-444-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-streetwalk-czesc-2-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-dewocjonalia-streetwalk-czesc-2/foto-z-chile-dewocjonalia-streetwalk-czesc-2-2/" />
+                <slugline><![CDATA[foto-z-chile-dewocjonalia-streetwalk-czesc-2-2]]></slugline>
+                <headline><![CDATA[Foto z Chile: Dewocjonalia (streetwalk część 2)]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/hfyspoF3vDZyyzjd1hXSqfHI9DbDo9VNraLQX5IcQ01LnZxLGrluzYVdXPve/10.05.05-10-Santiago-209.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-209-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sceny-z-chile-szachisci-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/sceny-z-chile-szachisci/sceny-z-chile-szachisci-2/" />
+                <slugline><![CDATA[sceny-z-chile-szachisci-2]]></slugline>
+                <headline><![CDATA[Sceny z Chile: Szachiści]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/mCe6v0ex2C6tJc4BaZ2atiRuwvnS65MtfcPeNHufLus1Qo9ilYDJDTwBwHCM/10.05.05-10-Santiago-253.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-253-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:twarza-w-twarz-z-ksiedzem-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/twarza-w-twarz-z-ksiedzem/twarza-w-twarz-z-ksiedzem-2/" />
+                <slugline><![CDATA[twarza-w-twarz-z-ksiedzem-2]]></slugline>
+                <headline><![CDATA[Twarzą w twarz z księdzem]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/1nfOPVmCO07R0upWRUdNxK5B8Mm4C8WIxCIvOk3ggoAYzR8EcssVKf99Y2n5/10.05.05-10-Santiago-424.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-424-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-dewocjonalia-streetwalk-czesc-1-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-dewocjonalia-streetwalk-czesc-1/foto-z-chile-dewocjonalia-streetwalk-czesc-1-2/" />
+                <slugline><![CDATA[foto-z-chile-dewocjonalia-streetwalk-czesc-1-2]]></slugline>
+                <headline><![CDATA[Foto z Chile: Dewocjonalia (streetwalk część 1)]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/Ses2UsYo27O6AHiSuBLVRxxKyswotw2sCQK0NwViblQmytWfKf7Ns6laze0D/10.05.05-10-Santiago-231.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-231-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:statystyczny-polak-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/statystyczny-polak/statystyczny-polak-2/" />
+                <slugline><![CDATA[statystyczny-polak-2]]></slugline>
+                <headline><![CDATA[Statystyczny Polak...]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/tkbJnlU1Aiu0oxlj18Bn5jFoM9HMgOlRql9iy0BDajmpeYWiahqRoc7o7c2x/10.05.30-MojTrener-AktywnaNied.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/xYy8vvwbu4zKxQLh26f7cQkxzrJJ36dvfjvb5UAEoE1myk6vDsNi6Budgsc9/010.05.30-MojTrener-AktywnaNied.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-30-mojtrener-aktywnanied-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="3"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:foto-z-chile-wywrozmy-sobie-przyszlosc-3"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/foto-z-chile-wywrozmy-sobie-przyszlosc/foto-z-chile-wywrozmy-sobie-przyszlosc-3/" />
+                <slugline><![CDATA[foto-z-chile-wywrozmy-sobie-przyszlosc-3]]></slugline>
+                <headline><![CDATA[Foto z Chile: Wywróżmy sobie przyszłość]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/ZbRTbs0ymayMbOiXXZMt3tYOnKZu1MBCpf7FXnlRDJJAo9FfsgrEvra9SaQC/10.05.05-10-Santiago-506.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-506-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:plaza-de-italia-w-santiago-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/plaza-de-italia-w-santiago/plaza-de-italia-w-santiago-2/" />
+                <slugline><![CDATA[plaza-de-italia-w-santiago-2]]></slugline>
+                <headline><![CDATA[Plaza de Italia w Santiago]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/LdaFM4QjwtuO6vOVWX465Bpdm1eHmx9qTuU1Hc9ljoWMyhPEzPFSHmb7fKrY/10.05.05-10-Santiago-48.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/XpVCL2i77a4dJoaAuPcBuo4wLMWQKsM7WgZeC551mM1MQBuC146wYalX6ZCF/10.05.05-10-Santiago-50.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/10-05-05-10-santiago-48-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="3"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:videopresentation-of-ceasefireliberia-com-gv2010-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/?attachment_id=202" />
+                <slugline><![CDATA[videopresentation-of-ceasefireliberia-com-gv2010-2]]></slugline>
+                <headline><![CDATA[Videopresentation of CeasefireLiberia.com #gv2010]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/temp-2010-05-13/ylvIFapIGdprClBpjneqnFdeuoIBybptjlGziidHiuGHhJJcsBxwAFDHrIil/116_11423.JPG.scaled500.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/116_11423-scaled500.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:panel-o-chilijskiej-blogosferze-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/?attachment_id=204" />
+                <slugline><![CDATA[panel-o-chilijskiej-blogosferze-2]]></slugline>
+                <headline><![CDATA[Panel o Chilijskiej blogosferze]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/w7rTadcqc32ZaZTGKIUq0iKuZK4qD7UAO8EdC1BYggx6JHWealaf9XOC3ukj/IMG_4826.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/img_4826-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bosco-uganda-accepting-breaking-borders-award-at-gv2010-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/?attachment_id=205" />
+                <slugline><![CDATA[bosco-uganda-accepting-breaking-borders-award-at-gv2010-2]]></slugline>
+                <headline><![CDATA[BOSCO Uganda accepting Breaking Borders Award at #gv2010]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/temp-2010-05-13/dDBezjpaJvtAGgqBzoyelpqqrqbDAAFxuzatntfEBAkuppyfvrxdGlsjnBnq/4542823360_6f26a68683_o.jpg.scaled1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/4542823360_6f26a68683_o-scaled1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:nagroda-breaking-borders-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/?attachment_id=206" />
+                <slugline><![CDATA[nagroda-breaking-borders-2]]></slugline>
+                <headline><![CDATA[Nagroda Breaking Borders]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/qFoVNBE1XGBeXSmuCbo3FlQhfN4OFWdbTDGdHw5Ss9GfjznVcdGusH412sQV/IMG_4820.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/img_4820-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:breaking-borders-award-for-the-philippines-center-for-investigative-journalism-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/?attachment_id=207" />
+                <slugline><![CDATA[breaking-borders-award-for-the-philippines-center-for-investigative-journalism-2]]></slugline>
+                <headline><![CDATA[Breaking Borders Award for The Philippines Center for Investigative Journalism]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/4qdvu2kR7Z7gJUAGEJQWptdiU3pZsJxFwigXHnFJsu2ORX04og96XqKHWXtG/4600629006_4bb2f1d5a1_o.jpg.scaled.1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/4600629006_4bb2f1d5a1_o-scaled-1000.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:wywiad-z-arcybiskupem-johnem-baptistem-odama-o-bosco-w-ugandzie-video-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/wywiad-z-arcybiskupem-johnem-baptistem-odama-o-bosco-w-ugandzie-video/wywiad-z-arcybiskupem-johnem-baptistem-odama-o-bosco-w-ugandzie-video-2/" />
+                <slugline><![CDATA[wywiad-z-arcybiskupem-johnem-baptistem-odama-o-bosco-w-ugandzie-video-2]]></slugline>
+                <headline><![CDATA[Wywiad z Arcybiskupem Johnem Baptistem Odamą o BOSCO w Ugandzie #video]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://posterous.com/getfile/files.posterous.com/kosmoblogpl/0XINx1m3XI8fr3D3jpE2ZLAeQp0YT0d7bvdE4fhCIvU0DQVM1a0KV3EBseZb/Archodama.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2010/06/archodama.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="0"
+                        height="0"
+                        version="2"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bylem-gosciem-x-poranka-z-pr"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:text" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <subject qcode="Path:Category//jakubgornicki/edukacja">
+                    <name><![CDATA[["Kosmo","Edukacja, Szkolenia, Treningi"]]]></name>
+                </subject>
+                <subject qcode="Path:Category//jakubgornicki">
+                    <name><![CDATA[["Kosmo"]]]></name>
+                </subject>
+                <subject qcode="Path:Category//miniblogpl">
+                    <name><![CDATA[["MiniBlog"]]]></name>
+                </subject>
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/bylem-gosciem-x-poranka-z-pr/" />
+                <link rel="itemrel:dependsOn" residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bylem-gosciem-x-poranka-z-pr$image-1" />
+                <slugline><![CDATA[bylem-gosciem-x-poranka-z-pr]]></slugline>
+                <headline><![CDATA[Byłem gościem X Poranka z PR]]></headline>
+            </contentMeta>
+            <contentSet>
+                <inlineXML contenttype="application/xhtml+xml; charset=UTF-8">
+<![CDATA[
+<img class="size-thumbnail wp-image-1574 alignleft" title="Mini Blog" src="http://old.kosmoblog.com/wp-content/uploads/2011/02/miniblog-150x150.jpg" alt="Mini Blog" width="150" height="150" />Fundacja InternetPR zaprosiła mnie do poprowadzenie dzięsiątego Poranka z PRem (pierwszego po długiej przerwie), poświęcongo tematyce: "Media społecznościowe a Internet w PR". Temat dobrze mi znany i łamie sobie nad nim głowę odkąd SM stał się słowem-kluczem dla wielu osób, które zajmują się komunikacją. Tylko nie do końca wiedzą, do których drzwi, ten klucz pasuje.
+
+<!--more-->
+
+Na spotkaniu, ku mojemu zaskoczeniu, pojawiło się blisko 30 osób, a w trakcie przerwy nie zanotowałem masowej ucieczki, co odczytuję jako dobry znak. Komentarze na FB były przychylne, aczkolwiek usłyszałem też, że za bardzo uciekałem w swój świat. Blisko trzy godziny opowiadałem o narzędziach jakie oferuje cały Internet osobom, które zajmują się Public Relations. O Facebooku też było, ale krótko i tyle ile trzeba :)
+
+Dziękuje za zaproszenie Markowi Wróblowi oraz Magdzie Myczko z Fundacji InternetPR
+
+[gallery link="file"]
+
+&nbsp;
+]]>
+                </inlineXML>
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:bylem-gosciem-x-poranka-z-pr$picture-1"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+                <title><![CDATA[Mini Blog]]></title>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/bylem-gosciem-x-poranka-z-pr/" />
+                <slugline><![CDATA[bylem-gosciem-x-poranka-z-pr-image-1]]></slugline>
+                <headline><![CDATA[Byłem gościem X Poranka z PR # image 1]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2011/02/miniblog-150x150.jpg"
+                        rendition="rnd:thumbnail"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="150"
+                        height="150"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:text" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <subject qcode="Item:Tag//ewa-jasiewicz">
+                    <name><![CDATA[Ewa Jasiewicz]]></name>
+                </subject>
+                <subject qcode="Path:Category//bliski-wschod/izrael">
+                    <name><![CDATA[["Bliski Wsch\u00f3d","Izrael"]]]></name>
+                </subject>
+                <subject qcode="Path:Category//ksiazka">
+                    <name><![CDATA[["Ksi\u0105\u017cki"]]]></name>
+                </subject>
+                <subject qcode="Path:Category//bliski-wschod/palestyna">
+                    <name><![CDATA[["Bliski Wsch\u00f3d","Palestyna"]]]></name>
+                </subject>
+                <subject qcode="Path:Category//spolecznie">
+                    <name><![CDATA[["Spo\u0142ecznie"]]]></name>
+                </subject>
+                <subject qcode="Path:Category//wydarzenia">
+                    <name><![CDATA[["Wydarzenia"]]]></name>
+                </subject>
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/sprawa-palestynska-budrus-i-podpalic-gaze/" />
+                <link rel="itemrel:dependsOn" residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze$image-1" />
+                <link rel="itemrel:dependsOn" residref="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze$image-2" />
+                <slugline><![CDATA[sprawa-palestynska-budrus-i-podpalic-gaze]]></slugline>
+                <headline><![CDATA[Sprawa palestyńska: Budrus i "Podpalić Gazę"]]></headline>
+            </contentMeta>
+            <contentSet>
+                <inlineXML contenttype="application/xhtml+xml; charset=UTF-8">
+<![CDATA[
+<p style="text-align: justify;"><img class="aligncenter size-full wp-image-1657" title="Budrus Gaza Jasiewicz" src="http://old.kosmoblog.com/wp-content/uploads/2011/03/BudrusGaza1.jpg" alt="Budrus Gaza Jasiewicz" width="700" height="400" />Dwa dni temu w Kinie Muranów odbyło się spotkanie autorskie z Ewą Jasiewicz, promujące jej najnowszą i zarazem pierwszą książkę - "Podpalić Gazę". Do tej pozycji jeszcze wrócę, bo nadaję się na co najmniej kilka wpisów, ale dziś chciałem skupić się na całej otoczce jaka towarzyszyła temu spotkaniu. Już przed przeczuwałem, że atmosfera będzie gorąca i kilku osobników nie wyprowadziło mnie z błędu. Całość rozpoczął pokaz filmu "Budrus", opowiadającego o biernym oporze mieszkańców wioski Zachodniego Brzegu Jordanu przeciw powstawaniu muru, który miał ograniczyć ich dostęp do ich drzew oliwnych. Dla wielu, źródła życia...</p>
+<!--more--><strong>Budrus</strong>
+<p style="text-align: justify;">To wioska w Palestynie, której mieszkańcy przez kilkanaście miesięcy stawiali opór przed powstaniem muru, mającego chronić obywateli Izreale przed Palestyńczykami. Całość historii opowiedziana jest z perspektywy Ajeda, lokalnego członka partii Fatah oraz jego rodziny. Ajed organizuje demonstracje i motywuje innych, do biernego i pokojowego oporu - zresztą zobaczcie sami:</p>
+<object width="700" height="555"><param name="movie" value="http://www.youtube.com/v/YQQ8F2W5eB0?fs=1&amp;hl=en_US&amp;rel=0&amp;hd=1" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><embed type="application/x-shockwave-flash" width="700" height="555" src="http://www.youtube.com/v/YQQ8F2W5eB0?fs=1&amp;hl=en_US&amp;rel=0&amp;hd=1" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+<p style="text-align: justify;">Nie jestem aż tak dobrze obeznany ze sprawą konfliktu palestyńsko-izraelskiego, ale utknęły w głowie słowa jednego z uczestników - "konflikt wskazuje, że po obu stronach stoją równorzędne strony, a strona palestyńska bynajmniej taką nie jest". Dla mnie temat do głębszej analizy i dokładnego zgłębienia. W okolicach tego cytatu, jeden ze wzburzonych gości opuścił salę. Zarówno "Podpalić Gazę" oraz "Budrus" przedstawiają sprawę z punktu widzenia Palestyńczyków - ciekawy i brakujący głos w szerszej dyskusji na temat podwalin "konfliktu". Dla mnie, osoby piszącej dla Global Voices, niewątpliwie ciekawe doświadczenie.</p>
+<p style="text-align: justify;"><strong>Spotkanie autorskie</strong></p>
+
+<![CDATA[ xxxxxxxxxxxx ]]&gt;
+
+[caption id="attachment_1658" align="aligncenter" width="223" caption="Ewa Jasiewicz"]<img class="size-medium wp-image-1658" title="photo 5" src="http://old.kosmoblog.com/wp-content/uploads/2011/03/photo-5-223x300.jpg" alt="" width="223" height="300" />[/caption]
+<p style="text-align: justify;">Spotkanie z Ewą Jasiewicz poprowadził redaktor naczelny polskiej edycji edycji Le Monde Diplomatique - Przemysław Wielgosz, a towarzyszył mu również Roman Kurkiewicz. Rozmowa była naprawdę ciekawa, Wielgosz imponował wiedzą, szkoda tylko, że kilka razy dał sobie zabrać ster i uczestnicy przejmowali kontrolę. Tak to bywa, gdy temat budzi emocje i nie wiadomo czy ingerencja moderatora niezaogni jeszcze bardziej sytuacji. Autorka, z pozoru skromna i cicha dziewczyna, nie dała się wyprowadzić z równowagi, a historie, które opowiada na pierwszy rzut oka do niej nie pasują do jej temperamentu. Jej siła wyraża się w spokoju i determinacji z jaką opowiada i reprezentuje stronę palestyńską.</p>
+<p style="text-align: justify;"><strong>Glos Gazy</strong></p>
+<p style="text-align: justify;">Pojawia się nowy głos w dyskusji, albo raczej do monologu jednej strony dołącza głos zgoła odmienny. Z zainteresowaniem będę śledził dalsze losy towarzyszące promocji "Podpalić Gazę" oraz towarzyszące jej emocje.</p>
+<p style="text-align: justify;"><strong>
+</strong></p>
+]]>
+                </inlineXML>
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze$picture-1"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+                <title><![CDATA[Budrus Gaza Jasiewicz]]></title>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/sprawa-palestynska-budrus-i-podpalic-gaze/" />
+                <slugline><![CDATA[sprawa-palestynska-budrus-i-podpalic-gaze-image-1]]></slugline>
+                <headline><![CDATA[Sprawa palestyńska: Budrus i "Podpalić Gazę" # image 1]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2011/03/BudrusGaza1.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="700"
+                        height="400"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+        <newsItem guid="urn:newsml:sourcefabric.org:2011-05-11T00:00:00Z:sprawa-palestynska-budrus-i-podpalic-gaze$picture-2"
+            xmlns="http://iptc.org/std/nar/2006-10-01/"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://iptc.org/std/nar/2006-10-01/
+                ../specification/NAR_1.8-spec-All-Core.xsd"
+            standard="NewsML-G2"
+            standardversion="2.7"
+            version="1"
+            xml:lang="en-US"
+            >
+            <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_13.xml" />
+            <catalogRef href="http://www.sourcefabric.org/odis/catalogs/nmlcodes.xml" />
+            <rightsInfo>
+                <copyrightHolder literal="KosmoBlog - http://old.kosmoblog.com" />
+            </rightsInfo>
+            <itemMeta>
+                <itemClass qcode="ninat:picture" />
+                <provider literal="Newscoop Online Data Import Service" />
+                <versionCreated>2011-05-11T00:00:00Z</versionCreated>
+                <pubStatus qcode="stat:usable" />
+                <service qcode="svc:WPI">
+                    <name>Word Press Import</name>
+                </service>
+                <title><![CDATA[photo 5]]></title>
+            </itemMeta>
+            <contentMeta>
+                <contentCreated>2011-05-11T00:00:00Z</contentCreated>
+                <contentModified></contentModified>
+                <creator literal="jakubgornicki">
+                    <name><![CDATA[Jakub Górnicki]]></name>
+                </creator>
+                <language tag="en-US" />
+                <link rel="itemrel:original" href="http://old.kosmoblog.com/sprawa-palestynska-budrus-i-podpalic-gaze/" />
+                <slugline><![CDATA[sprawa-palestynska-budrus-i-podpalic-gaze-image-2]]></slugline>
+                <headline><![CDATA[Sprawa palestyńska: Budrus i "Podpalić Gazę" # image 2]]></headline>
+            </contentMeta>
+            <contentSet>
+                <remoteContent
+                        href="http://old.kosmoblog.com/wp-content/uploads/2011/03/photo-5-223x300.jpg"
+                        rendition="rnd:web"
+                        size="0"
+                        contenttype="image/jpeg"
+                        width="223"
+                        height="300"
+                        version="1"
+                        colourspace="colsp:AdobeRGB" />
+            </contentSet>
+        </newsItem>
+    </itemSet>
+</newsMessage>

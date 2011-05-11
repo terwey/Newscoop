@@ -13,22 +13,31 @@ echo "\n<pre>\n";
 
 include('NewsMLFeed.php');
 
-$newsfeed = new NewsMLFeed('http://172.16.0.1/newnodis/wp-newsml.xml');
+//$newsfeed = new NewsMLFeed('http://172.16.0.1/newnodis/example.xml');
+//$newsfeed = new NewsMLFeed('http://172.16.0.1/newnodis/wp-newsml.xml');
 //$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/wp-newsml.xml');
-//$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110427T180924Z4db85bd438456');
-//$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110502T075616Z4dbe63a0c022c');
-//$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/D20110502T134353Z4dbeb5199bd6d');
-
+$newsfeed = new NewsMLFeed('http://newscoop_imp/nodis/example.xml');
 
 //var_dump($newsfeed->next()); exit;
 
 $nf = null;
 //$msg_ind = count($newsfeed->itemSet->newsItem) - 1;
 $msg_count = $newsfeed->count();
-echo "count: $msg_count\n\n";
+$msg_count_news = $newsfeed->countNews();
+echo "count: $msg_count_news / $msg_count\n\n";
 for ($mind = 0; $mind < $msg_count; $mind++) {
     //echo "\n--- next nf ---\n";
     $nf = $newsfeed->next();
+
+    if ($nf->isNews()) {
+        $deps = $nf->getDependencies();
+        if (!empty($deps)) {
+            var_dump($deps);
+            echo "\n";
+        }
+    }
+
+
 }
 //$nf = $newsfeed->next();
 
@@ -104,6 +113,7 @@ echo "link:      " . (string) $nf->getLink() . "\n";
 echo "creator:   " . (string) $nf->getCreator() . "\n";
 echo "service:   " . (string) $nf->getService() . "\n";
 echo "copyright: " . (string) $nf->getCopyright() . "\n";
+echo "title:     " . (string) $nf->getTitle() . "\n";
 
 echo "\n\n\n";
 
@@ -114,6 +124,14 @@ var_dump($attributes);
 echo "\n\n\n";
 //echo htmlspecialchars((string) $nf->itemSet->newsItem[$msg_ind]->contentSet->inlineXML);
 echo htmlspecialchars((string) $nf->getContentText());
+
+
+if (!$nf->isNews()) {
+    $images = $nf->getContentImages();
+    //echo "\n<pre>\n";
+    var_dump($images);
+    //echo "\n</pre>\n";
+}
 
 //Get items with next() or current()
 // echo $newsfeed->next()->guid;

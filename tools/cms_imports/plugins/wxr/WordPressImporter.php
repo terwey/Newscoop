@@ -1,18 +1,18 @@
 <?php
 /**
-    The data read / parsing is done by WordPress importer
+    Data parsing is done according to WordPress importer
     http://wordpress.org/extend/plugins/wordpress-importer/
     licensed under GPL2+, thus it should be ok to use it
 
-    the data parser is from file
-    http://svn.wp-plugins.org/wordpress-importer/trunk/parsers.php
-    it is named as WordPressParsers.php herein
-
-    the data importer goes along
-    http://svn.wp-plugins.org/wordpress-importer/trunk/wordpress-importer.php
-
     Note that this does not run on some WXR files since WordPress creates non-valid XML if 'CDATA' part is at an article content (e.g. at javascript), see
     http://drupal.org/node/1055310
+
+    One WP post results in:
+    *) one remote image message for image-only posts
+    *) one text message for a text post w/o links from that text
+    *) one text message, plus remote image messages for text post with img links
+        - those image messages are linked from the text mesage
+
  */
 
 require_once('WordPressParsers.php');
@@ -42,7 +42,7 @@ class WordPressImporter extends CMSImporterPlugin {
             return "image/tiff";
         }
         if (in_array($name_suffix, array("svg"))) {
-            return "xml/svg";
+            return "image/svg+xml";
         }
         return "image/*";
     } // fn getImageTypeByName
@@ -64,6 +64,7 @@ class WordPressImporter extends CMSImporterPlugin {
      * @return mixed
      */
     private function tryGetImage($p_imageUrl) {
+        // this function is not used now, since no image downloading is done herein
         $img_spec = array("width" => 0, "height" => 0, "size" => 0, "type" => "", "colors" => "");
 
         try {
@@ -98,8 +99,6 @@ class WordPressImporter extends CMSImporterPlugin {
 
         $item_pictures = array();
         $item_pictures_usage = array();
-        //$item_pictures_other = array();
-        //$item_videos = array();
 
         $version_rank = 0;
 
@@ -112,14 +111,6 @@ class WordPressImporter extends CMSImporterPlugin {
                     if (preg_match("/^(?:http(?:s)?|ftp(?:s)?)\:\/\/[^<>\s\"]+\.(?:jpg|jpeg|gif|png|tif|tiff|svg)$/i", $pm_value)) {
                         if (!in_array($pm_value, $item_pictures_usage)) {
                             $item_pictures_usage[] = $pm_value;
-                            //$img_info = $this->tryGetImage($pm_value);
-                            //if (!$img_info) {
-                            //    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
-                            //    $item_pictures_other[] = $img_info;
-                            //    continue;
-                            //}
-                            //$img_info["href"] = $pm_value;
-                            //$item_pictures[] = $img_info;
                             $version_rank += 1;
                             $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value), "version" => $version_rank);
                             $item_pictures[] = $img_info;
@@ -131,30 +122,15 @@ class WordPressImporter extends CMSImporterPlugin {
 
         // empty wp posts shall not contain multiplied pictures,
         // but we take them as different versions of a single image
-        //if ((!$text_empty) || (empty($item_pictures))) {
-            if (array_key_exists('attachment_url', $p_post)) {
-                $pm_value = $p_post['attachment_url'];
-                if (!in_array($pm_value, $item_pictures_usage)) {
-                    $item_pictures_usage[] = $pm_value;
-                    //$img_info = $this->tryGetImage($pm_value);
-                    //if (!$img_info) {
-                    //    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value));
-                    //    $item_pictures_other[] = $img_info;
-                    //}
-                    //else {
-                    //    $img_info["href"] = $pm_value;
-                    //    $item_pictures[] = $img_info;
-                    //}
-                    $version_rank += 1;
-                    $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value), "version" => $version_rank);
-                    $item_pictures[] = $img_info;
-                }
+        if (array_key_exists('attachment_url', $p_post)) {
+            $pm_value = $p_post['attachment_url'];
+            if (!in_array($pm_value, $item_pictures_usage)) {
+                $item_pictures_usage[] = $pm_value;
+                $version_rank += 1;
+                $img_info = array("href" => $pm_value, "type" => $this->getImageTypeByName($pm_value), "version" => $version_rank);
+                $item_pictures[] = $img_info;
             }
-        //}
-
-        //if ($text_empty && empty($item_pictures) && (!empty($item_pictures_other))) {
-        //    $item_pictures[] = $item_pictures_other[0];
-        //}
+        }
 
         // the result is either the empty set or several (usually two) versions of a single image
         $return_array = array();
@@ -204,14 +180,10 @@ class WordPressImporter extends CMSImporterPlugin {
                     $img_rank = -1;
                     foreach ($img_matches[1] as $one_img) {
                         $img_rank += 1;
-                        //if (!in_array($one_img, $item_pictures_usage)) {
-                            $img_info = $img_attrs[$img_rank];
-                            $img_info["href"] = $one_img;
-                            $img_info["type"] = $this->getImageTypeByName($one_img);
-                            $return_array[] = array($img_info);
-                            //$item_pictures[] = $img_info;
-                            //$item_pictures_usage[] = $img_info;
-                        //}
+                        $img_info = $img_attrs[$img_rank];
+                        $img_info["href"] = $one_img;
+                        $img_info["type"] = $this->getImageTypeByName($one_img);
+                        $return_array[] = array($img_info);
                     }
                 }
             }
@@ -219,7 +191,6 @@ class WordPressImporter extends CMSImporterPlugin {
 
         return $return_array;
     }
-
 
     /**
      * Makes the import from parsed data (by WXR_Parser) via the NewsMLCreator object
@@ -252,6 +223,8 @@ class WordPressImporter extends CMSImporterPlugin {
 
         $categories_by_slug = $import_data["categories_by_slug"];
 
+        $used_unames = array(); // for unique names
+
         foreach ($import_data["posts"] as $one_post) {
             # firstly, we need to take all the images links to know whether we shall create a single newsItem or several newsItems from a single post
             # single newsItem for: having a text and no image, or having a single (even when with several versions) image and no text
@@ -282,13 +255,28 @@ class WordPressImporter extends CMSImporterPlugin {
 
             // creating the main newsItem ('text' for text/composite posts, 'picture' for (attached) image posts)
             $item_holder = $p_newsmlHolder->createItem();
-            $item_holder->setCreated(); // can be set explicitely like ("1234-56-78", "11:22:33.000", "+01:00")
+
+            $one_date_time = gmdate("Y-m-d");
+            $item_holder->setCreated($one_date_time); // have to be set explicitely ("1234-56-78", "11:22:33.000", "+01:00") if item has some asset(s)
             $item_holder->setCopyright($copyright_info);
 
             $author_name = $one_post["post_author"];
             if (array_key_exists($one_post["post_author"], $import_data["authors"])) {
                 $author_name = $import_data["authors"][$one_post["post_author"]]["author_display_name"];
             }
+
+            $one_uname = str_replace(array("\"", ":", "$"), array("-", "-", "-"), $one_post["post_name"]);
+            $one_uname_test = $one_uname;
+            $one_uname_test_rank = 1;
+            while (array_key_exists($one_uname_test, $used_unames)) {
+                echo "$one_uname_test existed\n";
+                $one_uname_test_rank += 1;
+                $one_uname_test = $one_uname . "-" . $one_uname_test_rank;
+            }
+
+            $one_uname = $one_uname_test;
+            $item_holder->setUniqueName($one_uname);
+            $used_unames[$one_uname] = true;
 
             $item_holder->setCreator($one_post["post_author"], $author_name);
             $item_holder->setHeadline($one_post["post_title"]);
@@ -299,25 +287,12 @@ class WordPressImporter extends CMSImporterPlugin {
             }
             $item_holder->setLink($orig_link);
 
-/*
-            $set_content_text = false;
-            $content_text_trimmed = trim($content_text);
-            if (!empty($content_text_trimmed)) {
-                $set_content_text = true;
-            }
-            if (empty($item_pictures) && empty($item_videos)) {
-                $set_content_text = true;
-            }
-*/
-            //if ($set_content_text) {
             if (("text" == $content_type) || ("composite" == $content_type)) {
                 $item_holder->setContent("text", $content_text);
             }
 
-            //if (!empty($item_pictures)) {
             if ("picture") {
-                //$item_holder->setContent("images", $item_pictures);
-                $item_holder->setContent("images", $image_list_meta[0]);
+                $item_holder->setContent("images", $image_list_meta[0]); // the length of this array is one here, may change at next versions
             }
 
             $subjects = $one_post["terms"];
@@ -325,9 +300,14 @@ class WordPressImporter extends CMSImporterPlugin {
                 $subjects = array();
             }
             foreach ($subjects as $one_term) {
+                if (empty($one_term) || empty($one_term["slug"]) || empty($one_term["name"]) || empty($one_term["domain"])) {
+                    continue;
+                }
+                $one_term_slug = str_replace(array("\"", ":", "/"), array("-", "-", "-"), $one_term["slug"]);
+
                 // note that categories are hierarchical
                 if ("category" == $one_term["domain"]) {
-                    $cat_path = $cat_slug_run = $cat_slug = $one_term["slug"];
+                    $cat_path = $cat_slug_run = $cat_slug = $one_term_slug;
                     $cat_slug_used = array(
                         $cat_slug_run => true,
                     );
@@ -348,37 +328,52 @@ class WordPressImporter extends CMSImporterPlugin {
                         $cat_name_arr[] = $categories_by_slug[$cat_slug_run]["cat_name"];
                     }
                     $cat_name_arr = array_reverse($cat_name_arr);
-                    $item_holder->setSubject("Path:Category#" . $cat_path, json_encode($cat_name_arr));
+                    $item_holder->setSubject("Path:Category//" . $cat_path, json_encode($cat_name_arr));
                 }
                 if ("post_tag" == $one_term["domain"]) {
-                    $item_holder->setSubject("Item:Tag#" . $one_term["slug"], $one_term["name"]);
+                    $item_holder->setSubject("Item:Tag//" . $one_term_slug, $one_term["name"]);
                 }
             }
-
-            $p_newsmlHolder->appendItem($item_holder);
 
             if ("composite" == $content_type) {
                 $image_rank = 0;
 
-                //foreach ($image_list_meta) {
-                //    ;
-                //}
                 foreach ($image_list_text as $one_img_set) {
                     if (empty($one_img_set)) {
                         continue;
                     }
+                    $image_rank += 1;
+                    $item_holder->setImageLink($image_rank);
+                }
+            }
+
+            $p_newsmlHolder->appendItem($item_holder);
+            $item_holder = null;
+
+            if ("composite" == $content_type) {
+                $image_rank = 0;
+
+                // the $image_list_meta is non-zero just for 'image' type messages, this may change at future
+                foreach ($image_list_text as $one_img_set) {
+                    if (empty($one_img_set)) {
+                        continue;
+                    }
+                    $image_rank += 1;
 
                     $item_holder = $p_newsmlHolder->createItem();
-                    $item_holder->setCreated(); // can be set explicitely like ("1234-56-78", "11:22:33.000", "+01:00")
+                    $ret = $item_holder->becomeAsset("image", $image_rank);
+                    //if (!$ret) {echo "could not become asset!\n";}
+                    $item_holder->setCreated($one_date_time); // if the item is an asset, this has to be set explicitely into the owner value
+                    $item_holder->setUniqueName($one_uname); // if the item is an asset, this has to be set explicitely into the owner value
+
                     $item_holder->setCopyright($copyright_info);
 
                     $item_holder->setCreator($one_post["post_author"], $author_name);
-                    $item_holder->setHeadline($one_post["post_title"]);
+                    $item_holder->setHeadline($one_post["post_title"] . ' # image ' . $image_rank);
 
                     // we need to modify the guid
-                    $image_rank += 1;
-                    $slugline_image = $one_post["post_name"] . "#image-" . $image_rank;
-                    // set the slugline to contain the image spec, since the slugline is used for message id
+                    $slugline_image = $one_post["post_name"] . '-image-' . $image_rank;
+                    // already not: set the slugline to contain the image spec, since the slugline is used for message id
                     $item_holder->setSlugline($slugline_image);
                     $item_holder->setLink($orig_link);
 
@@ -386,10 +381,12 @@ class WordPressImporter extends CMSImporterPlugin {
 
                     if (array_key_exists("title", $one_img_set[0])) {
                         $img_title = $one_img_set[0]["title"];
-                        $item_holder->setSubject("Image:Title", $img_title);
+                        //$item_holder->setSubject("Image:Title", $img_title);
+                        $item_holder->setTitle($img_title);
                     }
 
                     $p_newsmlHolder->appendItem($item_holder);
+                    $item_holder = null;
                 }
             }
 

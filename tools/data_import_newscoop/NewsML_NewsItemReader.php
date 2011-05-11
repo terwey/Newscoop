@@ -28,7 +28,14 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
     public function count()
     {
         return 1;
-        // return count($this->root->packageItem->itemRef);
+    }
+
+    public function countNews()
+    {
+        if ($this->isNews()) {
+            return 1;
+        }
+        return 0;
     }
 
     public function item($index)
@@ -39,14 +46,6 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
 
         return $this->root;
 
-        //$node = $this->root->itemSet->newsItem[$index];
-        //if (!$node) {
-        //    return NULL;
-        //}
-
-        //return (object)array(
-        //    'guid' => (string) $node->attributes()->guid,
-        //);
     }
 
     public static function CanRead(\SimpleXMLElement $root)
@@ -96,7 +95,7 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
             $attrs_dsc = $attrs_arr[1];
             $attrs_cms = '__default'; // (default) cms type of the subject
             $attrs_lit = $attrs_dsc; // slug name of the subject (if w/o name)
-            $attrs_dsc_arr = explode('#', (string) $attrs_dsc);
+            $attrs_dsc_arr = explode('//', (string) $attrs_dsc);
             if (2 == count($attrs_dsc_arr)) {
                 $attrs_cms = $attrs_dsc_arr[0]; // cms type of the subject
                 $attrs_lit = $attrs_dsc_arr[1]; // slug name of the subject
@@ -198,23 +197,35 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
             return null;
         }
 
-        return $this->root->contentSet->inlineXML;
+        return (string) $this->root->contentSet->inlineXML;
     }
 
     public function getLink() {
-        if ((!$this->root) || (!$this->root->contentMeta)) {
+        if ((!$this->root) || (!$this->root->contentMeta) || (!$this->root->contentMeta->link)) {
             return null;
         }
 
-        $link = $this->root->contentMeta->link;
-        $attrs = $link->attributes();
+        $links = $this->root->contentMeta->link;
+        if (!is_array($links)) {
+            $links = array($links);
+        }
+        foreach ($links as $one_link) {
+            $attrs = $one_link->attributes();
+            if ("itemrel:original" != strtolower((string) $attrs['rel'])) {
+                continue;
+            }
+            return (string) $attrs['href'];
+        }
+
+        //$attrs = $link->attributes();
         // var_dump($attrs);
 
         //if ((!is_array($attrs)) || (!array_key_exists("href", $attrs))) {
         //    return null;
         //}
 
-        return $attrs['href'];
+        //return $attrs['href'];
+        return null;
     }
 
     public function getCreator() {
@@ -256,4 +267,78 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
 
         return (string) $attrs->guid;
     }
+
+
+
+
+
+    public function getTitle() { // non-empty usually just for images
+        if ((!$this->root) || (!$this->root->itemMeta) || (!$this->root->itemMeta->title)) {
+            return null;
+        }
+
+        return (string) $this->root->itemMeta->title;
+    }
+
+    public function getDependencies() {
+        if ((!$this->root) || (!$this->root->contentMeta) || (!$this->root->contentMeta->link)) {
+            return null;
+        }
+
+        $dependencies = array();
+
+        foreach ($this->root->contentMeta->link as $one_link) {
+            $attrs = $one_link->attributes();
+            if (strtolower("itemrel:dependsOn") == strtolower((string) $attrs['rel'])) {
+                $residref = (string) $attrs['residref'];
+                if (!empty($residref)) {
+                    $dependencies[] = $residref;
+                }
+            }
+        }
+
+        return $dependencies;
+    }
+
+    public function getContentImages() {
+        if ((!$this->root) || (!$this->root->contentSet) || (!$this->root->contentSet->remoteContent)) {
+            return null;
+        }
+
+        $rem_images = array();
+
+        $rem_content = $this->root->contentSet->remoteContent;
+        foreach ($rem_content as $one_remote) {
+            $attrs = $one_remote->attributes();
+            $one_cont_type = (string) $attrs['contenttype'];
+            if ("image/" != strtolower(substr($one_cont_type, 0, strlen("image/")))) {
+                continue;
+            }
+            $one_image = array(
+                "type" => $one_cont_type,
+                "href" => (string) $attrs['href'],
+                "width" => (string) $attrs['width'],
+                "height" => (string) $attrs['height'],
+                "version" => (string) $attrs['version'],
+            );
+            $rem_images[] = $one_image;
+        }
+
+        return $rem_images;
+    }
+
+    public function isNews() {
+        $guid = $this->getNewsID();
+        if (!$guid) {
+            return false;
+        }
+
+        if (false === strpos($guid, '$')) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
