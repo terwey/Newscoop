@@ -89,7 +89,9 @@ class WXR_Parser_SimpleXML {
         // grab cats, tags and terms
         foreach ($xml->xpath('/rss/channel/wp:category') as $term_arr) {
             $t = $term_arr->children($namespaces['wp']);
-            $one_cat_slug = (string) $t->category_nicename;
+
+            $one_cat_slug = str_replace(array("\"", ":", "/"), array("-", "-", "-"), (string) $t->category_nicename);
+            //$one_cat_slug = (string) $t->category_nicename;
             $one_cat_data = array(
                 'term_id' => (int) $t->term_id,
                 'category_nicename' => $one_cat_slug,
@@ -164,7 +166,8 @@ class WXR_Parser_SimpleXML {
                 if (isset($att['nicename'])) {
                     $post['terms'][] = array(
                         'name' => (string) $c,
-                        'slug' => (string) $att['nicename'],
+                        'slug' => str_replace(array("\"", ":", "/"), array("-", "-", "-"), (string) $att['nicename']),
+                        //'slug' => (string) $att['nicename'],
                         'domain' => (string) $att['domain']
                     );
                 }
