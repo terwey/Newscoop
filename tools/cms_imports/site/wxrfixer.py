@@ -12,9 +12,11 @@ class WXR_Fixer(object):
     # http://en.wikipedia.org/wiki/CDATA
     js_cdata = re.compile(r"]]>[\s]*</script>", re.UNICODE)
     css_cdata = re.compile(r"]]>[\s]*\*/[\s]*</style>", re.UNICODE)
+    amp_cdata = re.compile(r"& ", re.UNICODE)
 
     js_subst = "]]]]><![CDATA[>\n</script>"
     css_subst = "]]]]><![CDATA[>*/\n</style>"
+    amp_subst = "&amp; "
 
     # printing the error messages
     def write_err(self, msg):
@@ -47,6 +49,8 @@ class WXR_Fixer(object):
             # testing on line pairs
             last_line = None
             for line in infile.readlines():
+                line = re.sub(self.amp_cdata, self.amp_subst, line)
+
                 if last_line:
                     double_line = last_line + line
                     checked_dl = re.sub(self.js_cdata, self.js_subst, double_line)
