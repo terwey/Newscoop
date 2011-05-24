@@ -269,7 +269,6 @@ class WordPressImporter extends CMSImporterPlugin {
             $one_uname_test = $one_uname;
             $one_uname_test_rank = 1;
             while (array_key_exists($one_uname_test, $used_unames)) {
-                echo "$one_uname_test existed\n";
                 $one_uname_test_rank += 1;
                 $one_uname_test = $one_uname . "-" . $one_uname_test_rank;
             }
@@ -362,7 +361,6 @@ class WordPressImporter extends CMSImporterPlugin {
 
                     $item_holder = $p_newsmlHolder->createItem();
                     $ret = $item_holder->becomeAsset("image", $image_rank);
-                    //if (!$ret) {echo "could not become asset!\n";}
                     $item_holder->setCreated($one_date_time); // if the item is an asset, this has to be set explicitely into the owner value
                     $item_holder->setUniqueName($one_uname); // if the item is an asset, this has to be set explicitely into the owner value
 

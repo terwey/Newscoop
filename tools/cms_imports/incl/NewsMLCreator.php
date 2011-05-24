@@ -113,22 +113,18 @@ class NewsMLNewsItem {
      */
     public function becomeAsset($p_assetType, $p_assetRank) {
         if (!empty($this->image_links)) {
-            //echo "having some image links?\n";
             return false; // the assets here are just simple items; use grouping for more complex connections
         }
 
         $known_asset_types = array("image" => "picture", "picture" => "picture");
         if (!array_key_exists($p_assetType, $known_asset_types)) {
-            //echo "unknown asset type?\n";
             return false;
         }
         if (!is_numeric($p_assetRank)) {
-            //echo "unknown asset rank?\n";
             return false;
         }
         $p_assetRank = intval($p_assetRank);
         if (0 >= $p_assetRank) {
-            //echo "non-positive asset rank?\n";
             return false;
         }
 
@@ -400,7 +396,6 @@ class NewsMLNewsItem {
     public function isFilled() {
         foreach ($this->required_data as $one_key => $one_info) {
             if (is_null($one_info)) {
-                //echo "$one_key not filled\n";
                 return false;
             }
         }
@@ -630,7 +625,6 @@ class NewsMLCreator {
      */
     public function appendItem(NewsMLNewsItem $p_newsItem) {
         if (!$p_newsItem->isFilled()) {
-            echo "is not filled?\n";
             return false;
         }
 
