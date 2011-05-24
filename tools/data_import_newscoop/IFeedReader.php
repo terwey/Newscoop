@@ -15,13 +15,6 @@ namespace NewsML;
 interface IFeedReader
 {
     /**
-     * Create reader from SimpleXMLElement.
-     *
-     * @param SimpleXMLElement $root
-     */
-   // public function __construct(\SimpleXMLElement $root);
-
-    /**
      * Get single node.
      *
      * @return array or null
@@ -29,27 +22,17 @@ interface IFeedReader
     public function item($index);
 
     /**
-     * Get number of items.
+     * Get number of items, incl. linked media.
      *
      * @return int
      */
     public function count();
 
     /**
-     * Can this reader understand the XML file?
+     * Get number of real news items.
      *
-     * @param SimpleXMLElement $root
-     * @return bool
+     * @return int
      */
-    //public static function CanRead(\SimpleXMLElement $root);
-
-
-    /**
-     * Attributes of the given message feed.
-     *
-     * @return mixed
-     */
-    //public function getAttributes(array &$holder, $sort);
-
+    public function countNews();
 
 }

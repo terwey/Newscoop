@@ -21,11 +21,19 @@ class NewsML_NewsMessageReader implements IFeedCommon, IFeedReader
     /** @var SimpleXMLElement */
     private $root;
 
+    /**
+     * Constructor, requires xml message.
+     */
     public function __construct(\SimpleXMLElement $root)
     {
         $this->root = $root;
     }
 
+    /**
+     * Returns count of all messages, including thos which are just linked media.
+     *
+     * @return int
+     */
     public function count()
     {
         if ((!$this->root) || (!$this->root->itemSet) || (!$this->root->itemSet->packageItem) || (!$this->root->itemSet->packageItem->itemRef)) {
@@ -35,6 +43,11 @@ class NewsML_NewsMessageReader implements IFeedCommon, IFeedReader
         return count($this->root->itemSet->packageItem->itemRef);
     }
 
+    /**
+     * Returns count of real messages, i.e. it omits items of linked media.
+     *
+     * @return int
+     */
     public function countNews()
     {
         if ((!$this->root) || (!$this->root->itemSet) || (!$this->root->itemSet->packageItem) || (!$this->root->itemSet->packageItem->itemRef)) {
@@ -52,6 +65,11 @@ class NewsML_NewsMessageReader implements IFeedCommon, IFeedReader
         return $item_count; // just the real news items are counted here
     }
 
+    /**
+     * Provides specified reader of specified news item.
+     *
+     * @return mixed
+     */
     public function item($index)
     {
         $root = $this->root;
@@ -68,14 +86,13 @@ class NewsML_NewsMessageReader implements IFeedCommon, IFeedReader
         }
 
         return null;
-
-        // var_dump($node); exit;
-        // return $node;
-        //return (object)array(
-        //    'guid' => (string) $node->attributes()->guid,
-        //);
     }
 
+    /**
+     * Provides header of the message.
+     *
+     * @return mixed
+     */
     public function getHeader()
     {
         return $this->root->header;
@@ -133,8 +150,4 @@ class NewsML_NewsMessageReader implements IFeedCommon, IFeedReader
     } // fn getAttributeSet
 
 
-
-
-
-
-}
+} // class NewsML_NewsMessageReader

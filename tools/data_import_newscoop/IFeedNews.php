@@ -15,49 +15,88 @@ namespace NewsML;
 interface IFeedNews
 {
     /**
-     * Create reader from SimpleXMLElement.
-     *
-     * @param SimpleXMLElement $root
-     */
-    // public function __construct(\SimpleXMLElement $root);
-
-    /**
-     * Get single node.
-     *
-     * @return array or null
-     */
-    public function getSlugLine();
-
-    /**
      * Get number of items.
      *
      * @return int
      */
     public function getHeadLine();
 
-    public function getContentText();
-    public function getLink();
-    public function getCreator();
-    public function getService();
-    public function getCopyright();
-    public function getNewsID();
-    //public function ();
+    /**
+     * Get headline node.
+     *
+     * @return array or null
+     */
+    public function getSlugLine();
 
     /**
-     * Can this reader understand the XML file?
+     * Texts of the news.
      *
-     * @param SimpleXMLElement $root
-     * @return bool
+     * @return mixed
      */
-    // public static function CanRead(\SimpleXMLElement $root);
+    public function getContentTexts();
 
+    /**
+     * Origianl linked of the news.
+     *
+     * @return string
+     */
+    public function getLink();
+
+    /**
+     * Creator info of the news.
+     *
+     * @return string
+     */
+    public function getCreator();
+
+    /**
+     * Service info of the news.
+     *
+     * @return string
+     */
+    public function getService();
+
+    /**
+     * Rights info of the news.
+     *
+     * @return string
+     */
+    public function getCopyright();
+
+    /**
+     * GUID of the news.
+     *
+     * @return string
+     */
+    public function getNewsID();
+
+    /**
+     * Title of the news.
+     *
+     * @return string
+     */
+    public function getTitle();
 
     /**
      * Attributes of the given message feed.
      *
      * @return mixed
      */
-    // public function getAttributes(array &$holder, $sort);
+    public function getDependencies();
+
+    /**
+     * Get images from the news content.
+     *
+     * @return mixed
+     */
+    public function getContentImages();
+
+    /**
+     * Item of a real news, or a linked media.
+     *
+     * @return mixed
+     */
+    public function isNews();
 
 
 }

@@ -119,13 +119,23 @@ class NewsMLFeed
     }
 
     /**
-     * Get the number of items in the feed.
+     * Get the number of all (incl. linked media) items in the feed.
      *
      * @return int
      */
     public function count()
     {
         return $this->getReader()->count();
+    }
+
+    /**
+     * Get the number of items in the feed which are real news items, i.e. not just linked media.
+     *
+     * @return int
+     */
+    public function countNews()
+    {
+        return $this->getReader()->countNews();
     }
 
     /**

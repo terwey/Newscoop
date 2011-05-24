@@ -20,16 +20,29 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
     /** @var SimpleXMLElement */
     private $root;
 
+    /**
+     * Constructor, requires xml message.
+     */
     public function __construct(\SimpleXMLElement $root)
     {
         $this->root = $root;
     }
 
+    /**
+     * Returns 1 since this is a single message.
+     *
+     * @return int
+     */
     public function count()
     {
         return 1;
     }
 
+    /**
+     * Returns 1 (if the message is a real news) or 0 (for a linked media).
+     *
+     * @return int
+     */
     public function countNews()
     {
         if ($this->isNews()) {
@@ -38,16 +51,26 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return 0;
     }
 
+    /**
+     * Provides itself, i.e. reader of its news.
+     *
+     * @return mixed
+     */
     public function item($index)
     {
         if (0 !== $index) {
             return null;
         }
 
-        return $this->root;
+        return $this;
 
     }
 
+    /**
+     * Whether objects of this class can be used for reading the given message.
+     *
+     * @return boolean
+     */
     public static function CanRead(\SimpleXMLElement $root)
     {
         return $root->getName() == 'newsItem';
@@ -176,6 +199,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return true;
     }
 
+    /**
+     * Provides slugline info of the message.
+     *
+     * @return string
+     */
     public function getSlugLine() {
         if ((!$this->root) || (!$this->root->contentMeta)) {
             return null;
@@ -184,6 +212,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $this->root->contentMeta->slugline;
     }
 
+    /**
+     * Provides headline info of the message.
+     *
+     * @return string
+     */
     public function getHeadLine() {
         if ((!$this->root) || (!$this->root->contentMeta)) {
             return null;
@@ -192,14 +225,31 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $this->root->contentMeta->headline;
     }
 
-    public function getContentText() {
+    /**
+     * Provides texts (if any) from the content of the news.
+     *
+     * @return mixed
+     */
+    public function getContentTexts() {
         if ((!$this->root) || (!$this->root->contentSet) || (!$this->root->contentSet->inlineXML)) {
             return null;
         }
 
-        return (string) $this->root->contentSet->inlineXML;
+        $loc_texts = array();
+
+        $loc_content = $this->root->contentSet->inlineXML;
+        foreach ($loc_content as $one_local) {
+            $loc_texts[] = (string) $one_local;
+        }
+
+        return $loc_texts;
     }
 
+    /**
+     * Provides original link of the message.
+     *
+     * @return string
+     */
     public function getLink() {
         if ((!$this->root) || (!$this->root->contentMeta) || (!$this->root->contentMeta->link)) {
             return null;
@@ -217,17 +267,14 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
             return (string) $attrs['href'];
         }
 
-        //$attrs = $link->attributes();
-        // var_dump($attrs);
-
-        //if ((!is_array($attrs)) || (!array_key_exists("href", $attrs))) {
-        //    return null;
-        //}
-
-        //return $attrs['href'];
         return null;
     }
 
+    /**
+     * Provides creator info of the message.
+     *
+     * @return string
+     */
     public function getCreator() {
         if ((!$this->root) || (!$this->root->contentMeta) || (!$this->root->contentMeta->creator)) {
             return null;
@@ -236,6 +283,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $this->root->contentMeta->creator->name;
     }
 
+    /**
+     * Provides service info of the message.
+     *
+     * @return string
+     */
     public function getService() {
         if ((!$this->root) || (!$this->root->itemMeta) || (!$this->root->itemMeta->service)) {
             return null;
@@ -244,6 +296,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $this->root->itemMeta->service->name;
     }
 
+    /**
+     * Provides rights info of the message.
+     *
+     * @return string
+     */
     public function getCopyright() {
         if ((!$this->root) || (!$this->root->rightsInfo) || (!$this->root->rightsInfo->copyrightHolder)) {
             return null;
@@ -255,6 +312,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $attrs['literal'];
     }
 
+    /**
+     * Provides GUID of the message.
+     *
+     * @return string
+     */
     public function getNewsID() {
         if (!$this->root) {
             return null;
@@ -268,10 +330,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return (string) $attrs->guid;
     }
 
-
-
-
-
+    /**
+     * Provides title of the message.
+     *
+     * @return string
+     */
     public function getTitle() { // non-empty usually just for images
         if ((!$this->root) || (!$this->root->itemMeta) || (!$this->root->itemMeta->title)) {
             return null;
@@ -280,6 +343,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return (string) $this->root->itemMeta->title;
     }
 
+    /**
+     * Provides IDs of items that this message requires.
+     *
+     * @return mixed
+     */
     public function getDependencies() {
         if ((!$this->root) || (!$this->root->contentMeta) || (!$this->root->contentMeta->link)) {
             return null;
@@ -300,6 +368,12 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $dependencies;
     }
 
+    /**
+     * Provides images (if any) from the content of the news.
+     * It does not take linked images; use getDependencies and their methods for that.
+     *
+     * @return mixed
+     */
     public function getContentImages() {
         if ((!$this->root) || (!$this->root->contentSet) || (!$this->root->contentSet->remoteContent)) {
             return null;
@@ -327,6 +401,11 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return $rem_images;
     }
 
+    /**
+     * Is it a real message, or just a dependency content (e.g. an image of a news).
+     *
+     * @return boolean
+     */
     public function isNews() {
         $guid = $this->getNewsID();
         if (!$guid) {
@@ -340,5 +419,4 @@ class NewsML_NewsItemReader implements IFeedCommon, IFeedReader, IFeedNews
         return false;
     }
 
-
-}
+} // class NewsML_NewsItemReader
