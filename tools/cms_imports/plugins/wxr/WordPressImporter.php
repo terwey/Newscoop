@@ -22,6 +22,25 @@ require_once('WordPressParsers.php');
  */
 class WordPressImporter extends CMSImporterPlugin {
 
+    private function slugify($p_text) {
+        $p_text = strip_tags($p_text);
+        $p_text = preg_replace('~[^\\pL\d]+~u', '-', $p_text);
+        $p_text = trim($p_text, '-');
+        if (function_exists('iconv'))
+        {
+            $p_text = iconv('utf-8', 'us-ascii//TRANSLIT', $p_text);
+        } else {
+            $p_text = preg_replace('~[^a-zA-Z\d]+~', '-', $p_text);
+            $p_text = trim($p_text, '-');
+        }
+        $p_text = strtolower($p_text);
+        $p_text = preg_replace('~[^-\w]+~', '', $p_text);
+        if (empty($p_text)) {
+            return "";
+        }
+        return $p_text;
+    }
+
     private function getImageTypeByName($p_path) {
         $name_arr = explode(".", (string) $p_path);
         $name_arr_last = count($name_arr) - 1;
@@ -222,6 +241,7 @@ class WordPressImporter extends CMSImporterPlugin {
         $copyright_info = "" . $import_data["title"] . " - " . $import_data["link"];
 
         $categories_by_slug = $import_data["categories_by_slug"];
+        $categories_slugs_by_name = $import_data["categories_slugs_by_name"];
 
         $used_unames = array(); // for unique names
 
@@ -265,7 +285,19 @@ class WordPressImporter extends CMSImporterPlugin {
                 $author_name = $import_data["authors"][$one_post["post_author"]]["author_display_name"];
             }
 
-            $one_uname = str_replace(array("\"", ":", "$"), array("-", "-", "-"), $one_post["post_name"]);
+            $item_holder->setCreator($one_post["post_author"], $author_name);
+            $item_holder->setHeadline($one_post["post_title"]);
+
+            $cur_slugline = $one_post["post_name"];
+            if (empty($cur_slugline)) {
+                $cur_slugline = $this->slugify($one_post["post_title"]);
+                if (empty($cur_slugline)) {
+                    $cur_slugline = "a-post";
+                }
+            }
+
+            $one_uname = $cur_slugline;
+            $one_uname = str_replace(array("\"", ":", "$"), array("-", "-", "-"), $one_uname);
             $one_uname_test = $one_uname;
             $one_uname_test_rank = 1;
             while (array_key_exists($one_uname_test, $used_unames)) {
@@ -277,9 +309,7 @@ class WordPressImporter extends CMSImporterPlugin {
             $item_holder->setUniqueName($one_uname);
             $used_unames[$one_uname] = true;
 
-            $item_holder->setCreator($one_post["post_author"], $author_name);
-            $item_holder->setHeadline($one_post["post_title"]);
-            $item_holder->setSlugline($one_post["post_name"]);
+            $item_holder->setSlugline($cur_slugline);
             $orig_link = $one_post["guid"]; // this is a unique id that my contain old (already not valid) information
             if (array_key_exists("link", $one_post)) {
                 $orig_link = $one_post["link"]; // the link info shall be the right one, if available
@@ -290,11 +320,14 @@ class WordPressImporter extends CMSImporterPlugin {
                 $item_holder->setContent("text", $content_text);
             }
 
-            if ("picture") {
+            if ("picture" == $content_type) {
                 $item_holder->setContent("images", $image_list_meta[0]); // the length of this array is one here, may change at next versions
             }
 
-            $subjects = $one_post["terms"];
+            $subjects = array();
+            if (array_key_exists("terms", $one_post)) {
+                $subjects = $one_post["terms"];
+            }
             if (!$subjects) {
                 $subjects = array();
             }
@@ -318,13 +351,30 @@ class WordPressImporter extends CMSImporterPlugin {
                         }
                         // taking the parent of the current running category
                         $cat_slug_run = $categories_by_slug[$cat_slug_run]["category_parent"];
+                        $cat_name_run = $cat_slug_run; // if slug/name will not be found
                         // not to cycle if some wrong data at the document
-                        if ((!$cat_slug_run) || (array_key_exists($cat_slug_run, $cat_slug_used))) {
+                        if (!$cat_slug_run) {
                             break;
                         }
+                        // they can have slugs or names or whatever as category parents
+                        if (array_key_exists($cat_slug_run, $categories_by_slug)) {
+                            $cat_name_run = $categories_by_slug[$cat_slug_run]["cat_name"];
+                        } else {
+                            if (array_key_exists($cat_slug_run, $categories_slugs_by_name)) {
+                                $cat_slug_run = $categories_slugs_by_name[$cat_slug_run];
+                            } else {
+                                $cat_slug_run = $this->slugify($cat_slug_run);
+                            }
+                        }
+
+                        // not to cycle if some wrong data at the document
+                        if (array_key_exists($cat_slug_run, $cat_slug_used)) {
+                            break;
+                        }
+
                         $cat_path = $cat_slug_run . "/" . $cat_path;
                         $cat_slug_used[] = $cat_slug_run;
-                        $cat_name_arr[] = $categories_by_slug[$cat_slug_run]["cat_name"];
+                        $cat_name_arr[] = $cat_name_run;
                     }
                     $cat_name_arr = array_reverse($cat_name_arr);
                     $item_holder->setSubject("Path:Category//" . $cat_path, json_encode($cat_name_arr));
@@ -370,7 +420,7 @@ class WordPressImporter extends CMSImporterPlugin {
                     $item_holder->setHeadline($one_post["post_title"] . ' # image ' . $image_rank);
 
                     // we need to modify the guid
-                    $slugline_image = $one_post["post_name"] . '-image-' . $image_rank;
+                    $slugline_image = $cur_slugline . '-image-' . $image_rank;
                     // already not: set the slugline to contain the image spec, since the slugline is used for message id
                     $item_holder->setSlugline($slugline_image);
                     $item_holder->setLink($orig_link);
