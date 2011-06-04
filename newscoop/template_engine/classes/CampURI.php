@@ -985,7 +985,7 @@ abstract class CampURI
             case 'articleattachment':
                 $context = CampTemplate::singleton()->context();
                 $attachment = new Attachment($context->attachment->identifier);
-                $this->m_buildPath = $attachment->getAttachmentUrl();
+                $this->m_buildPath = $attachment->getAttachmentUri();
                 $this->m_buildQueryArray = array();
                 $p_params = array();
                 break;
@@ -1166,18 +1166,24 @@ abstract class CampURI
 
     private function readUser()
     {
+        $this->m_preview = false;
+        if (CampRequest::GetVar('preview') == 'on') {
+            $token = CampRequest::GetVar('LoginUserKey');
+            $userId = CampRequest::GetVar('LoginUserId');
+            $user = new MetaUser($userId);
+            $this->m_preview = $user->checkToken($token);
+        }
+
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity()) {
             $user = new User($auth->getIdentity());
             if ($user->exists()) {
                 $this->m_user = new MetaUser($auth->getIdentity());
-                $this->m_preview = CampRequest::GetVar('preview') == 'on' && $this->m_user->is_admin;
             }
         } else {
             $ipUsers = IPAccess::GetUsersHavingIP($_SERVER['REMOTE_ADDR']);
             if (count($ipUsers) > 0) {
                 $this->m_user = new MetaUser($ipUsers[0]->getUserId());
-                $this->m_preview = CampRequest::GetVar('preview') == 'on' && $this->m_user->is_admin;
             }
         }
     }
