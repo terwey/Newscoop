@@ -17,16 +17,18 @@
     }
 
     foreach ($this->rulesParents[$resource] as $rule) { ?>
-    <dd class="<?php echo $rule->class; ?> inherited"><strong><?php echo $rule->type; ?></strong> <?php echo $rule->action ?: getGS('Any action'); ?></dd>
+    <dd class="<?php echo $rule->class; ?><?php echo $this->canManage ? ' inherited' : ''; ?>"><strong><?php echo $rule->type; ?></strong> <?php echo $rule->action ?: getGS('Any action'); ?></dd>
     <?php } ?>
 
     <?php foreach ((array) $this->rules[$resource] as $rule) { ?>
     <dd class="<?php echo $rule->class; ?>">
+        <?php if ($this->canManage) { ?>
         <a class="delete icon" href="<?php echo $this->url(array(
             'controller' => 'acl',
             'action' => 'delete',
             'rule' => $rule->id,
         )); ?>" title="<?php putGS('Remove rule'); ?>"><?php putGS('Remove'); ?></a>
+        <?php } ?>
         <strong><?php echo $rule->type; ?></strong> <?php echo $rule->action ?: getGS('Any action'); ?>
     </dd>
     <?php } ?>

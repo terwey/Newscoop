@@ -119,13 +119,16 @@ class Admin_AclController extends Zend_Controller_Action
         $this->view->resources = $resources;
         $this->view->rules = $rules;
         $this->view->rulesParents = $rulesParents;
+        $this->view->canManage = $this->_helper->acl->isAllowed('user', 'manage');
 
-        $this->_helper->sidebar(array(
-            'label' => getGS('Add new rule'),
-            'module' => 'admin',
-            'controller' => 'acl',
-            'action' => 'form',
-        ), true);
+        if ($this->view->canManage) {
+            $this->_helper->sidebar(array(
+                'label' => getGS('Add new rule'),
+                'module' => 'admin',
+                'controller' => 'acl',
+                'action' => 'form',
+            ), true);
+        }
     }
 
     public function deleteAction()

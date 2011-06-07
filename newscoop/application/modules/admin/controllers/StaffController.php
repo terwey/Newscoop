@@ -12,15 +12,12 @@ use Newscoop\Entity\User\Staff;
  */
 class Admin_StaffController extends Zend_Controller_Action
 {
+    /** @var Newscoop\Entity\Repository\User\StaffRepository */
     private $repository;
 
+    /** @var Admin_Form_Staff */
     private $form;
 
-    /**
-     * Init
-     *
-     * @return void
-     */
     public function init()
     {
         camp_load_translation_strings('api');
@@ -77,7 +74,8 @@ class Admin_StaffController extends Zend_Controller_Action
 
         // check permission
         $auth = Zend_Auth::getInstance();
-        if ($staff->getId() != $auth->getIdentity()) { // check if user != current
+        $self = $staff->getId() == $auth->getIdentity();
+        if (!$self) { // check if user != current
             $this->_helper->acl->check('user', 'manage');
         }
 
@@ -91,19 +89,30 @@ class Admin_StaffController extends Zend_Controller_Action
 
         $this->view->form = $this->form;
 
-        $this->view->actions = array(
-            array(
+        if ($this->_helper->acl->isAllowed('user', 'manage')) {
+            $this->view->actions = array(array(
                 'label' => getGS('Edit access'),
                 'module' => 'admin',
                 'controller' => 'staff',
                 'action' => 'edit-access',
+                'resource' => 'user',
+                'privilege' => 'manage',
                 'params' => array(
                     'user' => $staff->getId(),
                 ),
-                'resource' => 'user',
-                'privilege' => 'manage',
-            ),
-        );
+            ));
+        } else {
+            $this->view->actions = array(array(
+                'label' => getGS('View access'),
+                'module' => 'admin',
+                'controller' => 'profile',
+                'action' => 'access',
+                'params' => array(
+                    'user' => $staff->getId(),
+                    'role' => $staff->getRoleId(),
+                ),
+            ));
+        }
     }
 
     public function editAccessAction()
@@ -113,7 +122,6 @@ class Admin_StaffController extends Zend_Controller_Action
 
         $this->_helper->actionStack('edit', 'acl', 'admin', array(
             'role' => $staff->getRoleId(),
-            'user' => $staff->getId(),
         ));
     }
 

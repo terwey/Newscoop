@@ -221,16 +221,6 @@ $pages[2]['pages'][] = array(
     'privilege' => 'manage',
 );
 
-$pages[2]['pages'][] = array(
-    'label' => getGS('Change your password'),
-    'module' => 'admin',
-    'controller' => 'staff',
-    'action' => 'edit',
-    'params' => array(
-        'user' => $g_user->getId(),
-    ),
-);
-
 if ($showAdminActions) {
     if ($g_user->hasPermission('ManageIssue') && $g_user->hasPermission('AddArticle')) {
         $pages[2]['pages'][] = array(
@@ -255,6 +245,8 @@ if ($showAdminActions) {
         'resource' => 'backup',
         'privilege' => 'manage',
     );
+} else {
+    unset($pages[2]);
 }
 
 // add configure menu
@@ -491,7 +483,7 @@ if ($showUserMenu) {
         'resource' => 'user-group',
         'privilege' => 'manage',
         'pages' => array(
-        array(
+            array(
                 'label' => getGS('Add new user type'),
                 'module' => 'admin', 
                 'controller' => 'user-group',
@@ -537,6 +529,23 @@ if (!empty($plugin_pages)) {
     );
 }
 
+// user account
+$auth = Zend_Auth::getInstance();
+$pages[] = array(
+    'label' => getGS('My account'),
+    'module' => 'admin',
+    'controller' => 'profile',
+    'visible' => false,
+    'pages' => array(
+        array(
+            'label' => getGS('View access'),
+            'module' => 'admin',
+            'controller' => 'profile',
+            'action' => 'access',
+        ),
+    ),
+);
+
 // set menu classes to speed up loading
 foreach ($pages as $i => $page) {
     $pages[$i]['class'] = 'fg-button ui-widget fg-button-icon-right fg-button-ui-state-default fg-button-ui-corner-all';
@@ -561,7 +570,10 @@ foreach ($pages as $i => $page) {
 $nav = new Zend_Navigation($pages);
 $view->navigation()->breadcrumbs()
     ->setContainer($nav)
-    ->setRenderInvisible(true);
+    ->setMinDepth(0)
+    ->setRenderInvisible(true)
+    ->setLinkLast(false)
+    ->setSeparator(' &gt; ');
 ?>
 
 <div class="breadcrumb-bar zend clearfix">
