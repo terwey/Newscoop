@@ -51,7 +51,7 @@ class NewscoopEntityAclRuleProxy extends \Newscoop\Entity\Acl\Rule implements \D
         return parent::setRole($role);
     }
 
-    public function setResource(\Newscoop\Entity\Acl\Resource $resource = NULL)
+    public function setResource($resource)
     {
         $this->_load();
         return parent::setResource($resource);
@@ -63,13 +63,7 @@ class NewscoopEntityAclRuleProxy extends \Newscoop\Entity\Acl\Rule implements \D
         return parent::getResource();
     }
 
-    public function getResourceId()
-    {
-        $this->_load();
-        return parent::getResourceId();
-    }
-
-    public function setAction(\Newscoop\Entity\Acl\Action $action = NULL)
+    public function setAction($action)
     {
         $this->_load();
         return parent::setAction($action);
@@ -79,12 +73,6 @@ class NewscoopEntityAclRuleProxy extends \Newscoop\Entity\Acl\Rule implements \D
     {
         $this->_load();
         return parent::getAction();
-    }
-
-    public function getActionName()
-    {
-        $this->_load();
-        return parent::getActionName();
     }
 
 

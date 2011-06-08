@@ -15,6 +15,7 @@ class Admin_View_Helper_RenderActions extends Zend_View_Helper_Abstract
     {
         if ($actions === NULL) {
             $actions = $this->view->actions;
+            $clean = true;
         }
 
         if (empty($actions)) {
@@ -24,5 +25,9 @@ class Admin_View_Helper_RenderActions extends Zend_View_Helper_Abstract
         $navigation = new Zend_Navigation($actions);
         $this->view->navigation()->menu()->setContainer($navigation);
         echo $this->view->render('actions.phtml');
+
+        if (!empty($clean)) { // render only once
+            $this->view->actions = null;
+        }
     }
 }

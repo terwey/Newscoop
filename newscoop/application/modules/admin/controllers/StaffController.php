@@ -29,12 +29,10 @@ class Admin_StaffController extends Zend_Controller_Action
         $this->form->setAction('')->setMethod('post');
 
         if ($this->_helper->acl->isAllowed('user', 'manage')) { // set form user groups
-            $groups = array();
             $groupRepository = $this->_helper->entity->getRepository('Newscoop\Entity\User\Group');
             foreach ($groupRepository->findAll() as $group) {
-                $groups[$group->getId()] = $group->getName();
+                $this->form->groups->addMultioption($group->getId(), $group->getName());
             }
-            $this->form->getElement('groups')->setMultioptions($groups);
         }
 
         // set form countries
@@ -71,6 +69,7 @@ class Admin_StaffController extends Zend_Controller_Action
     public function editAction()
     {
         $staff = $this->_helper->entity->get(new Staff, 'user');
+        $params = $this->getRequest()->getParams();
 
         // check permission
         $auth = Zend_Auth::getInstance();
@@ -89,40 +88,25 @@ class Admin_StaffController extends Zend_Controller_Action
 
         $this->view->form = $this->form;
 
-        if ($this->_helper->acl->isAllowed('user', 'manage')) {
+        if (!$this->_getParam('next')) {
             $this->view->actions = array(array(
-                'label' => getGS('Edit access'),
+                'label' => getGS('Permissions'),
                 'module' => 'admin',
                 'controller' => 'staff',
-                'action' => 'edit-access',
+                'action' => 'permissions',
                 'resource' => 'user',
                 'privilege' => 'manage',
                 'params' => array(
                     'user' => $staff->getId(),
                 ),
             ));
-        } else {
-            $this->view->actions = array(array(
-                'label' => getGS('View access'),
-                'module' => 'admin',
-                'controller' => 'profile',
-                'action' => 'access',
-                'params' => array(
-                    'user' => $staff->getId(),
-                    'role' => $staff->getRoleId(),
-                ),
-            ));
         }
     }
 
-    public function editAccessAction()
+    public function permissionsAction()
     {
-        $staff = $this->_helper->entity(new Staff, 'user');
+        $staff = $this->_helper->entity('Newscoop\Entity\User\Staff', 'user');
         $this->view->staff = $staff;
-
-        $this->_helper->actionStack('edit', 'acl', 'admin', array(
-            'role' => $staff->getRoleId(),
-        ));
     }
 
     /**
@@ -213,7 +197,8 @@ class Admin_StaffController extends Zend_Controller_Action
 
     private function handleForm(Zend_Form $form, Staff $staff)
     {
-        if ($this->getRequest()->isPost() && $form->isValid($_POST)) {
+        $request = $this->getRequest();
+        if ($request->isPost() && $form->isValid($request->getPost())) {
             $this->repository->save($staff, $form->getValues());
             $this->_helper->entity->getManager()->flush();
 
@@ -223,6 +208,14 @@ class Admin_StaffController extends Zend_Controller_Action
             }
 
             $this->_helper->flashMessenger(getGS('Staff member saved.'));
+
+            $next = $this->_getParam('next');
+            if ($next) {
+                $this->_redirect($next, array(
+                    'prependBase' => false,
+                ));
+            }
+
             $this->_helper->redirector->gotoSimple('edit', 'staff', 'admin', array(
                 'user' => $staff->getId(),
             ));

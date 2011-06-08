@@ -20,7 +20,7 @@ class Admin_AclController extends Zend_Controller_Action
     /** @var array */
     private $ruleTypes;
 
-    /** @var Doctrine\ORM\EntityRepository */
+    /** @var Newscoop\Entity\Repository\Acl\RuleRepository */
     private $ruleRepository;
 
     public function init()
@@ -34,58 +34,30 @@ class Admin_AclController extends Zend_Controller_Action
             'deny' => getGS('Deny'),
         );
 
-        $this->_helper->contextSwitch()
-            ->addActionContext('actions', 'json')
-            ->initContext();
-
         $this->acl = Zend_Registry::get('acl');
+
+        $this->_helper->contextSwitch()
+            ->addActionContext('get-resource-actions', 'json')
+            ->initContext();
     }
 
-    public function formAction()
+    public function listAction()
     {
-        $form = $this->getForm()
-            ->setAction('')
-            ->setMethod('post')
-            ->setDefaults(array(
-                'type' => 'allow',
-                'role' => $this->_getParam('role', 0),
-                'group' => $this->_getParam('group', 0),
-                'user' => $this->_getParam('user', 0),
-            ));
+        $role = $this->_helper->entity->get('Newscoop\Entity\Acl\Role', 'role');
 
-        // form handle
-        if ($this->getRequest()->isPost() && $form->isValid($_POST)) {
-            try {
-                $rule = new Rule();
-                $this->ruleRepository->save($rule, $form->getValues());
-                $this->_helper->entity->flushManager();
-
-                $this->_helper->flashMessenger->addMessage(getGS('Rule saved.'));
-                $this->redirect();
-            } catch (PDOException $e) {
-                $form->role->addError(getGS('Rule for this resource/action exists already.'));
-            }
-        }
-
-        $this->view->form = $form;
-    }
-
-    public function editAction()
-    {
-        $role = $this->_helper->entity->get(new Role, 'role');
+        // get resources
         $resources = array('' => getGS('Global'));
+        $rules = $inheritedRules = array('' => array());
         foreach (array_keys($this->acl->getResources()) as $resource) {
             $resources[$resource] = $this->formatName($resource);
+
+            // init arrays
+            $rules[$resource] = $inheritedRules[$resource] = array();
         }
 
         // get rules
-        $rules = array();
         foreach ($role->getRules() as $rule) {
             $resource = $rule->getResource();
-            if (!isset($rules[$resource])) {
-                $rules[$resource] = array();
-            }
-
             $rules[$resource][] = (object) array(
                 'id' => $rule->getId(),
                 'class' => $rule->getType(),
@@ -94,18 +66,12 @@ class Admin_AclController extends Zend_Controller_Action
             );
         }
 
-        $rulesParents = array();
-        $user = $this->_getParam('user', false);
-        if ($user) {
-            $staff = $this->_helper->entity->get(new Staff, 'user', FALSE);
+        try { // get inherited rules
+            $staff = $this->_helper->entity->get('Newscoop\Entity\User\Staff', 'user');
             foreach ($staff->getGroups() as $group) {
                 foreach ($group->getRoleRules() as $rule) {
                     $resource = $rule->getResource();
-                    if (!isset($rulesParents[$resource])) {
-                        $rulesParents[$resource] = array();
-                    }
-
-                    $rulesParents[$resource][] = (object) array(
+                    $inheritedRules[$resource][] = (object) array(
                         'id' => $rule->getId(),
                         'class' => $rule->getType(),
                         'type' => $this->ruleTypes[$rule->getType()],
@@ -113,108 +79,86 @@ class Admin_AclController extends Zend_Controller_Action
                     );
                 }
             }
+        } catch (InvalidArgumentException $e) { // ignore
         }
 
         $this->view->role = $role;
         $this->view->resources = $resources;
         $this->view->rules = $rules;
-        $this->view->rulesParents = $rulesParents;
-        $this->view->canManage = $this->_helper->acl->isAllowed('user', 'manage');
-
-        if ($this->view->canManage) {
-            $this->_helper->sidebar(array(
-                'label' => getGS('Add new rule'),
-                'module' => 'admin',
-                'controller' => 'acl',
-                'action' => 'form',
-            ), true);
-        }
+        $this->view->rulesParents = $inheritedRules;
+        $this->view->readonly = $this->_getParam('readonly');
     }
 
+    public function editAction()
+    {
+        $form = new Admin_Form_Acl;
+        $form->setAction($this->view->url(array(
+            'controller' => 'acl',
+            'action' => 'edit',
+        )))->setMethod('post');
+
+        // add resources
+        foreach (array_keys($this->acl->getResources()) as $resource) {
+            $form->resource->addMultiOption($resource, $this->formatName($resource));
+        }
+
+        // add actions
+        foreach ($this->acl->getActions() as $action) {
+            $form->action->addMultiOption($action, $this->formatName($action));
+        }
+
+        // add types
+        $form->type->setMultiOptions($this->ruleTypes);
+
+        $form->setDefaults(array(
+            'type' => 'allow',
+            'role' => $this->_getParam('role', 0),
+            'next' => $this->_getParam('next'),
+        ));
+
+        $request = $this->getRequest();
+        if ($request->isPost() && $form->isValid($request->getPost())) {
+            try {
+                $rule = new Rule();
+                $this->ruleRepository->save($rule, $form->getValues());
+                $this->_helper->entity->flushManager();
+
+                $this->_helper->flashMessenger(getGS('Rule saved.'));
+            } catch (Exception $e) {
+                $form->_helper->flashMessenger(getGS('Rule for this resource/action exists already.'));
+            }
+
+            $this->_redirect($this->_getParam('next'), array(
+                'prependBase' => false,
+            ));
+        }
+
+        $this->view->form = $form;
+    }
+
+    /**
+     * @Acl(resource="user", action="manage")
+     */
     public function deleteAction()
     {
         $this->ruleRepository->delete($this->_getParam('rule'));
         $this->_helper->entity->flushManager();
 
         $this->_helper->flashMessenger->addMessage(getGS('Rule removed.'));
-        $this->redirect();
+        $this->_redirect(urldecode($this->_getParam('next')), array(
+            'prependBase' => false,
+        ));
     }
 
-    /**
-     * Get actions for resource
-     */
-    public function actionsAction()
+    public function getResourceActionsAction()
     {
         $actions = array();
-        $resource = $this->_getParam('resource', '');
+        $resource = $this->_getParam('resource');
         if (!empty($resource)) {
             $actions = $this->acl->getActions($resource);
         }
 
         $this->view->actions = $actions;
-    }
-
-    /**
-     * Get rule form
-     *
-     * @return Zend_Form
-     */
-    private function getForm()
-    {
-        $form = new Zend_Form();
-
-        $form->addElement('hidden', 'role');
-        $form->addElement('hidden', 'group');
-        $form->addElement('hidden', 'user');
-
-        // get resources
-        $resources = array('' => getGS('Any resource'));
-        foreach (array_keys($this->acl->getResources()) as $resource) {
-            $resources[$resource] = $this->formatName($resource);
-        }
-
-        $form->addElement('select', 'resource', array(
-            'multioptions' => $resources,
-            'label' => getGS('Resource'),
-        ));
-
-        // get actions
-        $actions = array('' => getGS('Any action'));
-        foreach ($this->acl->getActions() as $action) {
-            $actions[$action] = $this->formatName($action);
-        }
-
-        $form->addElement('select', 'action', array(
-            'multioptions' => $actions,
-            'label' => getGS('Action'),
-        ));
-
-        $form->addElement('radio', 'type', array(
-            'label' => getGS('Add Rule'),
-            'multioptions' => $this->ruleTypes,
-            'class' => 'acl type',
-        ));
-
-        $form->addElement('submit', 'submit', array(
-            'label' => getGS('Add'),
-        ));
-
-        return $form;
-    }
-
-    /**
-     * Redirect after action
-     *
-     * @return void
-     */
-    private function redirect()
-    {
-        $params = $this->getRequest()->getParams();
-        $entity = !empty($params['group']) ? 'group' : 'user';
-        
-        $this->_helper->redirector('edit-access', $entity == 'group' ? 'user-group' : 'staff', 'admin', array(
-            $entity => $params[$entity],
-        ));
     }
 
     /**

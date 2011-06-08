@@ -5,8 +5,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-use Newscoop\Entity\User\Staff;
-
 /**
  * @Acl(ignore="1")
  */
@@ -19,25 +17,20 @@ class Admin_ProfileController extends Zend_Controller_Action
     {
         $auth = Zend_Auth::getInstance();
         $this->staff = $this->_helper->entity->find('Newscoop\Entity\User\Staff', $auth->getIdentity());
+        $this->view->staff = $this->staff;
     }
 
     public function indexAction()
     {
-        $this->view->placeholder('title')
-            ->set(getGS('My account'));
-
-        $this->_forward('edit', 'staff', 'admin', array(
-            'user' => $this->staff->getId(),
+        $this->view->actions = array(array(
+            'label' => getGS('Permissions'),
+            'module' => 'admin',
+            'controller' => 'profile',
+            'action' => 'permissions',
         ));
     }
 
-    public function accessAction()
+    public function permissionsAction()
     {
-        $this->view->placeholder('title')
-            ->set(getGS('View access'));
-
-        $this->_forward('edit', 'acl', 'admin', array(
-            'user' => $this->staff->getId(),
-        ));
     }
 }

@@ -1,0 +1,35 @@
+<?php $rules = false; ?> 
+
+<?php foreach ($this->resources as $resource => $name) {
+    if (empty($this->rules[$resource]) && empty($this->rulesParents[$resource])) { // ignore empty
+        continue;
+    }
+
+    $rules = true;
+?>
+<dl class="resource">
+    <dt><?php echo $name; ?></dt>
+
+    <?php foreach ($this->rulesParents[$resource] as $rule) { ?>
+    <dd class="<?php echo $rule->class; ?><?php if (!$this->readonly) { ?> inherited<?php } ?>"><strong><?php echo $rule->type; ?></strong> <?php echo $rule->action ?: getGS('Any action'); ?></dd>
+    <?php } ?>
+
+    <?php foreach ($this->rules[$resource] as $rule) { ?>
+    <dd class="<?php echo $rule->class; ?>">
+        <?php if (!$this->readonly) { ?>
+        <a class="delete icon" href="<?php echo $this->url(array(
+            'controller' => 'acl',
+            'action' => 'delete',
+            'rule' => $rule->id,
+            'next' => urlencode($this->url()),
+        )); ?>" title="<?php putGS('Remove rule'); ?>"><?php putGS('Remove'); ?></a>
+        <?php } ?>
+        <strong><?php echo $rule->type; ?></strong> <?php echo $rule->action ?: getGS('Any action'); ?>
+    </dd>
+    <?php } ?>
+</dl>
+<?php } ?>
+
+<?php if (!$rules) {
+    echo $this->renderMessage(getGS('No rules.'));
+} ?>

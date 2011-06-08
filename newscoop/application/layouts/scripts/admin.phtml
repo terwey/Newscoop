@@ -82,6 +82,7 @@
             'module' => 'admin',
             'controller' => 'profile',
             'action' => 'index',
+            'user' => null,
         )); ?>"><?php putGS('My account'); ?></a></li>
         <li><?php putGS("Signed in: $1", '<strong>' . $this->user->getRealName() . '</strong>'); ?></li>
     </ul>

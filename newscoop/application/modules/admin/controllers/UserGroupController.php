@@ -12,6 +12,7 @@ use Newscoop\Entity\User\Group;
  */
 class Admin_UserGroupController extends Zend_Controller_Action
 {
+    /** @var Newscoop\Entity\Repository\User\GroupRepository */
     private $repository;
 
     public function init()
@@ -28,25 +29,40 @@ class Admin_UserGroupController extends Zend_Controller_Action
         $this->_helper->sidebar(array(
             'label' => getGS('Add new user type'),
             'controller' => 'user-group',
-            'action' => 'add',
+            'action' => 'edit-name',
         ));
     }
 
-    public function addAction()
+    public function editNameAction()
     {
-        $form = $this->getForm()->setMethod('post')->setAction('');
-        $group = new Group;
+        $form = new Admin_Form_UserGroup;
+        $form->setAction($this->view->url(array(
+            'action' => 'edit-name',
+        )))->setMethod('post');
 
-        if ($this->getRequest()->isPost() && $form->isValid($_POST)) {
+        try {
+            $group = $this->_helper->entity('Newscoop\Entity\User\Group', 'group');
+            $form->setDefaults(array(
+                'name' => $group->getName(),
+            ));
+        } catch (InvalidArgumentException $e) {
+            $group = new Group;
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost() && $form->isValid($request->getPost())) {
             try {
                 $this->repository->save($group, $form->getValues());
-                $this->_helper->entity->getManager()->flush();
+                $this->_helper->entity->flushManager();
 
-                $this->_helper->flashMessenger->addMessage(getGS('User type added.'));
-                $this->_helper->redirector('index');
+                $this->_helper->flashMessenger(getGS('User type saved.'));
             } catch (Exception $e) {
-                $form->getElement('name')->addError(getGS('That type name already exists, please choose a different name.'));
+                $this->_helper->flashMessenger(getGS('That type name already exists, please choose a different name.'));
             }
+
+            $this->_helper->redirector($this->_getParam('group') ? 'edit' : 'index', 'user-group', 'admin', array(
+                'group' => $this->_getParam('group'),
+            ));
         }
 
         $this->view->form = $form;
@@ -54,47 +70,8 @@ class Admin_UserGroupController extends Zend_Controller_Action
 
     public function editAction()
     {
-        $form = $this->getForm();
-        $group = $this->_helper->entity('Newscoop\Entity\User\Group', 'group');
-
-        $request = $this->getRequest();
-        if ($request->isPost() && $form->isValid($request->getPost()) && $form->name != $group->getName()) {
-            try {
-                $this->repository->save($group, $form->getValues());
-                $this->_helper->entity->flushManager();
-                $this->_helper->flashMessenger->addMessage(getGS('User type saved.'));
-            } catch (Exception $e) {
-                $this->_helper->flashMessenger(getGS('That type name already exists, please choose a different name.'));
-            }
-        }
-
-        $this->_helper->redirector('edit-access', 'user-group', 'admin', array(
-            'group' => $group->getId(),
-        ));
-    }
-
-    public function editAccessAction()
-    {
         $group = $this->_helper->entity(new Group, 'group');
         $this->view->group = $group;
-
-        $form = $this->getForm();
-        $form->setMethod('post');
-
-        $form->setAction($this->view->url(array(
-            'action' => 'edit',
-        )));
-
-        $form->setDefaults(array(
-            'name' => $group->getName(),
-        ));
-
-        $this->view->form = $form;
-
-        $this->_helper->actionStack('edit', 'acl', 'admin', array(
-            'role' => $group->getRoleId(),
-            'group' => $group->getId(),
-        ));
     }
 
     public function deleteAction()
@@ -111,27 +88,5 @@ class Admin_UserGroupController extends Zend_Controller_Action
             $this->_helper->flashMessenger->addMessage(getGS('Can not delete a user type with assigned users.'));
         }
         $this->_helper->redirector('index');
-    }
-
-    /**
-     * Get group form
-     *
-     * @return Zend_Form
-     */
-    private function getForm()
-    {
-        $form = new Zend_Form;
-
-        $form->addElement('text', 'name', array(
-            'label' => getGS('Name'),
-            'required' => true,
-        ));
-
-        $form->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
-            'ignore' => true,
-        ));
-
-        return $form;
     }
 }

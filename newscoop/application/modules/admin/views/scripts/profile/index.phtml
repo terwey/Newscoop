@@ -1,0 +1,9 @@
+<?php $this->placeholder('title')->set(getGS('My account')); ?>
+
+<?php echo $this->renderActions(); ?>
+
+<?php echo $this->action('edit', 'staff', 'admin', array(
+    'user' => $this->staff->getId(),
+    'next' => $this->url(),
+    'groups' => false,
+)); ?>

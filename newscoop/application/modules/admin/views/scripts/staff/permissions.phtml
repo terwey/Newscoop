@@ -1,0 +1,13 @@
+<?php $this->placeholder('title')
+->set(getGS('Permissions: $1', $this->staff)); ?>
+
+<?php echo $this->action('list', 'acl', 'admin', array(
+    'role' => $this->staff->getRoleId(),
+    'user' => $this->staff->getId(),
+    'next' => $this->url(),
+)); ?>
+
+<?php $this->sidebar(getGS('Add rule'), $this->action('edit', 'acl', 'admin', array(
+    'role' => $this->staff->getRoleId(),
+    'next' => $this->url(),
+))); ?>

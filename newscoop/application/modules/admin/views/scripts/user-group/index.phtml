@@ -1,11 +1,9 @@
 <?php $this->placeholder('title')->set(getGS('User types')); ?>
 
-<?php
-if (empty($this->groups)) {
+<?php if (empty($this->groups)) {
     $this->renderMessage(getGS('No user types.'));
     return;
-}
-?>
+} ?>
 
 <ul class="edit user-types">
     <?php foreach ($this->groups as $group) { ?>
@@ -15,7 +13,7 @@ if (empty($this->groups)) {
             'group' => $group->getId(),
         )); ?>" title="<?php putGS('Delete user type $1', $group->getName()); ?>"><?php putGS('Delete'); ?></a>
         <a class="edit" href="<?php echo $this->url(array(
-            'action' => 'edit-access',
+            'action' => 'edit',
             'group' => $group->getId(),
         )); ?>" title="<?php putGS('Edit user type $1', $group->getName()); ?>"><?php echo $group->getName(); ?></a>
     </li>

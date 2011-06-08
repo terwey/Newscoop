@@ -374,10 +374,10 @@ if ($showUserMenu) {
                     'reset_params' => false,
                     'pages' => array(
                         array(
-                            'label' => getGS('Edit access'),
+                            'label' => getGS('Permissions'),
                             'module' => 'admin',
                             'controller' => 'staff',
-                            'action' => 'edit-access',
+                            'action' => 'permissions',
                             'visible' => false,
                         ),
                     ),
@@ -484,17 +484,10 @@ if ($showUserMenu) {
         'privilege' => 'manage',
         'pages' => array(
             array(
-                'label' => getGS('Add new user type'),
-                'module' => 'admin', 
-                'controller' => 'user-group',
-                'action' => 'add',
-                'visible' => false,
-            ),
-            array(
                 'label' => getGS('Edit user type'),
                 'module' => 'admin',
                 'controller' => 'user-group',
-                'action' => 'edit-access',
+                'action' => 'edit',
                 'visible' => false,
             ),
         ),
@@ -538,10 +531,10 @@ $pages[] = array(
     'visible' => false,
     'pages' => array(
         array(
-            'label' => getGS('View access'),
+            'label' => getGS('Permissions'),
             'module' => 'admin',
             'controller' => 'profile',
-            'action' => 'access',
+            'action' => 'permissions',
         ),
     ),
 );

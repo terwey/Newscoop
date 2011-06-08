@@ -1,0 +1,7 @@
+<?php $this->placeholder('title')->set(getGS('Permissions')); ?>
+
+<?php echo $this->action('list', 'acl', 'admin', array(
+    'role' => $this->staff->getRoleId(),
+    'user' => $this->staff->getId(),
+    'readonly' => true,
+)); ?>
