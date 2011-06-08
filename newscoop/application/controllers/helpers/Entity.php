@@ -122,7 +122,7 @@ class Action_Helper_Entity extends Zend_Controller_Action_Helper_Abstract
      * Find entity
      *
      * @param string $entity
-     * @param mixed $id
+     * @param mixed $key
      * @return mixed
      */
     public function find($entity, $key)
