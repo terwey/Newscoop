@@ -74,6 +74,10 @@ class Admin_UserGroupController extends Zend_Controller_Action
         $this->view->group = $group;
     }
 
+    public function addAction()
+    {
+    }
+
     public function deleteAction()
     {
         $groupId = $this->getRequest()->getParam('group', 0);
