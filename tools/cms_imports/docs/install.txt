@@ -6,6 +6,8 @@ The directory structure of this conversion tool has to be copied to a working se
   do not put this directory into (direct) web serving.
 * 'plugions' directory contains php files for particular original cms formats
 * 'incl', 'bin' directories contain work files that are being included and/or run
+* note that periodicclean.php and periodicruns.php from the 'bin' directory shall
+  be exacutable since they are run from cron
 * 'conf' is for site configuration:
     * copy converter_loc_blank.php, converter_dba_blank.php into
       copy converter_loc.php, converter_dba.php and fill in your info
