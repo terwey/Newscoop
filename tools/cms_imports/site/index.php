@@ -9,26 +9,33 @@
 
 */
 
+$base_dir = dirname(dirname(__FILE__));
+
 // taking configurations
-$conf_dir = dirname(dirname(__FILE__)) . "/conf/";
+$conf_dir = $base_dir . '/conf/';
 require_once($conf_dir . 'converter_dba.php');
 require_once($conf_dir . 'converter_inf.php');
 require_once($conf_dir . 'converter_loc.php');
+
+// taking recaptcha lib
+$incl_dir = $base_dir . '/incl/';
+require_once($incl_dir . 'recaptchalib.php');
+
 // this is the handler of the form data
-$upload_url = "submit.php";
+$upload_url = 'submit.php';
 
 // was this a request for the converted file
-if (array_key_exists("newsml", $_REQUEST)) {
+if (array_key_exists('newsml', $_REQUEST)) {
     $correct = true;
-    $file_path = "";
+    $file_path = '';
 
-    $file_id = $_REQUEST["newsml"];
-    if (!preg_match("/^[a-zA-Z0-9]+[a-zA-Z0-9_\.-]*$/", $file_id)) {
+    $file_id = $_REQUEST['newsml'];
+    if (!preg_match('/^[a-zA-Z0-9]+[a-zA-Z0-9_\.-]*$/', $file_id)) {
         $correct = false;
     }
 
     if ($correct) {
-        $file_path = $converter_paths["output_dir"] . $file_id;
+        $file_path = $converter_paths['output_dir'] . $file_id;
         if (!file_exists($file_path)) {
             $correct = false;
         }
@@ -38,9 +45,9 @@ if (array_key_exists("newsml", $_REQUEST)) {
     try {
         if ($correct) {
             $fh = fopen($file_path, 'rb');
-            header("Content-Type: text/xml");
-            header("Content-Length: " . filesize($file_path));
-            header("Content-Disposition: attachment; filename=\"newscoop-$file_id.xml\"");
+            header('Content-Type: text/xml');
+            header('Content-Length: ' . filesize($file_path));
+            header('Content-Disposition: attachment; filename="newscoop-' . $file_id . '.xml"');
             fpassthru($fh);
             fclose($fh);
         }
@@ -51,24 +58,12 @@ if (array_key_exists("newsml", $_REQUEST)) {
 
     // if the requested file is not available
     if (!$correct) {
-        echo '
-<html>
-<head>
-<title>Newscoop CMS conversion</title>
-<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
-</head>
-<body>
-<div class="no_file_page">
-<div class="no_file_info">
-The requested NewsML file was not found.
-</div>
-<div class="sourcefabric_link">
-<a href="http://www.sourcefabric.org/">Sourcefabric</a>
-</div>
-</div>
-</body>
-</html>
-';
+        $output_html_name = $base_dir . '/html/output_not_found.html';
+        $output_html_fh = fopen($output_html_name, 'r');
+        $output_html_text = fread($output_html_fh, filesize($output_html_name));
+        fclose($output_html_fh);
+
+        echo $output_html_text;
     }
 
     exit(0);
@@ -76,53 +71,13 @@ The requested NewsML file was not found.
 
 // a form for cms file upload; the standard way here
 
-        echo '
-<html>
-<head>
-<title>Newscoop CMS conversion</title>
-<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
-</head>
-<body>
-<div class="submit_form_page">
-<div class="submit_form_info">
-Import into Newscoop NewsML
-</div>
-<div class="newsml_import_form">
-<form enctype="multipart/form-data" action="' . $upload_url . '" method="POST">
-<input type="hidden" name="cmsformat" value="wxr" />
-<input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
+$input_html_name = $base_dir . '/html/input_index.html';
+$input_html_fh = fopen($input_html_name, 'r');
+$input_html_text = fread($input_html_fh, filesize($input_html_name));
+fclose($input_html_fh);
 
-<div class="newsml_import_form_field newsml_import_form_email">
-<input type="text" class="input_user_email" name="useremail" value="email contact" size="40" onFocus="if (\'email contact\' == this.value) {this.value=\'\';};" title="Download information will be sent to that email." />
-</div>
-<div class="newsml_import_form_field">
-Source CMS type
-<select name="cmsformat">
-    <option value="wxr">WordPress WXR
-</select>
-</div>
-<div class="newsml_import_form_field">
-<input type="file" name="cmsfile" />
-</div>
-<div class="newsml_import_form_field newsml_import_form_submit">
-<input type="submit" value="Send File" />
-</div>
-
-</form>
-</div>
-
-<div class="wxr_problems">
-Note that sometimes WordPress creates invalid dumps (on cdata parts).<br />
-If converting a wxr file fails, you can try an auxiliary <a href="wxrfixer.py">script</a> to fix that.
-</div>
-
-<div class="sourcefabric_link">
-<a href="http://www.sourcefabric.org/">Sourcefabric</a>
-</div>
-
-</div>
-</body>
-</html>
-';
+$recaptcha_public = $converter_recaptcha['public'];
+$recaptcha_part = recaptcha_get_html($recaptcha_public);
+echo str_replace(array('%%upload_url%%', '%%recaptcha_part%%'), array($upload_url, $recaptcha_part), $input_html_text);
 
 ?>

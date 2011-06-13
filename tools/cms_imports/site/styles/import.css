@@ -18,11 +18,14 @@
     margin-right: auto;
 }
 .submit_form_info {
+    font-size: 18px;
+    margin-left: 50px;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
 .newsml_import_form_field {
+    list-style-type: none;
 }
 .newsml_import_form_email {
     margin-bottom: 20px;
@@ -61,7 +64,69 @@
 }
 
 .wxr_problems {
+    font-size: 14px;
     margin-top: 60px;
     margin-bottom: 20px;
+}
+
+.recaptcha_part {
+    margin-top: 20px;
+    margin-left: 55px;
+}
+
+.input_user_email_label {
+    font-size: 14px;
+    width: 120px;
+    float: left;
+}
+
+.input_user_email {
+    width: 270px;
+    float: left;
+}
+
+.email_fieldset {
+    width: 400px;
+}
+
+.file_fieldset {
+    width: 400px;
+}
+
+.file_submit {
+    margin-top: 20px;
+    margin-left: 55px;
+}
+
+.source_cmsformat_label {
+    padding: 5px;
+    font-size: 14px;
+}
+.cmsformat_part {
+    margin-bottom: 5px;
+}
+
+.form_fill_incorrect {
+    background: #f0e0d0;
+}
+
+.error_msgs_list {
+    font-size: 14px;
+/*
+    list-style-type: none;
+*/
+}
+.error_msgs_part {
+    width: 300px;
+    display: hidden;
+}
+
+.error_msgs_none {
+    display: hidden;
+}
+
+.error_msgs_some {
+    font-size: 14px;
+    color: #803010;
 }
 

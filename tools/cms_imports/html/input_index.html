@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Newscoop CMS conversion</title>
+<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
+<!-- Grab Google CDNs jQuery. fall back to local if necessary -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script>
+    !window.jQuery && document.write(unescape('%3Cscript src="/js/jquery-1.4.4.min.js"%3E%3C/script%3E'))
+</script> 
+
+<script type="text/javascript">
+window.validateForm = function() {
+    var error_msgs = [];
+    var error_msgs_part = document.getElementById ? document.getElementById('error_msgs_part') : null;
+    if (error_msgs_part) {
+        error_msgs_part.innerHTML = "";
+    }
+
+    $("#error_msgs_part").addClass("error_msgs_none");
+
+    var input_user_email = document.getElementById ? document.getElementById('input_user_email') : null;
+    var input_user_email_retype = document.getElementById ? document.getElementById('input_user_email_retype') : null;
+    var import_file_name = document.getElementById ? document.getElementById('import_file_name') : null;
+
+    var input_user_email_value = '';
+    var input_user_email_retype_value = '';
+    if (input_user_email && input_user_email.value) {
+        input_user_email_value = input_user_email.value;
+    }
+    input_user_email_value = input_user_email_value.replace(/^\s+/g, "").replace(/\s+$/g, "");
+    if (input_user_email_retype && input_user_email_retype.value) {
+        input_user_email_retype_value = input_user_email_retype.value;
+    }
+    input_user_email_retype_value = input_user_email_retype_value.replace(/^\s+/g, "").replace(/\s+$/g, "");
+
+    var email_pattern = /^([^\s]+)@([^\s]+)$/i;
+
+    $("#input_user_email").removeClass("form_fill_incorrect");
+    $("#input_user_email_retype").removeClass("form_fill_incorrect");
+    $("#import_file_name").removeClass("form_fill_incorrect");
+
+    var is_correct = true;
+
+    if (!email_pattern.exec(input_user_email_value)) {
+        is_correct = false;
+        $("#input_user_email").addClass("form_fill_incorrect");
+        error_msgs.push("fill in email address");
+    }
+
+    if (!email_pattern.exec(input_user_email_retype_value)) {
+        is_correct = false;
+        $("#input_user_email_retype").addClass("form_fill_incorrect");
+        error_msgs.push("retype email address");
+    }
+
+    if (is_correct) {
+        if (input_user_email_value != input_user_email_retype_value) {
+            is_correct = false;
+            $("#input_user_email").addClass("form_fill_incorrect");
+            $("#input_user_email_retype").addClass("form_fill_incorrect");
+            error_msgs.push("email addresses differ");
+        }
+    }
+
+    if('' == import_file_name.value) {
+        is_correct = false;
+        $("#import_file_name").addClass("form_fill_incorrect");
+        error_msgs.push("choose file to convert");
+    }
+
+    var error_text = "";
+    var error_msgs_count = error_msgs.length;
+    if (error_msgs_part && (0 < error_msgs_count)) {
+        error_text += "<ul class='error_msgs_list'>Please, fill in missing information:";
+        for (var eind = 0; eind < error_msgs_count; eind++) {
+            error_text += "<li><span class='error_msgs_some'>" + error_msgs[eind] + "</span></li>";
+        }
+        error_text += "</ul>";
+        error_msgs_part.innerHTML = error_text;
+        $("#error_msgs_part").removeClass("error_msgs_none");
+    }
+
+    return is_correct;
+}
+</script>
+</head>
+<body>
+<div class="submit_form_page">
+<ul>
+<h2 class="submit_form_info">
+Import into Newscoop NewsML
+</h2>
+</ul>
+
+<ul>
+<div id="error_msgs_part" class="error_msgs_part error_msgs_none">
+</div>
+</ul>
+
+<div class="newsml_import_form">
+<form enctype="multipart/form-data" action="%%upload_url%%" method="POST" id="file_submit_form" onsubmit="return validateForm();" >
+<input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
+
+<ul class="newsml_import_form_field newsml_import_form_email">
+<fieldset class="email_fieldset">
+<li>
+    <div>
+    <label for="input_user_email" class="input_user_email_label">email contact</label>
+    <input type="text" id="input_user_email" class="input_user_email" name="useremail" value="fill in your email address" size="40" onFocus="if ('fill in your email address' == this.value) {this.value='';};" onBlur="if ('' == this.value) {this.value='fill in your email address';};" title="Download information will be sent to this email address." />
+    </div>
+</li>
+<li>
+    <div>
+    <label for="input_user_email_retype" class="input_user_email_label">retype please</label>
+    <input type="text" id="input_user_email_retype" class="input_user_email" name="useremail_retype" value="fill in your email address" size="40" onFocus="if ('fill in your email address' == this.value) {this.value='';};" onBlur="if ('' == this.value) {this.value='fill in your email address';};" title="Download information will be sent to this email address." />
+    </div>
+</li>
+</fieldset>
+</ul>
+
+<ul class="newsml_import_form_field newsml_import_form_file">
+<fieldset class="file_fieldset">
+<li class="newsml_import_form_field">
+<div class="cmsformat_part">
+    <label for="cmsformat" class="source_cmsformat_label">Source CMS type</label>
+    <select id="cmsformat" name="cmsformat">
+        <option value="wxr">WordPress WXR
+    </select>
+</div>
+</li>
+<li class="newsml_import_form_field">
+<div>
+    <input type="file" name="cmsfile" id="import_file_name" />
+</div>
+</li>
+</fieldset>
+</ul>
+
+<ul class="newsml_import_form_field recaptcha_part">
+%%recaptcha_part%%
+</ul>
+
+<ul class="newsml_import_form_field newsml_import_form_submit">
+<li>
+    <input class="file_submit" type="submit" value="Send File" />
+</li>
+</ul>
+
+</form>
+</div>
+
+<ul>
+<div class="wxr_problems">
+Note that sometimes WordPress creates invalid dumps (on cdata parts).<br />
+If converting a wxr file fails, you can try an auxiliary <a href="wxrfixer.py">script</a> to fix that.
+</div>
+<div class="sourcefabric_link">
+<a href="http://www.sourcefabric.org/">Sourcefabric</a>
+</div>
+</ul>
+
+</div>
+</body>
+</html>

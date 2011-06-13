@@ -2,6 +2,8 @@
 The directory structure of this conversion tool has to be copied to a working server.
 * 'site' directory is for web serving, it shall be set as the www root directory,
   other directories should not be served by web server
+* 'html' is for html pre-texts that are used for web pages;
+  do not put this directory into (direct) web serving.
 * 'plugions' directory contains php files for particular original cms formats
 * 'incl', 'bin' directories contain work files that are being included and/or run
 * 'conf' is for site configuration:

@@ -16,15 +16,41 @@
 
 // if not a post request (with file and other form data), go to the default page
 if ('post' != strtolower($_SERVER['REQUEST_METHOD'])) {
-    header("Location: index.php");
+    header('Location: index.php');
     exit(0);
 }
 
+$base_dir = dirname(dirname(__FILE__));
+
 // taking configurations
-$conf_dir = dirname(dirname(__FILE__)) . "/conf/";
+$conf_dir = $base_dir . '/conf/';
 require_once($conf_dir . 'converter_dba.php');
 require_once($conf_dir . 'converter_inf.php');
 require_once($conf_dir . 'converter_loc.php');
+
+// taking recaptcha lib
+$incl_dir = $base_dir . '/incl/';
+require_once($incl_dir . 'recaptchalib.php');
+
+/**
+ * Checks whether reCaptcha was filled correctly
+ *
+ * @param string $p_privKey
+ * @return boolean
+ */
+function check_recaptcha($p_privKey) {
+
+    $client_addr = $_SERVER['REMOTE_ADDR'];
+    $rec_challenge = $_POST['recaptcha_challenge_field'];
+    $rec_response = $_POST['recaptcha_response_field'];
+
+    if (empty($rec_challenge) or empty($rec_response)) {
+        return false;
+    }
+
+    $resp = recaptcha_check_answer($p_privKey, $client_addr, $rec_challenge, $rec_response);
+    return $resp->is_valid;
+}
 
 /**
  * Takes and checks parameters sent via the form
@@ -40,53 +66,72 @@ function take_form_params($p_formInfo, $p_knownFormats, &$p_formValues = null) {
     }
 
     $email_field = $p_formInfo['email'];
+    $email2_field = $p_formInfo['email2'];
     $file_field = $p_formInfo['file'];
     $format_field = $p_formInfo['format'];
 
     // checking email, format
-    $f_email = "";
-    $f_format = "";
+    $f_email = '';
+    $f_email2 = '';
+    $f_format = '';
     if (!array_key_exists($email_field, $_REQUEST)) {
-        $p_formValues["message"] = "email addressed not provided";
+        $p_formValues['message'] = 'email address not provided';
+        return false;
+    }
+    if (!array_key_exists($email2_field, $_REQUEST)) {
+        $p_formValues['message'] = 'email address confirmation not provided';
         return false;
     }
     if (!array_key_exists($format_field, $_REQUEST)) {
-        $p_formValues["message"] = "file format not provided";
+        $p_formValues['message'] = 'file format not provided';
         return false;
     }
 
-    $f_email = (string) $_REQUEST[$email_field];
+    $f_email = (string) trim($_REQUEST[$email_field]);
     if (!$f_email) {
-        $p_formValues["message"] = "email addressed not provided";
+        $p_formValues['message'] = 'email address not provided';
+        return false;
+    }
+    $f_email2 = (string) trim($_REQUEST[$email2_field]);
+    if (!$f_email2) {
+        $p_formValues['message'] = 'email address confirmation not provided';
         return false;
     }
 
     $f_format = (string) strtolower($_REQUEST[$format_field]);
     if (!$f_format) {
-        $p_formValues["message"] = "file format not provided";
+        $p_formValues['message'] = 'file format not provided';
         return false;
     }
 
-    if (!preg_match("/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+$/", $f_email)) {
-        $p_formValues["message"] = "email addressed not valid";
+    if (!preg_match('/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+$/', $f_email)) {
+        $p_formValues['message'] = 'email address not valid';
+        return false;
+    }
+    if (!preg_match('/^[a-zA-Z0-9_\.+%=:-]+@[a-zA-Z0-9_\.-]+$/', $f_email2)) {
+        $p_formValues['message'] = 'email address confirmation not valid';
+        return false;
+    }
+    if ($f_email != $f_email2) {
+        $p_formValues['message'] = 'email address and its confirmation differ';
         return false;
     }
 
     if (!array_key_exists($f_format, $p_knownFormats)) {
-        $p_formValues["message"] = "file format not known";
+        $p_formValues['message'] = 'file format not known';
         return false;
     }
 
     // checking file
     if (!array_key_exists($file_field, $_FILES)) {
-        $p_formValues["message"] = "cms file not provided";
+        $p_formValues['message'] = 'cms file not provided';
         return false;
     }
 
     $file_orig_name = $_FILES[$file_field]['name'];
     $file_tmp_name = $_FILES[$file_field]['tmp_name'];
     if (empty($file_orig_name)) {
-        $p_formValues["message"] = "cms file not provided";
+        $p_formValues['message'] = 'cms file not provided';
         return false;
     }
 
@@ -111,9 +156,9 @@ function save_uploaded_file($p_paths, $formValues, &$p_fileInfo = null) {
         return false;
     }
 
-    $save_dir = $p_paths["input_dir"];
+    $save_dir = $p_paths['input_dir'];
 
-    $local_name = "" . gmdate("\DYmd\THis\Z") . uniqid();
+    $local_name = '' . gmdate('\DYmd\THis\Z') . uniqid();
     $local_path = $save_dir . $local_name;
 
     $orig_name = $formValues['file_orig'];
@@ -129,8 +174,8 @@ function save_uploaded_file($p_paths, $formValues, &$p_fileInfo = null) {
         return false;
     }
 
-    $p_fileInfo["orig_name"] = $orig_name;
-    $p_fileInfo["local_name"] = $local_name;
+    $p_fileInfo['orig_name'] = $orig_name;
+    $p_fileInfo['local_name'] = $local_name;
 
     return true;
 } // fn save_uploaded_file
@@ -145,10 +190,10 @@ function save_uploaded_file($p_paths, $formValues, &$p_fileInfo = null) {
  */
 function set_import_info($p_dbAccess, $formValues, $p_fileInfo) {
 
-    $f_email = $formValues["email"];
-    $f_format = $formValues["format"];
-    $f_file = $p_fileInfo["local_name"];
-    $f_orig = $p_fileInfo["orig_name"];
+    $f_email = $formValues['email'];
+    $f_format = $formValues['format'];
+    $f_file = $p_fileInfo['local_name'];
+    $f_orig = $p_fileInfo['orig_name'];
 
     $reqStr = "INSERT INTO ConvRequests (state, email, format, file, orig) VALUES ('init', :email, :format, :file, :orig)";
 
@@ -162,7 +207,7 @@ function set_import_info($p_dbAccess, $formValues, $p_fileInfo) {
             "mysql:host=$db_host;dbname=$db_name", 
             "$db_user",
             "$db_pwd",
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
         );
 
         $sth = $dbh->prepare($reqStr);
@@ -194,10 +239,10 @@ function set_import_info($p_dbAccess, $formValues, $p_fileInfo) {
  */
 function start_converter($p_runtimeInfo) {
 
-    $script_shell = $p_runtimeInfo["shell"];
-    $script_name = $p_runtimeInfo["script"];
-    $conf_dir = $p_runtimeInfo["conf_dir"];
-    $log_file = $p_runtimeInfo["log_dir"] . "convert_web.log";
+    $script_shell = $p_runtimeInfo['shell'];
+    $script_name = $p_runtimeInfo['script'];
+    $conf_dir = $p_runtimeInfo['conf_dir'];
+    $log_file = $p_runtimeInfo['log_dir'] . 'convert_web.log';
 
     // we have just a one worker process for web by default
     $worker = 1;
@@ -215,6 +260,7 @@ function start_converter($p_runtimeInfo) {
 // what form data to get/check
 $formInfo = array(
     'email' => 'useremail',
+    'email2' => 'useremail_retype',
     'file' => 'cmsfile',
     'format' => 'cmsformat',
 );
@@ -231,11 +277,26 @@ $formValues = array(
 );
 $fileInfo = array();
 
+$recaptcha_private = $converter_recaptcha['private'];
+
 // try to take the sent data
 $got_params = true;
-$res = take_form_params($formInfo, $knownFormats, $formValues);
-if (!$res) {
-    $got_params = false;
+$got_recaptcha = true;
+
+$res = true;
+
+if ($res) {
+    $res = check_recaptcha($recaptcha_private);
+    if (!$res) {
+        $got_recaptcha = false;
+    }
+}
+
+if ($res) {
+    $res = take_form_params($formInfo, $knownFormats, $formValues);
+    if (!$res) {
+        $got_params = false;
+    }
 }
 
 // save the file if data correct
@@ -255,62 +316,30 @@ if ($res) {
 
 // write the output info if submit was correct
 if ($res) {
-    echo '
-<html>
-<head>
-<title>Newscoop CMS conversion</title>
-<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
-</head>
-<body>
-<div class="conversion_submit_done">
 
-<div class="conversion_submit_done_info">
-The CMS file was submitted for Newscoop NewsML conversion.
-You will be informed by email when the conversion is finished.
-</div>
+    $submit_ok_html_name = $base_dir . '/html/submit_ok.html';
+    $submit_ok_html_fh = fopen($submit_ok_html_name, 'r');
+    $submit_ok_html_text = fread($submit_ok_html_fh, filesize($submit_ok_html_name));
+    fclose($submit_ok_html_fh);
 
-<div class="import_back_link">
-<a href="index.php">back</a>
-</div>
-
-</div>
-</body>
-</html>
-';
+    echo $submit_ok_html_text;
     exit(0);
 }
 
 // write error info if something got wrong
-echo '
-<html>
-<head>
-<title>Newscoop CMS conversion</title>
-<link type="text/css" rel="stylesheet" href="styles/import.css" media="all">
-</head>
-<body>
-<div class="conversion_submit_failed">
+$submit_error_html_name = $base_dir . '/html/submit_error.html';
+$submit_error_html_fh = fopen($submit_error_html_name, 'r');
+$submit_error_html_text = fread($submit_error_html_fh, filesize($submit_error_html_name));
+fclose($submit_error_html_fh);
 
-<div class="conversion_submit_failed_info">
-Unfortunately, the CMS file could not be processed.
-</div>
-';
-
-if ((!$got_params) && ($formValues["message"])) {
-    echo '
-<div class="conversion_submit_failed_reason">
-' . $formValues["message"] . '
-</div>
-';
+$problem_reason= '';
+if (!$got_recaptcha) {
+    $problem_reason = 'Incorrectly filled the reCaptcha field.';
+} else {
+    if ((!$got_params) && ($formValues['message'])) {
+        $problem_reason = $formValues['message'];
+    }
 }
-
-echo '
-<div class="import_back_link">
-<a href="index.php">back</a>
-</div>
-
-</div>
-</body>
-</html>
-';
+echo str_replace(array('%%problem_reason%%'), array($problem_reason), $submit_error_html_text);
 
 ?>
