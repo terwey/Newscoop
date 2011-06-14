@@ -9,7 +9,7 @@
  * @version $Revision$
  * @link http://www.sourcefabric.org
  */
-
+ 
 global $g_db;
 
 /**
@@ -20,6 +20,7 @@ require_once('adodb/adodb.inc.php');
 require_once($GLOBALS['g_campsiteDir'].'/classes/Input.php');
 require_once($GLOBALS['g_campsiteDir'].'/template_engine/classes/CampRequest.php');
 require_once($GLOBALS['g_campsiteDir'].'/install/classes/CampInstallationView.php');
+require_once($GLOBALS['g_campsiteDir'].'/install/scripts/SQLImporting.php');
 
 
 /**
@@ -153,7 +154,6 @@ class CampInstallationBase
     	}
     }
 
-
     /**
      *
      */
@@ -263,6 +263,11 @@ class CampInstallationBase
             $g_db->Execute("ALTER TABLE `$table` ENABLE KEYS");
         }
 
+        { // installing the stored function for 'point in polygon' checking
+            $sqlFile = CS_INSTALL_DIR . DIR_SEP . 'sql' . DIR_SEP . "checkpp.sql";
+            importSqlStoredProgram($g_db, $sqlFile);
+        }
+
         $this->m_config['database'] = array(
                                             'hostname' => $db_hostname,
                                             'hostport' => $db_hostport,
@@ -273,7 +278,6 @@ class CampInstallationBase
 
         return true;
     } // fn databaseConfiguration
-
 
     /**
      *
@@ -693,11 +697,7 @@ class CampInstallationBaseHelper
             ."Password = SHA1('".$g_db->Escape($p_password)."'), "
             ."EMail = '".$g_db->Escape($p_email)."' "
             .'WHERE Id = 1';
-        $sqlQuery2 = 'UPDATE phorum_users SET '
-            ."password = SHA1('".$g_db->Escape($p_password)."'), "
-            ."email = '".$g_db->Escape($p_email)."' "
-            .'WHERE user_id = 1';
-        if (!$g_db->Execute($sqlQuery1) || !$g_db->Execute($sqlQuery2)) {
+        if (!$g_db->Execute($sqlQuery1)) {
             return false;
         }
 

@@ -19,7 +19,7 @@ class LegacyController extends Zend_Controller_Action
     {
         global $controller;
         $controller = $this;
-
+	
         require_once($GLOBALS['g_campsiteDir'].DIRECTORY_SEPARATOR.'include'
             .DIRECTORY_SEPARATOR.'campsite_constants.php');
         require_once(CS_PATH_CONFIG.DIR_SEP.'install_conf.php');
@@ -45,12 +45,6 @@ class LegacyController extends Zend_Controller_Action
 
         if (file_exists(CS_PATH_SITE.DIR_SEP.'upgrade.php')) {
             $this->upgrade();
-            exit(0);
-        }
-
-        $stats_only = false;
-        Statistics::ProcessStats($stats_only);
-        if ($stats_only) {
             exit(0);
         }
 

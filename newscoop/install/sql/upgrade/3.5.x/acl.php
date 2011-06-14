@@ -8,6 +8,8 @@ use Newscoop\Utils\PermissionToAcl;
 require_once dirname(__FILE__) . '/../../../../db_connect.php';
 require_once dirname(__FILE__) . '/../../../../library/Newscoop/Utils/PermissionToAcl.php';
 
+function upgrade_35x_acl() {
+
 global $g_ado_db;
 
 $roleId = 1;
@@ -54,6 +56,10 @@ foreach ($users as $user) {
         $rightName = $right['right_define_name'];
         list($resource, $action) = PermissionToAcl::translate($rightName);
         $rules[] = array('allow', $roleId, strtolower($resource), strtolower($action));
+
+        if (strtolower($resource) == 'template' && strtolower($action) == 'manage') {
+            $rules[] = array('allow', $roleId, 'theme', 'manage');
+        }
     }
 
     $roleId++;
@@ -75,3 +81,10 @@ for ($i = 1; $i < $roleId; $i++) {
     $sql = "INSERT INTO acl_role (`id`) VALUE ( $i );";
     $g_ado_db->Execute($sql);
 }
+
+} // fn upgrade_35x_acl
+
+// the (function) names defined here shall not clash with those defined at other places
+// since the new upgrade system works by calling 'require' on the respective php files
+upgrade_35x_acl();
+
