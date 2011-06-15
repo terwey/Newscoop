@@ -30,27 +30,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // init session before loading plugins to prevent session start errors
         $this->bootstrap('session');
 
-        // plugin include paths
-        $includePaths = array(
-            'classes',
-            'template_engine/classes',
-            'template_engine/metaclasses',
-        );
-
-        // add plugins to path
-        foreach (CampPlugin::GetPluginsInfo(true) as $info) {
-            $name = $info['name'];
-            foreach ($includePaths as $path) {
-                $includePath = "$g_campsiteDir/plugins/$name/$path";
-                if (file_exists($includePath)) {
-                    set_include_path(implode(PATH_SEPARATOR, array(
-                        $includePath,
-                        get_include_path(),
-                    )));
-                }
-            }
-        }
-
         return $autoloader;
     }
 
@@ -69,12 +48,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Session::start();
     }
 
-    /**
-     * Init bootstrap plugin
-     */
-    protected function _initBootstrapPlugin()
+    protected function _initPlugins()
     {
         $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin(new Application_Plugin_Upgrade());
+        $front->registerPlugin(new Application_Plugin_CampPluginAutoload());
         $front->registerPlugin(new Application_Plugin_Bootstrap($this->getOptions()));
     }
 }

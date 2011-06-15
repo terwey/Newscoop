@@ -42,13 +42,6 @@ class Admin_Bootstrap extends Zend_Application_Module_Bootstrap
         require_once CS_PATH_SITE . DIR_SEP . 'include' . DIR_SEP . 'campsite_init.php';
         require_once CS_PATH_SITE . DIR_SEP . 'classes' . DIR_SEP . 'CampTemplateCache.php';
 
-        // check for upgrade
-        if (file_exists(CS_PATH_SITE . DIR_SEP . 'upgrade.php')) {
-            camp_display_message("Site is down for upgrade. Please initiate upgrade process.");
-            echo '<meta http-equiv="Refresh" content="10" />';
-            exit;
-        }
-
         // detect extended login/logout files
         $prefix = file_exists(CS_PATH_SITE . DIR_SEP . 'admin-files' . DIR_SEP . 'ext_login.php') ? '/ext_' : '/';
 
@@ -198,8 +191,7 @@ class Admin_Bootstrap extends Zend_Application_Module_Bootstrap
     protected function _initLog()
     {
         // get entity manager
-        $this->bootstrap('doctrine');
-        $em = $this->getResource('doctrine')
+        $em = Zend_Registry::get('doctrine')
             ->getEntityManager();
 
         // create logger
@@ -240,8 +232,7 @@ class Admin_Bootstrap extends Zend_Application_Module_Bootstrap
      */
     protected function _initAclStorage()
     {
-        $this->bootstrap('doctrine');
-        $doctrine = $this->getResource('doctrine');
+        $doctrine = Zend_Registry::get('doctrine');
 
         $this->bootstrap('acl');
         $acl = $this->getResource('acl');

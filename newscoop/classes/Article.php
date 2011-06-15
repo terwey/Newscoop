@@ -816,6 +816,7 @@ class Article extends DatabaseObject {
              $queryStr .= " AND Articles.Published = 'Y'";
          }
         $order = Article::ProcessLanguageListOrder($p_order);
+        $sqlOrder = array();
         foreach ($order as $orderDesc) {
             $sqlOrder[] = $orderDesc['field'] . ' ' . $orderDesc['dir'];
         }
@@ -2927,7 +2928,7 @@ class Article extends DatabaseObject {
                     //@todo change this with DOCTRINE2 when refactor
 		            $dbField = 'comments_counter.comments_count';
                     $joinTable = "(SELECT COUNT(*) AS comments_count, `fk_thread_id` AS `fk_article_number`, fk_language_id \n"
-                               . "    FROM `Comment` `c` \n"
+                               . "    FROM `comment` `c` \n"
                                . "    WHERE c.status = 0 \n"
                                . '    GROUP BY fk_thread_id, fk_language_id)';
                     $p_otherTables[$joinTable] = array('__TABLE_ALIAS'=>'comments_counter',
@@ -2938,7 +2939,7 @@ class Article extends DatabaseObject {
                     //@todo change this with DOCTRINE2 when refactor
         		    $dbField = 'comment_ids.last_comment_id';
                     $joinTable = "(SELECT MAX(id) AS last_comment_id, `fk_thread_id` AS `fk_article_number`, fk_language_id \n"
-                               . "    FROM Comment c \n"
+                               . "    FROM comment c \n"
                                . "    WHERE c.status = 0 \n"
                                . "    GROUP BY fk_thread_id, fk_language_id)";
                     $p_otherTables[$joinTable] =  array('__TABLE_ALIAS'=>'comment_ids',
