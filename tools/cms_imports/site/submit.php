@@ -65,10 +65,23 @@ function take_form_params($p_formInfo, $p_knownFormats, &$p_formValues = null) {
         return false;
     }
 
+    $policy_field = $p_formInfo['policy'];
     $email_field = $p_formInfo['email'];
     $email2_field = $p_formInfo['email2'];
     $file_field = $p_formInfo['file'];
     $format_field = $p_formInfo['format'];
+
+    // checking egreement to the privacy policy
+    $f_ppolicy = '';
+    if (!array_key_exists($policy_field, $_REQUEST)) {
+        $p_formValues['message'] = 'privacy policy agreement was not provided';
+        return false;
+    }
+    $f_policy = (string) trim($_REQUEST[$policy_field]);
+    if ((!$f_policy) || ("off" == strtolower($f_policy))) {
+        $p_formValues['message'] = 'privacy policy agreement was not provided';
+        return false;
+    }
 
     // checking email, format
     $f_email = '';
@@ -259,6 +272,7 @@ function start_converter($p_runtimeInfo) {
 
 // what form data to get/check
 $formInfo = array(
+    'policy' => 'policy_agreement',
     'email' => 'useremail',
     'email2' => 'useremail_retype',
     'file' => 'cmsfile',

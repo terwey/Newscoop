@@ -194,6 +194,11 @@ dd {
     margin: 6px 0 0;
     padding: 0;
 }
+
+.input_privacy_policy_agreement_text {
+    font-size:13px;
+}
+
 input[type="text"], input[type="password"] {
     background-color: #FFFFFF;
     border: 1px solid #9D9D9D;

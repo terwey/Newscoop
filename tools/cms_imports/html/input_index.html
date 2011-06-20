@@ -21,6 +21,7 @@ window.validateForm = function() {
     var input_user_email = document.getElementById ? document.getElementById('input_user_email') : null;
     var input_user_email_retype = document.getElementById ? document.getElementById('input_user_email_retype') : null;
     var import_file_name = document.getElementById ? document.getElementById('import_file_name') : null;
+    var policy_agree_check = document.getElementById ? document.getElementById('input_privacy_policy_agreement') : null;
 
     var input_user_email_value = '';
     var input_user_email_retype_value = '';
@@ -35,9 +36,15 @@ window.validateForm = function() {
 
     var email_pattern = /^([^\s]+)@([^\s]+)$/i;
 
+    var policy_agree = false;
+    if (policy_agree_check && policy_agree_check.checked) {
+        policy_agree = true;
+    }
+
     $("#input_user_email").removeClass("form_fill_incorrect");
     $("#input_user_email_retype").removeClass("form_fill_incorrect");
     $("#import_file_name").removeClass("form_fill_incorrect");
+    $("#policy_agreement_fill").removeClass("form_fill_incorrect");
 
     var is_correct = true;
 
@@ -66,6 +73,12 @@ window.validateForm = function() {
         is_correct = false;
         $("#import_file_name").addClass("form_fill_incorrect");
         error_msgs.push("choose file to convert");
+    }
+
+    if (!policy_agree) {
+        is_correct = false;
+        $("#policy_agreement_fill").addClass("form_fill_incorrect");
+        error_msgs.push("you have to agree to the <a href='http://www.sourcefabric.org/en/about/policy/' target='_blank'>policy privacy</a> to use our services");
     }
 
     var error_text = "";
@@ -97,7 +110,7 @@ window.validateForm = function() {
       <input type="hidden" name="MAX_FILE_SIZE" value="30000000">
       <fieldset class="email_fieldset">
       <h3><span>1</span>Provide your data</h3>
-      <p class="description">Facilisis tristique. Vel pulvinar pulvinar dapibus vel et ac. Sagittis adipiscing dignissim, turpis purus, elementum!</p>
+      <p class="description">Input your e-mail address, you will get a message with the link to download the NewsML file.</p>
         <dl class="newsml_import_form_field newsml_import_form_email">
           <dt>
             <label for="input_user_email" class="input_user_email_label">Email contact</label>
@@ -111,12 +124,20 @@ window.validateForm = function() {
           <dd>
             <input type="text" id="input_user_email_retype" class="input_user_email" name="useremail_retype" value="fill in your email address" size="40" onfocus="if ('fill in your email address' == this.value) {this.value='';};" onblur="if ('' == this.value) {this.value='fill in your email address';};" title="Download information will be sent to this email address.">
           </dd>
+          <dt>
+            <label for="input_privacy_policy_agreement" class="input_privacy_policy_agreement_label">Privacy policy</label>
+          </dt>
+          <dd id="policy_agreement_fill">
+            <input type="checkbox" id="input_privacy_policy_agreement" class="input_privacy_policy_agreement" name="policy_agreement" /><label for="input_privacy_policy_agreement"><span class="input_privacy_policy_agreement_text">I agree to the <a href="http://www.sourcefabric.org/en/about/policy/" target="_blank">Privacy Policy</a>.</span></label>
+          </dd>
         </dl>
       </fieldset>
       <fieldset class="file_fieldset newsml_import_form_field newsml_import_form_file">
       <h3><span>2</span>Select the file you want to convert</h3>
-      <p class="description">Facilisis tristique. Vel pulvinar pulvinar dapibus vel et ac. Sagittis adipiscing dignissim, turpis purus, elementum! Pellentesque lundium non diam phasellus! Adipiscing odio parturient tincidunt placerat placerat.</p>
+      <p class="description">Upload your data file. Currently we only support data importing for Wordpress WXR files. More data sources coming soon.</p>
         <dl class="newsml_import_form_field">
+        <input type="hidden" name="cmsformat" value="wxr" />
+<!--
           <dt class="cmsformat_part">
             <label for="cmsformat" class="source_cmsformat_label">Source CMS type</label>
           </dt>
@@ -125,6 +146,7 @@ window.validateForm = function() {
               <option value="wxr">WordPress WXR
             </select>
           </dd>
+-->
           <dt>
             <label>Select the file to convert</label>
           </dt>
@@ -141,7 +163,6 @@ window.validateForm = function() {
       </div>
     </form>
   </div>
-
     <p class="wxr_problems"> Note that sometimes WordPress creates invalid dumps (on cdata parts).<br>
       If converting a wxr file fails, you can try an auxiliary <a href="wxrfixer.py">script</a> to fix that.
     </p>
