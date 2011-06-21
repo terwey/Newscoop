@@ -57,6 +57,7 @@ h2 {
 	padding:2px 0 0 54px;
 	height:42px;
 	line-height:18px;
+	position:relative;
 	
 }
 .submit_form_info span {
@@ -198,7 +199,18 @@ dd {
 .input_privacy_policy_agreement_text {
     font-size:13px;
 }
-
+input[type="checkbox"] {
+	float:left;
+    font-family: Arial,Helvetica,sans-serif;
+	outline:none;
+    height: 13px;
+	width:13px;
+    margin: 0;
+    padding: 0;
+}
+input[type="checkbox"].input_privacy_policy_agreement {
+	margin:1px 5px 0 1px;
+}
 input[type="text"], input[type="password"] {
     background-color: #FFFFFF;
     border: 1px solid #9D9D9D;
@@ -335,4 +347,15 @@ p.description {
 	float:left;
 	text-align:center;
 	margin-top:-2px;
+}
+.beta-badge {
+	position:absolute;
+	width:43px;
+	height:44px;
+	display:block;
+	background:transparent url(img/beta_badge.png) no-repeat 0 0;
+	top:-18px;
+	left:-28px;
+	text-indent:-99999px;
+	overflow:hidden;
 }
