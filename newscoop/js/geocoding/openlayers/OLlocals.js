@@ -38,40 +38,31 @@ OpenLayers.Layer.OSMMod = OpenLayers.Class(OpenLayers.Layer.OSM, {
     attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/' target='_blank'>OpenStreetMap</a>",
     sphericalMercator: true,
     url: 'http://tile.openstreetmap.org/${z}/${x}/${y}.png',
-    getURL: function (bounds) {
+
+    getXYZ: function(bounds) {
         var res = this.map.getResolution();
         var x = Math.round((bounds.left - this.maxExtent.left) 
             / (res * this.tileSize.w));
         var y = Math.round((this.maxExtent.top - bounds.top) 
             / (res * this.tileSize.h));
-        var z = this.map.getZoom() + this.zoomOffset;
+        var z = this.serverResolutions != null ?
+            OpenLayers.Util.indexOf(this.serverResolutions, res) :
+            this.map.getZoom() + this.zoomOffset;
 
-        var z_mod = Math.pow(2, z);
-        while (x < 0) {
-            x += z_mod;
-        }
-        while (y < 0) {
-            y += z_mod;
-        }
-        while (x >= z_mod) {
-            x -= z_mod;
-        }
-        while (y >= z_mod) {
-            y -= z_mod;
-        }
-
-        var url = this.url;
-        var s = '' + x + y + z;
-        if (url instanceof Array)
+        var limit = Math.pow(2, z);
+        if (this.wrapDateLine)
         {
-            url = this.selectUrl(s, url);
+           x = ((x % limit) + limit) % limit;
         }
-        
-        var path = OpenLayers.String.format(url, {'x': x, 'y': y, 'z': z});
 
-        return path;
+        // not to non-sentially ask for non-existent tiles
+        x = ((x % limit) + limit) % limit;
+        y = ((y % limit) + limit) % limit;
+
+        return {'x': x, 'y': y, 'z': z};
     },
-     CLASS_NAME: "OpenLayers.Layer.OSM"
+
+    CLASS_NAME: "OpenLayers.Layer.OSM"
 });
 
 OpenLayers.Layer.MapQuest = OpenLayers.Class(OpenLayers.Layer.OSMMod, {
@@ -85,76 +76,6 @@ OpenLayers.Layer.MapQuest = OpenLayers.Class(OpenLayers.Layer.OSMMod, {
         'http://otile4.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png'
     ],
     CLASS_NAME: "OpenLayers.Layer.MapQuest"
-});
-
-// solving issues on Google v3 things
-OpenLayers.Layer.GoogleMod = OpenLayers.Class(OpenLayers.Layer.Google, {
-    // just added the modRepositionMapElements call at the end
-    initialize: function(name, options) {
-        options = options || {};
-        if(!options.version) {
-            options.version = typeof GMap2 === "function" ? "2" : "3";
-        }
-        var mixin = OpenLayers.Layer.Google["v" +
-            options.version.replace(/\./g, "_")];
-        if (mixin) {
-            OpenLayers.Util.applyDefaults(options, mixin);
-        } else {
-            throw "Unsupported Google Maps API version: " + options.version;
-        }
-
-        OpenLayers.Util.applyDefaults(options, mixin.DEFAULTS);
-        if (options.maxExtent) {
-            options.maxExtent = options.maxExtent.clone();
-        }
-
-        OpenLayers.Layer.EventPane.prototype.initialize.apply(this,
-            [name, options]);
-        OpenLayers.Layer.FixedZoomLevels.prototype.initialize.apply(this,
-            [name, options]);
-
-        if (this.sphericalMercator) {
-            OpenLayers.Util.extend(this, OpenLayers.Layer.SphericalMercator);
-            this.initMercatorParameters();
-        }
-        this.modRepositionMapElements();
-    },
-    'numZoomLevels': 20,
-    'sphericalMercator': true,
-    'modRepositionMapElements': function () {
-    // we need to change it here, otherwise the old repositionMapElements function would be used
-        this.repositionMapElements = this.repositionMapElementsMod;
-    },
-    'repositionMapElementsMod' : function () {
-        google.maps.event.trigger(this.mapObject, "resize");
-        var div = this.mapObject.getDiv().firstChild;
-        if (!div || div.childNodes.length < 3) {
-            this.repositionTimer = window.setTimeout(OpenLayers.Function.bind(this.repositionMapElements, this), 250);
-            return false;
-        }
-
-        var cache = OpenLayers.Layer.Google.cache[this.map.id];
-        var container = this.map.viewPortDiv;
-
-        var termsOfUse = div.lastChild;
-        container.appendChild(termsOfUse);
-        termsOfUse.style.zIndex = "1100";
-        termsOfUse.style.bottom = "";
-        termsOfUse.className = "olLayerGoogleCopyright olLayerGoogleV3";
-        //termsOfUse.style.display = "";
-        //cache.termsOfUse = termsOfUse;
-
-        var poweredBy = div.lastChild;
-        container.appendChild(poweredBy);
-        poweredBy.style.zIndex = "1100";
-        poweredBy.style.bottom = "";
-        poweredBy.className = "olLayerGooglePoweredBy olLayerGoogleV3 gmnoprint";
-        poweredBy.style.display = "";
-        cache.poweredBy = poweredBy;
-
-        this.setGMapVisibility(this.visibility);
-    },
-    CLASS_NAME: "OpenLayers.Layer.Google"
 });
 
 // controls for actions on hover and click
@@ -274,18 +195,15 @@ OpenLayers.Control.PanZoomMod = OpenLayers.Class(OpenLayers.Control.PanZoom, {
 });
 
 OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBar, {
-    // msie does not stops the event, and does not preserves its properties either
     divClick: function (evt) {
-        //if (undefined === evt.stopPropagation) {evt.stopPropagation = null;}
-
         if (!OpenLayers.Event.isLeftClick(evt)) {
             return;
         }
         var levels = evt.xy.y / this.zoomStopHeight;
-        if (this.forceFixedZoomLevel || !this.map.fractionalZoom) {
+        if(this.forceFixedZoomLevel || !this.map.fractionalZoom) {
             levels = Math.floor(levels);
-        }
-        var zoom = this.map.getNumZoomLevels() - 1 - levels;
+        }    
+        var zoom = (this.map.getNumZoomLevels() - 1) - levels; 
         zoom = Math.min(Math.max(zoom, 0), this.map.getNumZoomLevels() - 1);
         this.map.zoomTo(zoom);
 
@@ -294,7 +212,6 @@ OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBa
         {
             OpenLayers.Event.stop(evt);
         }
-
     },
 
     buttonDown: function(evt) {
@@ -331,45 +248,32 @@ OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBa
         OpenLayers.Event.stop(evt);
     },
 
-    zoomBarUp: function(evt) {
-        if (!OpenLayers.Event.isLeftClick(evt)) {
+    zoomBarUp:function(evt) {
+        if (!OpenLayers.Event.isLeftClick(evt) && evt.type !== "touchend") {
             return;
         }
         if (this.mouseDragStart) {
             this.div.style.cursor="";
             this.map.events.un({
+                "touchmove": this.passEventToSlider,
                 "mouseup": this.passEventToSlider,
                 "mousemove": this.passEventToSlider,
                 scope: this
             });
-            var deltaY = this.zoomStart.y - evt.xy.y;
             var zoomLevel = this.map.zoom;
             if (!this.forceFixedZoomLevel && this.map.fractionalZoom) {
-                zoomLevel += deltaY/this.zoomStopHeight;
+                zoomLevel += this.deltaY/this.zoomStopHeight;
                 zoomLevel = Math.min(Math.max(zoomLevel, 0), 
                                      this.map.getNumZoomLevels() - 1);
             } else {
-                zoomLevel += Math.round(deltaY/this.zoomStopHeight);
+                zoomLevel += this.deltaY/this.zoomStopHeight;
+                zoomLevel = Math.min(Math.max(Math.round(zoomLevel), 0), this.map.getNumZoomLevels() - 1);
             }
-
-            var max_layer_zoom = OpenLayers.Hooks.Zooms.maxZoom(this);
-            var min_layer_zoom = OpenLayers.Hooks.Zooms.minZoom(this);
-
-            if ((max_layer_zoom !== undefined) && (typeof max_layer_zoom === "number")) {
-                if (max_layer_zoom < zoomLevel) {zoomLevel = max_layer_zoom;}
-            }
-            if ((min_layer_zoom !== undefined) && (typeof min_layer_zoom === "number")) {
-                if (min_layer_zoom > zoomLevel) {zoomLevel = min_layer_zoom;}
-            }
-
             this.map.zoomTo(zoomLevel);
             this.mouseDragStart = null;
             this.zoomStart = null;
-
-            var stop_event = OpenLayers.Hooks.PanZoomBar.zoomBarUp(this);
-            if (stop_event) {
-                OpenLayers.Event.stop(evt);
-            }
+            this.deltaY = 0;
+            OpenLayers.Event.stop(evt);
         }
     },
 
@@ -377,15 +281,46 @@ OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBa
 });
 
 OpenLayers.Control.DragPanMod = OpenLayers.Class(OpenLayers.Control.DragPan, {
-    panMapDone: function(pixel) {
-        OpenLayers.Hooks.DragPan.panMapDone(this);
+    panMapDone: function(xy) {
+        if(this.panned) {
+            var res = null;
+            if (this.kinetic) {
+                res = this.kinetic.end(xy);
+            }
+            this.map.pan(
+                this.handler.last.x - xy.x,
+                this.handler.last.y - xy.y,
+                {dragging: !!res, animate: false}
+            );
+            if (res) {
+                var self = this;
+                this.kinetic.move(res, function(x, y, end) {
+                    self.map.pan(x, y, {dragging: !end, animate: false});
+                });
+            }
+            this.panned = false;
+        }
+
+        if(!this.kinetic) {
+            OpenLayers.Hooks.DragPan.panMapDone(this);
+        }
     },
+
+
     panMap: function(xy) {
+        if(this.kinetic) {
+            this.kinetic.update(xy);
+        }
         this.panned = true;
+        this.map.pan(
+            this.handler.last.x - xy.x,
+            this.handler.last.y - xy.y,
+            {dragging: true, animate: false}
+        );
 
-        this.map.pan(this.handler.last.x - xy.x, this.handler.last.y - xy.y, {dragging: this.handler.dragging, animate: false});
-
-        OpenLayers.Hooks.DragPan.panMap(this);
+        if(!this.kinetic) {
+            OpenLayers.Hooks.DragPan.panMap(this);
+        }
     },
 
     CLASS_NAME: "OpenLayers.Control.DragPan"
@@ -589,7 +524,6 @@ OpenLayers.HooksLocal.map_center_update = function (geo_obj)
         geo_obj.map.addControl(geo_obj.select_control);
         geo_obj.select_control.activate();
     } catch (e) {}
-
 };
 
 OpenLayers.HooksLocal.map_feature_redraw = function(geo_obj) {
@@ -600,10 +534,9 @@ OpenLayers.HooksLocal.map_feature_redraw = function(geo_obj) {
 
     if (time_delay <= (cur_time - OpenLayers.HooksLocal.redraw_times.map_dragging_last))
     {
-        OpenLayers.HooksLocal.map_center_update(geo_obj);
         OpenLayers.HooksLocal.redraw_times.map_dragging_last = cur_time;
+        OpenLayers.HooksLocal.map_center_update(geo_obj);
     }
-
 };
 
 // on map click for the (pre)view mode

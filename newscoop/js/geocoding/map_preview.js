@@ -933,7 +933,7 @@ this.main_openlayers_init = function(map_div_name) {
     if (this.map_view_layer_providers[google_label])
     {
         // google map v3
-        map_gsm = new OpenLayers.Layer.GoogleMod(
+        map_gsm = new OpenLayers.Layer.Google(
             "Google Streets",
             {}
         );
