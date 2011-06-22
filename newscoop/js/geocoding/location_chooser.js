@@ -103,7 +103,7 @@ this.map_art_view_width_display = 600;
 this.map_art_view_height_display = 400;
 this.map_art_view_top_display = 70;
 this.map_art_view_right_display = 105;
-this.map_border_zindex_on = 900;
+this.map_border_zindex_on = 1000;
 this.map_border_zindex_off = -1000;
 this.map_border_background = "#8080ff";
 // basic map info
@@ -1414,10 +1414,13 @@ this.main_openlayers_init = function(map_div_name, descs_name)
         {
             styleMap: style_map,
             isBaseLayer: false,
+            renderers: ["SVG2", "VML", "Canvas"],
             rendererOptions: {yOrdering: true}
         }
     );
+    this.layer.setZIndex(1999);
     this.map.addLayer(this.layer);
+    this.on_svg2 = OpenLayers.Util.using_svg2(this.layer.renderer);
 
     // setting map center
     this.map.setCenter (lonLat_cen, zoom);

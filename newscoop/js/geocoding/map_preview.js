@@ -1040,10 +1040,13 @@ this.main_openlayers_init = function(map_div_name) {
         {
             styleMap: style_map,
             isBaseLayer: false,
+            renderers: ["SVG2", "VML", "Canvas"],
             rendererOptions: {yOrdering: true}
         }
     );
+    this.layer.setZIndex(1999);
     this.map.addLayer(this.layer);
+    this.on_svg2 = OpenLayers.Util.using_svg2(this.layer.renderer);
 
     // setting map center
     this.map.setCenter (lonLat_cen, zoom);

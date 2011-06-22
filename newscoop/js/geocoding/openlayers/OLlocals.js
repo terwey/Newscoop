@@ -10,6 +10,16 @@ OpenLayers.Util.test_ready = function() {
     return true;
 };
 
+// if we are using SVG2, then some parts are easier
+
+OpenLayers.Util.using_svg2 = function(renderer) {
+    if (renderer.xmlns && renderer.xmlns.match(/svg/i)) {
+        return true;
+    }
+
+    return false;
+}
+
 // auxiliary url changing on MapQuest failures
 
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 20;
@@ -53,13 +63,35 @@ OpenLayers.Layer.OSMMod = OpenLayers.Class(OpenLayers.Layer.OSM, {
         if (this.wrapDateLine)
         {
            x = ((x % limit) + limit) % limit;
+        } else {
+            // not to non-sensically ask for non-existent tiles
+            if ((x < 0) || (x >= limit)) {
+                return null;
+            }
         }
 
-        // not to non-sentially ask for non-existent tiles
-        x = ((x % limit) + limit) % limit;
-        y = ((y % limit) + limit) % limit;
+        // not to non-sensically ask for non-existent tiles
+        if ((y < 0) || (y >= limit)) {
+            return null;
+        }
 
         return {'x': x, 'y': y, 'z': z};
+    },
+
+    getURL: function (bounds) {
+        var xyz = this.getXYZ(bounds);
+
+        if (null == xyz) {
+            return OpenLayers.Util.getImagesLocation() + "blank.gif";
+        }
+
+        var url = this.url;
+        if (url instanceof Array) {
+            var s = '' + xyz.x + xyz.y + xyz.z;
+            url = this.selectUrl(s, url);
+        }
+        
+        return OpenLayers.String.format(url, xyz);
     },
 
     CLASS_NAME: "OpenLayers.Layer.OSM"
@@ -77,6 +109,87 @@ OpenLayers.Layer.MapQuest = OpenLayers.Class(OpenLayers.Layer.OSMMod, {
     ],
     CLASS_NAME: "OpenLayers.Layer.MapQuest"
 });
+
+
+
+/*
+
+// solving issues on Google v3 things
+OpenLayers.Layer.GoogleMod = OpenLayers.Class(OpenLayers.Layer.Google, {
+    // just added the modRepositionMapElements call at the end
+    initialize: function(name, options) {
+        options = options || {};
+        if(!options.version) {
+            options.version = typeof GMap2 === "function" ? "2" : "3";
+        }
+        var mixin = OpenLayers.Layer.Google["v" +
+            options.version.replace(/\./g, "_")];
+        if (mixin) {
+            OpenLayers.Util.applyDefaults(options, mixin);
+        } else {
+            throw "Unsupported Google Maps API version: " + options.version;
+        }
+
+        OpenLayers.Util.applyDefaults(options, mixin.DEFAULTS);
+        if (options.maxExtent) {
+            options.maxExtent = options.maxExtent.clone();
+        }
+
+        OpenLayers.Layer.EventPane.prototype.initialize.apply(this,
+            [name, options]);
+        OpenLayers.Layer.FixedZoomLevels.prototype.initialize.apply(this,
+            [name, options]);
+
+        if (this.sphericalMercator) {
+            OpenLayers.Util.extend(this, OpenLayers.Layer.SphericalMercator);
+            this.initMercatorParameters();
+        }
+        this.modRepositionMapElements();
+    },
+    'numZoomLevels': 20,
+    'sphericalMercator': true,
+    'modRepositionMapElements': function () {
+    // we need to change it here, otherwise the old repositionMapElements function would be used
+        this.repositionMapElements = this.repositionMapElementsMod;
+    },
+    'repositionMapElementsMod' : function () {
+        google.maps.event.trigger(this.mapObject, "resize");
+        var div = this.mapObject.getDiv().firstChild;
+        if (!div || div.childNodes.length < 3) {
+            this.repositionTimer = window.setTimeout(OpenLayers.Function.bind(this.repositionMapElements, this), 250);
+            return false;
+        }
+
+        var cache = OpenLayers.Layer.Google.cache[this.map.id];
+        var container = this.map.viewPortDiv;
+
+        var termsOfUse = div.lastChild;
+        container.appendChild(termsOfUse);
+        termsOfUse.style.zIndex = "1100";
+        termsOfUse.style.bottom = "";
+        termsOfUse.className = "olLayerGoogleCopyright olLayerGoogleV3";
+        //termsOfUse.style.display = "";
+        //cache.termsOfUse = termsOfUse;
+
+        var poweredBy = div.lastChild;
+        container.appendChild(poweredBy);
+        poweredBy.style.zIndex = "1100";
+        poweredBy.style.bottom = "";
+        poweredBy.className = "olLayerGooglePoweredBy olLayerGoogleV3 gmnoprint";
+        poweredBy.style.display = "";
+        cache.poweredBy = poweredBy;
+
+        this.setGMapVisibility(this.visibility);
+    },
+    CLASS_NAME: "OpenLayers.Layer.Google"
+});
+
+*/
+
+
+
+
+
 
 // controls for actions on hover and click
 
@@ -513,10 +626,17 @@ OpenLayers.HooksLocal.redraw_times = {
     map_dragging_last: 0
 };
 
-OpenLayers.HooksLocal.map_center_update = function (geo_obj)
+// TODO: it looks that this does work just for v google maps
+OpenLayers.HooksLocal.map_vectors_update = function (geo_obj)
 {
-    var new_center = geo_obj.map.center.clone();
-    geo_obj.map.setCenter(new_center);
+    if (!geo_obj.on_svg2) {
+        if (geo_obj.map && geo_obj.map.center) {
+            var new_center = geo_obj.map.center.clone();
+            geo_obj.map.setCenter(new_center);
+        } else {
+            geo_obj.layer.redraw();
+        }
+    }
 
     try {
         geo_obj.select_control.destroy();
@@ -535,7 +655,7 @@ OpenLayers.HooksLocal.map_feature_redraw = function(geo_obj) {
     if (time_delay <= (cur_time - OpenLayers.HooksLocal.redraw_times.map_dragging_last))
     {
         OpenLayers.HooksLocal.redraw_times.map_dragging_last = cur_time;
-        OpenLayers.HooksLocal.map_center_update(geo_obj);
+        OpenLayers.HooksLocal.map_vectors_update(geo_obj);
     }
 };
 
@@ -767,7 +887,7 @@ OpenLayers.Hooks.DragPan.panMap = function(ctrl) {
 };
 
 OpenLayers.Hooks.DragPan.panMapDone = function(ctrl) {
-    OpenLayers.HooksLocal.map_center_update(ctrl.map.geo_obj);
+    OpenLayers.HooksLocal.map_vectors_update(ctrl.map.geo_obj);
     OpenLayers.HooksLocal.map_check_popup(ctrl.map.geo_obj);
 };
 
