@@ -1101,7 +1101,7 @@ this.main_openlayers_init = function(map_div_name) {
     var cur_date = new Date();
     OpenLayers.HooksLocal.redraw_times.map_dragging_last = cur_date.getTime();
 
-    var drag_map = new OpenLayers.Control.DragPanMod([map_gsm, map_mqm, map_osm]);
+    var drag_map = OpenLayers.Control.getDragPanMod([map_gsm, map_mqm, map_osm]);
     this.map.addControl(drag_map);
     drag_map.activate();
 

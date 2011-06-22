@@ -1464,7 +1464,7 @@ this.main_openlayers_init = function(map_div_name, descs_name)
     this.map.addControl(drag_feature);
     drag_feature.activate();
 
-    var drag_map = new OpenLayers.Control.DragPanMod([map_gsm, map_mqm, map_osm]);
+    var drag_map = OpenLayers.Control.getDragPanMod([map_gsm, map_mqm, map_osm]);
     this.map.addControl(drag_map);
     drag_map.activate();
 
