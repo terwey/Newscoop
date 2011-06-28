@@ -73,7 +73,7 @@ class Admin_StaffController extends Zend_Controller_Action
 
         // check permission
         $auth = Zend_Auth::getInstance();
-        $self = $staff->getId() == $auth->getIdentity();
+        $self = ($staff->getId() == $auth->getIdentity());
         if (!$self) { // check if user != current
             $this->_helper->acl->check('user', 'manage');
         }

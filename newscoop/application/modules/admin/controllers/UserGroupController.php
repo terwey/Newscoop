@@ -60,7 +60,8 @@ class Admin_UserGroupController extends Zend_Controller_Action
                 $this->_helper->flashMessenger(getGS('That type name already exists, please choose a different name.'));
             }
 
-            $this->_helper->redirector($this->_getParam('group') ? 'edit' : 'index', 'user-group', 'admin', array(
+            $action = $this->_getParam('group') ? 'edit' : 'index';
+            $this->_helper->redirector($action, 'user-group', 'admin', array(
                 'group' => $this->_getParam('group'),
             ));
         }
