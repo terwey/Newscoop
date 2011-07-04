@@ -610,7 +610,9 @@ var geo_main_openlayers_init = function(geo_obj, map_div_name)
         map_gsm = new OpenLayers.Layer.Google(
             "Google Streets",
             {
-                numZoomLevels: 20, 'sphericalMercator': true, 'repositionMapElements': function () {
+                numZoomLevels: 20, 'sphericalMercator': true
+/*
+                'repositionMapElements': function () {
                     google.maps.event.trigger(this.mapObject, "resize");
                     var div = this.mapObject.getDiv().firstChild;
                     if (!div || div.childNodes.length < 3) {
@@ -639,6 +641,7 @@ var geo_main_openlayers_init = function(geo_obj, map_div_name)
 
                     this.setGMapVisibility(this.visibility);
                 }
+*/
             }
         );
         geo_obj.map_view_layer_names_all[google_label] = map_gsm.name;

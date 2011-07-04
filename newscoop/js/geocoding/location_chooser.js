@@ -1408,13 +1408,14 @@ this.main_openlayers_init = function(map_div_name, descs_name)
     style_map.addUniqueValueRules("default", "type", lookup);
 
     // layer for features
+    var poi_renderers = OpenLayers.Util.vector_renderers();
     this.layer = new OpenLayers.Layer.Vector(
         //"POI markers",
         this.display_strings.point_markers,
         {
             styleMap: style_map,
             isBaseLayer: false,
-            renderers: ["SVG2", "VML", "Canvas"],
+            renderers: poi_renderers,
             rendererOptions: {yOrdering: true}
         }
     );

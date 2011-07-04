@@ -12,13 +12,49 @@ OpenLayers.Util.test_ready = function() {
 
 // if we are using SVG2, then some parts are easier
 
+OpenLayers.Util.svg2_correct = function() {
+    return true;
+    //return false;
+};
+
+OpenLayers.Util.vector_renderers = function() {
+    var renderers = ["SVG", "VML", "Canvas"];
+    if (OpenLayers.Util.svg2_correct()) {
+        renderers = ["SVG2", "VML", "Canvas"];
+    }
+
+    return renderers;
+}
+
 OpenLayers.Util.using_svg2 = function(renderer) {
+    if (!OpenLayers.Util.svg2_correct()) {return false;}
+
     if (renderer.xmlns && renderer.xmlns.match(/svg/i)) {
         return true;
     }
 
     return false;
 }
+
+
+OpenLayers.Util.mouseLeft0 = function (evt, div) {
+    // start with the element to which the mouse has moved
+    var target = (evt.relatedTarget) ? evt.relatedTarget : evt.toElement;
+    // walk up the DOM tree.
+    while (target != div && target != null) {
+        var target_test = null;
+        try {
+            target_test = target.parentNode;
+        }
+        catch (e) {
+            break;
+        }
+        target = target_test;
+    }
+    // if the target we stop at isn't the div, then we've left the div.
+    return (target != div);
+};
+
 
 // auxiliary url changing on MapQuest failures
 
@@ -111,10 +147,9 @@ OpenLayers.Layer.MapQuest = OpenLayers.Class(OpenLayers.Layer.OSMMod, {
 });
 
 
-
-/*
-
-// solving issues on Google v3 things
+// solving issues on Google v3 things (maps data providers popup)
+// we do not need this now, since ol 2.11 has solved that already
+// thus it is here just if it would be necessary again
 OpenLayers.Layer.GoogleMod = OpenLayers.Class(OpenLayers.Layer.Google, {
     // just added the modRepositionMapElements call at the end
     initialize: function(name, options) {
@@ -163,6 +198,11 @@ OpenLayers.Layer.GoogleMod = OpenLayers.Class(OpenLayers.Layer.Google, {
         var cache = OpenLayers.Layer.Google.cache[this.map.id];
         var container = this.map.viewPortDiv;
 
+        // move the Map Data popup to the container, if any
+        while (div.lastChild.style.display == "none") {
+            container.appendChild(div.lastChild);
+        }
+
         var termsOfUse = div.lastChild;
         container.appendChild(termsOfUse);
         termsOfUse.style.zIndex = "1100";
@@ -183,12 +223,6 @@ OpenLayers.Layer.GoogleMod = OpenLayers.Class(OpenLayers.Layer.Google, {
     },
     CLASS_NAME: "OpenLayers.Layer.Google"
 });
-
-*/
-
-
-
-
 
 
 // controls for actions on hover and click
@@ -270,27 +304,7 @@ OpenLayers.Hooks.DragPan.panMapDone = function(ctrl) {return null};
 
 // changed map controls to contain the proposed hook calls
 
-/*
-OpenLayers.Control.getPanZoomMod = function () {
-    var ctrl_pan_zoom = new OpenLayers.Control.PanZoomMod();
-
-    ctrl_pan_zoom.buttonDownOrig = ctrl_pan_zoom.buttonDown;
-    ctrl_pan_zoom.buttonDown = ctrl_pan_zoom.buttonDownMod;
-
-    return ctrl_pan_zoom;
-};
-*/
-
 OpenLayers.Control.PanZoomMod = OpenLayers.Class(OpenLayers.Control.PanZoom, {
-
-    buttonDownMod: function(evt) {
-        if (!OpenLayers.Event.isLeftClick(evt)) {
-            return;
-        }
-        var ctrl = OpenLayers.Hooks.PanZoom.buttonDown(this);
-        ctrl.buttonDownOrig(evt);
-    },
-
     buttonDown: function(evt) {
         if (!OpenLayers.Event.isLeftClick(evt)) {
             return;
@@ -328,17 +342,6 @@ OpenLayers.Control.PanZoomMod = OpenLayers.Class(OpenLayers.Control.PanZoom, {
     CLASS_NAME: "OpenLayers.Control.PanZoom"
 });
 
-/*
-OpenLayers.Control.getPanZoomBarMod = function () {
-    var ctrl_pan_zoom_bar = new OpenLayers.Control.PanZoomBarMod();
-
-    ctrl_pan_zoom_bar.buttonDownOrig = ctrl_pan_zoom_bar.buttonDown;
-    ctrl_pan_zoom_bar.buttonDown = ctrl_pan_zoom_bar.buttonDownMod;
-
-    return ctrl_pan_zoom_bar;
-};
-*/
-
 OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBar, {
     divClick: function (evt) {
         if (!OpenLayers.Event.isLeftClick(evt)) {
@@ -352,22 +355,10 @@ OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBa
         zoom = Math.min(Math.max(zoom, 0), this.map.getNumZoomLevels() - 1);
         this.map.zoomTo(zoom);
 
-        var stop_event = OpenLayers.Hooks.PanZoomBar.divClick(this);
-        if (stop_event)
-        {
-            OpenLayers.Event.stop(evt);
-        }
+        OpenLayers.Hooks.PanZoomBar.divClick(this);
+        OpenLayers.Event.stop(evt);
+
     },
-
-    buttonDownMod: function(evt) {
-        if (!OpenLayers.Event.isLeftClick(evt)) {
-            return;
-        }
-        OpenLayers.Hooks.PanZoomBar.buttonDown(this);
-
-        this.buttonDownOrig(evt);
-    },
-
     buttonDown: function(evt) {
         if (!OpenLayers.Event.isLeftClick(evt)) {
             return;
@@ -427,6 +418,8 @@ OpenLayers.Control.PanZoomBarMod = OpenLayers.Class(OpenLayers.Control.PanZoomBa
             this.mouseDragStart = null;
             this.zoomStart = null;
             this.deltaY = 0;
+
+            OpenLayers.Hooks.PanZoomBar.zoomBarUp(this);
             OpenLayers.Event.stop(evt);
         }
     },
@@ -450,53 +443,11 @@ OpenLayers.Control.DragPanMod = OpenLayers.Class(OpenLayers.Control.DragPan, {
     panMapDoneMod: function(xy) {
         this.panMapDoneOrig(xy);
         OpenLayers.Hooks.DragPan.panMapDone(this);
-/*
-        if(this.panned) {
-            var res = null;
-            if (this.kinetic) {
-                res = this.kinetic.end(xy);
-            }
-            this.map.pan(
-                this.handler.last.x - xy.x,
-                this.handler.last.y - xy.y,
-                {dragging: !!res, animate: false}
-            );
-            if (res) {
-                var self = this;
-                this.kinetic.move(res, function(x, y, end) {
-                    self.map.pan(x, y, {dragging: !end, animate: false});
-                });
-            }
-            this.panned = false;
-        }
-
-        if(!this.kinetic) {
-            OpenLayers.Hooks.DragPan.panMapDone(this);
-        }
-*/
     },
 
     panMapMod: function(xy) {
-        //console.log("pan map mod 0");
         this.panMapOrig(xy);
         OpenLayers.Hooks.DragPan.panMap(this);
-        //console.log("pan map mod");
-
-/*
-        if(this.kinetic) {
-            this.kinetic.update(xy);
-        }
-        this.panned = true;
-        this.map.pan(
-            this.handler.last.x - xy.x,
-            this.handler.last.y - xy.y,
-            {dragging: true, animate: false}
-        );
-
-        if(!this.kinetic) {
-            OpenLayers.Hooks.DragPan.panMap(this);
-        }
-*/
     },
 
     CLASS_NAME: "OpenLayers.Control.DragPan"
@@ -914,15 +865,14 @@ OpenLayers.Hooks.PanZoom.buttonDown = function(ctrl) {
 };
 
 OpenLayers.Hooks.PanZoomBar.divClick = function(ctrl) {
-    // this change works for firefox under winxp too, but not for linux/firefox
-    if ('msie' == OpenLayers.Util.getBrowserName())
-    {
-        try {
-            ctrl.map.geo_obj.ignore_click = true;
-        } catch (e) {}
-        return false;
-    }
-    return true;
+    try {
+        var geo_obj = ctrl.map.geo_obj;
+        if (geo_obj.editing) {
+            geo_obj.ignore_click = true;
+            setTimeout(geo_obj.obj_name + ".ignore_click = false;", 500);
+        }
+    } catch (e) {}
+
 };
 
 OpenLayers.Hooks.PanZoomBar.buttonDown = function(ctrl) {
@@ -932,18 +882,14 @@ OpenLayers.Hooks.PanZoomBar.buttonDown = function(ctrl) {
 };
 
 OpenLayers.Hooks.PanZoomBar.zoomBarUp = function(ctrl) {
-    // this change works for firefox under winxp too, but not for linux/firefox
-    if ('msie' == OpenLayers.Util.getBrowserName())
-    {
-        try {
-            ctrl.map.geo_obj.ignore_click = true;
-            if (ctrl.map.geo_obj.obj_name) {
-                setTimeout("try {" + ctrl.map.geo_obj.obj_name + ".ignore_click = false;} catch (e) {}", 500);
-            }
-        } catch (e) {}
-        return false;
-    }
-    return true;
+    try {
+        var geo_obj = ctrl.map.geo_obj;
+        if (geo_obj.editing) {
+            geo_obj.ignore_click = true;
+            setTimeout(geo_obj.obj_name + ".ignore_click = false;", 500);
+        }
+    } catch (e) {}
+
 };
 
 OpenLayers.Hooks.DragPan.panMap = function(ctrl) {
