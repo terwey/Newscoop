@@ -52,6 +52,13 @@ function UpdateArticleFieldContext() {
 	    ToggleRowVisibility('is_content');
 	    ToggleBoolValue('show_is_content');
 	}
+	
+	var show_editor_size = my_form.elements["show_editor_size"].value
+	if ((show_editor_size == "true" && field_type != "body")
+	        || (show_editor_size == "false" && field_type == "body")) {
+	    ToggleRowVisibility('editor_size');
+	    ToggleBoolValue('show_editor_size');
+	}
 
     var show_precision = my_form.elements["show_precision"].value
     if ((show_precision == "true" && field_type != "numeric")
@@ -75,6 +82,7 @@ function UpdateArticleFieldContext() {
 <?php echo SecurityToken::FormParameter(); ?>
 <input type="hidden" name="is_topic" id="is_topic" value="false">
 <input type="hidden" name="show_is_content" id="show_is_content" value="false">
+<input type="hidden" name="show_editor_size" id="show_editor_size" value="false">
 <input type="hidden" name="show_precision" id="show_precision" value="false">
 <input type="hidden" name="show_maxsize" id="show_maxsize" value="true">
 <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" CLASS="box_table">
@@ -129,6 +137,19 @@ foreach ($topics as $topicPath) {
     <td align="right"><?php putGS('Is Content'); ?>:</td>
     <td><input type="checkbox" name="f_is_content"></td>
 </tr>
+<tr style="display: none;" id="editor_size">
+    <td align="right"><?php putGS('Editor size'); ?>:</td>
+    <td>
+		<select name="f_editor_size" onChange="if (this.value == 'custom') document.getElementById('editor_size_custom').style.display = 'inline'; else document.getElementById('editor_size_custom').style.display = 'none';">
+			<option value="small"><?php putGS('Small ($1 pixels)', ArticleTypeField::BODY_ROWS_SMALL)?></option>
+			<option value="medium"><?php putGS('Medium ($1 pixels)', ArticleTypeField::BODY_ROWS_MEDIUM)?></option>
+			<option value="large"><?php putGS('Large ($1 pixels)', ArticleTypeField::BODY_ROWS_LARGE)?></option>
+			<option value="custom"><?php putGS('Custom')?></option>
+		</select>
+		&nbsp;
+		<input type="text" name="f_editor_size_custom" class="input_text" value="160" id="editor_size_custom" size="3" style="display: none;">
+    </td>
+</tr>
 <tr style="display: none;" id="precision">
     <td align="right"><?php putGS('Precision'); ?>:</td>
     <td><input type="text" class="input_text" size="2" maxlength="2" name="f_precision" emsg="<?php putGS('You must input a number greater than $1 and less than $2 into the $3 field.', 0, 99, getGS('Precision')); ?>" alt="number|0|0|99|bok" ></td>
@@ -136,7 +157,7 @@ foreach ($topics as $topicPath) {
 <tr style="display: table-row;" id="maxsize">
     <td align="right"><?php putGS('Characters limit'); ?>:</td>
     <td>
-        <input type="text" class="input_text" size="3" maxlength="3" name="f_maxsize" emsg="<?php putGS('You must input a number greater than $1 and less than $2 into the $3 field.', 0, 999, getGS('Characters limit')); ?>" alt="number|0|0|999|bok" >
+        <input type="text" class="input_text" size="3" maxlength="3" name="f_maxsize" emsg="<?php putGS('You must input a number greater than $1 and less than $2 into the $3 field.', 0, 999, getGS('Characters limit')); ?>" alt="number|0|1|999|bok" >
     </td>
 </tr>
 <TR>

@@ -13,13 +13,20 @@ require_once $GLOBALS['g_campsiteDir'] . '/public/index.php';
  */
 require_once($GLOBALS['g_campsiteDir'].'/classes/User.php');
 
+// Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
+    realpath(dirname(__FILE__) . '/../include'),
     get_include_path(),
-    '/usr/share/php/libzend-framework-php',
 )));
-
-
+if (!is_file('Zend/Application.php')) {
+	// include libzend if we dont have zend_application
+	set_include_path(implode(PATH_SEPARATOR, array(
+		'/usr/share/php/libzend-framework-php',
+		get_include_path(),
+	)));
+}
+require_once 'Zend/Application.php';
 
 include_once("Zend/Auth.php");
 include_once("Zend/Auth/Storage/Session.php");

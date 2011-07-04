@@ -4,6 +4,7 @@
  * @copyright 2011 Sourcefabric o.p.s.
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
+use Newscoop\Service\Exception\RemoveThemeException;
 use Newscoop\Entity\OutputSettings;
 use Newscoop\Service\IArticleTypeService,
     Newscoop\Entity\Repository\ArticleTypeRepository,
@@ -262,7 +263,7 @@ class Admin_ThemesController extends Zend_Controller_Action
                 ->getElement( 'submit-button' )->clearDecorators()->addDecorator( 'ViewHelper' )->setAttrib( 'style', 'display:none' );
             $this->view->uploadForm = $uploadForm;
 
-            $this->view->headScript()->appendFile( $this->view->baseUrl( "/js/jquery/jquery.tmpl.js" ) );
+            $this->view->headScript()->appendFile( $this->view->baseUrl( "/js/jquery/doT.js" ) );
             $this->view->headLink( array
             (
             	'type'  =>'text/css',
@@ -419,8 +420,7 @@ class Admin_ThemesController extends Zend_Controller_Action
         try // @todo maybe implement this a little smarter, little less code?
         {
             if( $this->_request->isPost() ) {
-                if( $outputForm->isValid( $this->_request->getPost() ) )
-                {
+                if( $outputForm->isValid( $this->_request->getPost() ) ) {
                     $settings->setFrontPage( new Resource( $outputForm->getValue( 'frontpage' ) ) );
                     $settings->setSectionPage( new Resource( $outputForm->getValue( 'sectionpage' ) ) );
                     $settings->setArticlePage( new Resource( $outputForm->getValue( 'articlepage' ) ) );
@@ -428,10 +428,11 @@ class Admin_ThemesController extends Zend_Controller_Action
 
                     $this->getThemeService()->assignOutputSetting( $settings, $theme );
 
-                    $this->_helper->flashMessenger( ( $this->view->success = getGS( 'Settings saved.' ) ) );
+                    $msg = getGS( 'Theme settings saved.' ) ;
+                    $this->view->success = $msg;
+                    $this->_helper->flashMessenger( $msg );
                 }
-                else
-                {
+                else {
                     throw new \Exception();
                 }
             }
@@ -471,7 +472,7 @@ class Admin_ThemesController extends Zend_Controller_Action
 
         $articleTypes           = $this->_request->getPost( 'articleTypes' );
         $articleTypeFields      = $this->_request->getPost( 'articleTypeFields' );
-        $themeArticleTypeFields = $this->_request->getPost( 'themeArticleTypeFields' );
+        $themeArticleTypeFields = $this->_request->getPost( 'themeArticleTypeFields', array() );
         $themeArticleTypes      = $this->_request->getPost( 'themeArticleTypes' );
 
         // complex logic for matching
@@ -563,6 +564,8 @@ class Admin_ThemesController extends Zend_Controller_Action
 
         $this->view->response = $thmServ->assignArticleTypes( $updateArticleTypes, $theme );
 
+        $this->_helper->flashMessenger(getGS('Theme settings updated.'));
+
     }
 
     public function deleteAction()
@@ -573,7 +576,22 @@ class Admin_ThemesController extends Zend_Controller_Action
     public function unassignAction()
     {
         if( ( $themeId = $this->_getParam( 'id', null ) ) ) {
-            $this->view->response = $this->getThemeService()->removeTheme($themeId);
+            try
+            {
+                $this->getThemeService()->removeTheme($themeId);
+                $this->view->status = true;
+                $this->view->response = getGS( "Unassign successful" );
+            }
+            catch( RemoveThemeException $e )
+            {
+                $this->view->status = false;
+                $this->view->response = getGS( "Cannot remove theme, it's most probably used by an issue" );
+            }
+            catch( Exception $e )
+            {
+                $this->view->status = false;
+                $this->view->response = getGS( "Failed unassigning theme" );
+            }
         }
     }
 

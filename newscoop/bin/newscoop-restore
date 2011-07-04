@@ -11,14 +11,19 @@ if (php_sapi_name() == 'cli') {
         || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
     // Ensure library/ is on include_path
-    set_include_path(implode(PATH_SEPARATOR, array(
-        '/usr/share/php/libzend-framework-php',
-        realpath(APPLICATION_PATH . '/../library'),
-        get_include_path(),
-    )));
-
-    /** Zend_Application */
-    require_once 'Zend/Application.php';
+	set_include_path(implode(PATH_SEPARATOR, array(
+		realpath(APPLICATION_PATH . '/../library'),
+		realpath(dirname(__FILE__) . '/../include'),
+		get_include_path(),
+	)));
+	if (!is_file('Zend/Application.php')) {
+		// include libzend if we dont have zend_application
+		set_include_path(implode(PATH_SEPARATOR, array(
+			'/usr/share/php/libzend-framework-php',
+			get_include_path(),
+		)));
+	}
+	require_once 'Zend/Application.php';
 
     // Create application, bootstrap, and run
     $application = new Zend_Application(
@@ -32,7 +37,7 @@ if (php_sapi_name() == 'cli') {
 require_once dirname(__FILE__) . '/newscoop_bootstrap.php';
 require_once $CAMPSITE_DIR . '/classes/CampPlugin.php';
 
-if (!is_array($GLOBALS['argv']) && empty($options)) {
+if( isset($GLOBAL['argv']) && !is_array($GLOBALS['argv']) && empty($options)) {
     echo "Can't read command line arguments\n";
     exit(1);
 }
@@ -144,7 +149,7 @@ $destDbName = isset($options['t']) ? $options['t'] : "";
 $convertToUTF = isset($options['c']) || isset($options['s']);
 
 // verify if the command line parameters were valid
-if (empty($archive_file) || ($destDbSpecified && empty($destDbName))
+if ((empty($archive_file) && !in_array('l', array_keys($options))) || ($destDbSpecified && empty($destDbName))
 || (isset($options['c']) && empty($options['c']))) {
     echo $usage;
     camp_exit_with_error("Invalid parameters; please read the usage description above.");
@@ -512,7 +517,6 @@ foreach($template_files as $template_file) {
 }
 echo "done.\n";
 
-
 //
 // Restore the database...
 //
@@ -538,6 +542,7 @@ flush_output($flush);
 // If database version is minor than 2.6.0 we do nothing but exit the
 // script as we only care about upgrading newer Newscoops.
 camp_detect_database_version($destDbName, $dbVersion);
+
 if ($dbVersion < '2.6.0') {
     echo "\n You must upgrade to Newscoop 2.6 or 2.7 first, after that";
     echo "\n run this script again to upgrade to 3.0.\n\n";
@@ -556,24 +561,27 @@ $res = camp_upgrade_database($destDbName);
 if ($res !== 0) {
     camp_exit_with_error($res);
 }
+//if( $res === 0 )
+//{
 
-if ($convertToUTF) {
-    echo " * Converting the database from '$fromCharset' to 'UTF-8'...\n";
-
-    $dumpFile = "$tempDirName/$destDbName-database-$fromCharset.sql";
-    if (camp_backup_database($destDbName, $dumpFile, $output,
-    array("--default-character-set=$fromCharset")) != 0) {
-        camp_exit_with_error("Unable to backup the database $destDbName\n"
-        . implode("\n", $output));
-    }
-    $outDumpFile = "$tempDirName/$destDbName-database-utf8.sql";
-    camp_change_dump_encoding($dumpFile, $outDumpFile, $fromCharset);
-    camp_restore_database($outDumpFile);
-    unlink($dumpFile);
-    unlink($outDumpFile);
-
-    echo "   done.\n";
-}
+	if ($convertToUTF) {
+	    echo " * Converting the database from '$fromCharset' to 'UTF-8'...\n";
+	
+	    $dumpFile = "$tempDirName/$destDbName-database-$fromCharset.sql";
+	    if (camp_backup_database($destDbName, $dumpFile, $output,
+	    array("--default-character-set=$fromCharset")) != 0) {
+	        camp_exit_with_error("Unable to backup the database $destDbName\n"
+	        . implode("\n", $output));
+	    }
+	    $outDumpFile = "$tempDirName/$destDbName-database-utf8.sql";
+	    camp_change_dump_encoding($dumpFile, $outDumpFile, $fromCharset);
+	    camp_restore_database($outDumpFile);
+	    unlink($dumpFile);
+	    unlink($outDumpFile);
+	
+	    echo "   done.\n";
+	}
+//}
 
 // upgrade plugins
 echo " * Updating plugins (if necessary)...";

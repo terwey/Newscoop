@@ -118,14 +118,23 @@ final class CampInstallationView
         $success = true;
         $libraryRequirements = array();
 
-/*        $autoloadCallback = function( $class )
+        // autoloader for dependencies
+        $inclPath = explode(PATH_SEPARATOR, get_include_path());
+        $autoloadCallback = function($p_class) use ($inclPath)
         {
-            TODO some code here to check pear classes
+            foreach ($inclPath as $path) {
+                $fn = DIR_SEP.trim($path, DIR_SEP).DIR_SEP.str_replace("_", DIR_SEP, $p_class).".php";
+                if (file_exists($fn)) {
+                    require_once $fn;
+                    return true;
+                }
+            }
+            return true;
         };
 
         $autoloader = Zend_Loader_Autoloader::getInstance();
-        $autoloader->pushAutoloader( $autoloadCallback );
-*/
+        $autoloader->pushAutoloader($autoloadCallback);
+
 
         $pear = CampInstallationViewHelper::CheckPear();
         $success = ($pear == 'Yes') ? $success : false;
@@ -182,7 +191,7 @@ final class CampInstallationView
 			'tag' => 'PEAR/XML_Parser',
 			'exists' => $pearXmlParser
 		);
-		
+
 		$pearHtmlCommon = CampInstallationViewHelper::CheckPearHtmlCommon();
         $success = ($pearHtmlCommon == 'Yes') ? $success : false;
         $libraryRequirements[] = array(
@@ -213,10 +222,8 @@ final class CampInstallationView
 
         $this->m_lists['libraryRequirements'] = $libraryRequirements;
 
-        /*
-         * remove autoloader like so
-        $autoloader->removeAutoloader( $autoloadCallback );
-		*/
+        // removing that autoloader
+        $autoloader->removeAutoloader($autoloadCallback);
 
         return $success;
     } // fn librariesCheck
@@ -378,7 +385,7 @@ final class CampInstallationViewHelper
     {
         return (class_exists('XML_Parser')) ? 'Yes' : 'No';
     } // fn checkPearXmlParser
-    
+
     public static function CheckPearHtmlCommon()
     {
         return (class_exists('HTML_Common')) ? 'Yes' : 'No';
