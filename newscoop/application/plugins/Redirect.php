@@ -35,24 +35,43 @@ I would suggest:
 class Application_Plugin_Redirect extends Zend_Controller_Plugin_Abstract
 {
 
-    private function _redirect ($url, $status) {
-        header('Location: ' . $url, true, $status);
+    private function _redirect ($p_url, $p_status) {
+        header('Location: ' . $p_url, true, $p_status);
         exit(0);
+    }
+
+    private function _findNewURI ($p_uriOld) {
+
+        // example strings below for development & testing purposes
+        $old_str_part = '/abcdef/';
+        $new_str = '/en/jan2011/politics/101/News-on-general-theory-of-relativity.htm';
+
+        if ($old_str_part == substr($p_uriOld, 0, strlen($old_str_part))) {
+            return $new_str;
+        }
+
+        return null;
     }
 
     public function routeStartup(Zend_Controller_Request_Abstract $request)
     {
-        $req_uri = $request->getRequestUri();
-        $old_str_part = '/abcdef/';
-        $new_str_redir = '/en/jan2011/politics/101/News-on-general-theory-of-relativity.htm';
+        $legacy = SystemPref::Get('LegacyUriUsage');
+        if (!in_array($legacy, array('R', 'S'))) {
+            return;
+        }
 
-        if ($old_str_part == substr($req_uri, 0, strlen($old_str_part))) {
-            $request->setRequestUri($new_str_redir);
+        $req_uri = $request->getRequestUri();
+
+        $new_uri = $this->_findNewURI($req_uri);
+        if (!empty($new_uri)) {
+            $request->setRequestUri($new_uri);
             $request->setControllerName('content');
             $request->setModuleName('');
 
-            //$this->_redirect($new_str_redir, 301); // permanently - production
-            //$this->_redirect($new_str_redir, 307); // temporarily - development
+            if ('R' == $legacy) {
+                //$this->_redirect($new_uri, 301); // permanently - production
+                $this->_redirect($new_uri, 307); // temporarily - development
+            }
         }
     }
 

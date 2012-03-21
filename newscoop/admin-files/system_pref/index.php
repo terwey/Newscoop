@@ -289,6 +289,16 @@ $availableTemplateCacheHandlers = CampTemplateCache::availableHandlers();
     </td>
 </tr>
 <tr>
+    <td align="left" width="400px">
+        <?php putGS('Legacy URI usage:'); ?>
+    </td>
+    <td align="left" valign="top">
+        <input type="radio" name="f_legacy_uri_usage" value="N" <?php if (!in_array(SystemPref::Get("LegacyUriUsage"), array('R', 'S'))) p("checked"); ?> /> <?php putGS("None"); ?>
+        <input type="radio" name="f_legacy_uri_usage" value="R" <?php if (SystemPref::Get("LegacyUriUsage") == 'R') p("checked"); ?> /> <?php putGS("Redirect"); ?>
+        <input type="radio" name="f_legacy_uri_usage" value="S" <?php if (SystemPref::Get("LegacyUriUsage") == 'S') p("checked"); ?> /> <?php putGS("Serve"); ?>
+    </td>
+</tr>
+<tr>
     <td colspan="2"><hr /></td>
 </tr>
 <?php

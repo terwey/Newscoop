@@ -16,6 +16,7 @@ if (!$g_user->hasPermission('ChangeSystemPreferences')) {
 }
 
 if(SaaS::singleton()->hasPermission('ManageSystemPreferences')) {
+	$f_legacy_uri_usage = Input::Get('f_legacy_uri_usage');
 	$f_collect_statistics = Input::Get('f_collect_statistics');
 	$f_cache_engine = Input::Get('f_cache_engine');
 	$f_template_cache_handler = Input::Get('f_template_cache_handler');
@@ -196,6 +197,11 @@ SystemPref::Set('SMTPPort', $f_smtp_port);
 
 // Statistics collecting
 SystemPref::Set('CollectStatistics', $f_collect_statistics);
+
+// Legacy URI usage
+// TODO: has to update .htaccess if it is used at the lagacy uri dealing
+SystemPref::Set('LegacyUriUsage', $f_legacy_uri_usage);
+
 
 // Image resizing for WYSIWYG editor
 if ($f_editor_image_ratio < 1 || $f_editor_image_ratio > 100) {
