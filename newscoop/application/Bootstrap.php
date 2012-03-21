@@ -226,6 +226,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $front->registerPlugin(new Application_Plugin_Auth($options['auth']));
         $front->registerPlugin(new Application_Plugin_Acl($options['acl']));
         $front->registerPlugin(new Application_Plugin_Locale());
+        $front->registerPlugin(new Application_Plugin_Redirect());
     }
 
     protected function _initRouter()
