@@ -5,6 +5,7 @@ php:
 branches:
   only:
     - next
+    - next-notice
 
 notifications:
   email: false
