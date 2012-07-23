@@ -1,0 +1,13 @@
+<?php $this->placeholder('title')->captureStart(); ?>
+<?php putGS('Notices'); ?>
+<span class="inline-search">
+    <input type="text" name="q"/> <button id="notice-search" class="search"><?php putGS('Search'); ?></button>
+</span>
+<?php $this->placeholder('title')->captureEnd(); ?>
+
+<?php echo $this->noticeForm; ?>
+<ul>
+    <?php foreach ($this->notice->getTags() as $tag): ?>
+    <li><?php echo $tag->getName() ?></li>
+    <?php endforeach; ?>
+</ul>

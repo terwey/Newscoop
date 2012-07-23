@@ -1,0 +1,20 @@
+<?php $this->placeholder('title')->captureStart(); ?>
+<?php putGS('Notices'); ?>
+<span class="inline-search">
+    <input type="text" name="q"/> <button id="notice-search" class="search"><?php putGS('Search'); ?></button>
+</span>
+<?php $this->placeholder('title')->captureEnd(); ?>
+
+
+<?php foreach ($this->Trees as $slug => $tree): ?>
+<div style="border:1px solid #000000;">
+    <h3>
+        <?php echo $tree['root']->getTitle()?></h3>
+    <?php echo $slug?>
+    <?php echo $tree['children'];?>
+</div>
+<?php endforeach; ?>
+
+
+<?php print_r($this->result); ?>
+<?php echo $this->noticeForm; ?>
