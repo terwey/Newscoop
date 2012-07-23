@@ -20,19 +20,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function _initAutoloader()
     {
-        $options = $this->getOptions();
-        set_include_path(implode(PATH_SEPARATOR, array_map('realpath', $options['autoloader']['dirs'])) . PATH_SEPARATOR . get_include_path());
-        $autoloader = Zend_Loader_Autoloader::getInstance();
-        $autoloader->setFallbackAutoloader(TRUE);
-
-        // fix adodb loading error
-        $autoloader->pushAutoloader(function($class) {
-            return;
-        }, 'ADO');
 
         $GLOBALS['g_campsiteDir'] = realpath(APPLICATION_PATH . '/../');
 
-        return $autoloader;
+        return false;
     }
 
     protected function _initSession()
@@ -66,6 +57,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrine = $this->getResource('doctrine');
         $container->setService('em', $doctrine->getEntityManager());
 
+        $container->setService('tag.manager', $doctrine->getTagManager());
+
         $this->bootstrap('view');
         $container->setService('view', $this->getResource('view'));
 
@@ -83,6 +76,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $loader->load('configs/services.yml');
+
+        $container->register('notice', 'Newscoop\Services\NoticeService')
+            ->addArgument(new sfServiceReference('em'));
 
         Zend_Registry::set('container', $container);
         return $container;
@@ -186,6 +182,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                      'subscription-rest',
                      'subscription-section-rest',
                      'subscription-ip-rest',
+                     'notice-rest'
                  ),
              )));
     }
