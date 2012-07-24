@@ -14,7 +14,8 @@
         "sfDependencyInjection":"2.0",
         "sfEventDispatcher":"2.0",
         "fpn/doctrine-extensions-taggable":">=2.0",
-        "gedmo/doctrine-extensions":"=v2.1.0"
+        "gedmo/doctrine-extensions":"=v2.1.0",
+        "symfony/console":"2.0.x-dev"
     },
     "repositories":[
         {
@@ -70,6 +71,17 @@
                     "url":"http://framework.zend.com/svn/framework/standard/",
                     "type":"svn",
                     "reference":"tags/release-1.11.12/"
+                },
+                "autoload": {
+                    "psr-0": {
+                        "Zend": "library/"
+                    }
+                },
+                "include-path": [
+                    "library/"
+                ],
+                "config": {
+                    "bin-dir": "bin"
                 }
             }
         },
@@ -97,7 +109,8 @@
             "Newscoop": "newscoop/library",
             "Resource": "newscoop/library",
             "Nette": "newscoop/library",
-            "Gedmo": "vendor/gedmo/doctrine-extensions/lib/"
+            "Gedmo": "vendor/gedmo/doctrine-extensions/lib/",
+            "Zend": "vendor/zendframework/zendframework1/library"
         },
         "classmap":["vendor/sfDependencyInjection", "vendor/sfEventDispatcher", "vendor/Smarty3/libs", "newscoop/classes","dependencies/include/adodb","newscoop/template_engine","newscoop/plugins"]
     },

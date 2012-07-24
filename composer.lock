@@ -1,5 +1,5 @@
 {
-    "hash": "5e52e14804b0ae869aca500a2bbc1052",
+    "hash": "91c06e126fad969d34577641fce601e5",
     "packages": [
         {
             "package": "Smarty3",
@@ -42,6 +42,12 @@
             "version": "2.0"
         },
         {
+            "package": "symfony/console",
+            "version": "2.0.x-dev",
+            "source-reference": "3d0d961fa4e721ca282f2aba05f6eb2b9d20ad14",
+            "commit-date": "1342761932"
+        },
+        {
             "package": "zendframework/zendframework1",
             "version": "1.11.12"
         }
@@ -51,7 +57,7 @@
 
     ],
     "minimum-stability": "dev",
-    "stability-flags": [
-
-    ]
+    "stability-flags": {
+        "symfony/console": 20
+    }
 }
