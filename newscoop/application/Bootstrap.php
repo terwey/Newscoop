@@ -57,8 +57,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $doctrine = $this->getResource('doctrine');
         $container->setService('em', $doctrine->getEntityManager());
 
-        $container->setService('tag.manager', $doctrine->getTagManager());
-
         $this->bootstrap('view');
         $container->setService('view', $this->getResource('view'));
 
