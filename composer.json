@@ -13,7 +13,6 @@
         "doctrine/orm":"2.1.*",
         "sfDependencyInjection":"2.0",
         "sfEventDispatcher":"2.0",
-        "fpn/doctrine-extensions-taggable":">=2.0",
         "gedmo/doctrine-extensions":"=v2.1.0",
         "symfony/console":"2.0.x-dev"
     },
