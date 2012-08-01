@@ -13,15 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Notices entity
  * @Entity(repositoryClass="Newscoop\Entity\Repository\NoticeRepository")
- * @Table(name="Notice")
+ * @Table(name="notice")
  */
-class Notice implements \DoctrineExtensions\Taggable\Taggable
+class Notice
 {
-    /**
-     * Provides the class name as a constant.
-     */
-    const NAME = __CLASS__;
-
     /**
      * @Column(name="id", type="integer")
      * @Id
@@ -106,15 +101,10 @@ class Notice implements \DoctrineExtensions\Taggable\Taggable
     private $lastname;
 
     /**
-     * @ManyToMany(targetEntity="DoctrineExtensions\Taggable\Entity\Tag")
-     * @JoinTable(name="Tagging",
-     *      joinColumns={@JoinColumn(name="resource_id", referencedColumnName="id")}
-     *
-     *      )
+     * @ManyToMany(targetEntity="Newscoop\Entity\NoticeCategory")
      */
-    private $tags;
+    private $categories;
 
-    private $tagType = 'notice';
 
     /**
      * @param int $number
@@ -139,33 +129,14 @@ class Notice implements \DoctrineExtensions\Taggable\Taggable
     }
 
     /**
-     * Get language id
+     * Set title of notice
      *
-     * @return int
+     * @return string
      */
-    public function getLanguageId()
+    public function setTitle($title)
     {
-        return $this->language !== null ? $this->language->getId() : null;
-    }
-
-    /**
-     * Get publication
-     *
-     * @return Publication
-     */
-    public function getPublication()
-    {
-        return $this->publication;
-    }
-
-    /**
-     * Get publication Id
-     *
-     * @return int
-     */
-    public function getPublicationId()
-    {
-        return $this->publication !== null ? $this->publication->getId() : null;
+        $this->title = $title;
+        return $this;
     }
 
     /**
@@ -178,15 +149,17 @@ class Notice implements \DoctrineExtensions\Taggable\Taggable
         return $this->title;
     }
 
-    /**
-     * Set title of notice
-     *
-     * @return string
-     */
-    public function setTitle($title)
+    public function getId()
     {
-        $this->title = $title;
-        return $this;
+        return $this->id;
+    }
+
+    /**
+     * @param string $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
     }
 
     /**
@@ -197,61 +170,6 @@ class Notice implements \DoctrineExtensions\Taggable\Taggable
     public function getBody()
     {
         return $this->body;
-    }
-
-    /**
-     * sets the unique taggable resource type
-     *
-     * @return self
-     */
-    function setTaggableType($tagType = 'notice')
-    {
-        $this->tagType = $tagType;
-        return $this;
-    }
-    /**
-     * Returns the unique taggable resource type
-     *
-     * @return string
-     */
-    function getTaggableType()
-    {
-        return  $this->tagType;
-    }
-
-    /**
-     * Returns the unique taggable resource identifier
-     *
-     * @return string
-     */
-    function getTaggableId()
-    {
-        return $this->getId();
-    }
-
-    /**
-     * Returns the collection of tags for this Taggable entity
-     *
-     * @return Doctrine\Common\Collections\Collection
-     */
-    function getTags()
-    {
-        $this->tags = $this->tags ?: new ArrayCollection();
-        return $this->tags;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-
-    /**
-     * @param string $body
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
     }
 
     /**
@@ -350,16 +268,6 @@ class Notice implements \DoctrineExtensions\Taggable\Taggable
         return $this->sub_title;
     }
 
-    public function setTagType($tagType)
-    {
-        $this->tagType = $tagType;
-    }
-
-    public function getTagType()
-    {
-        return $this->tagType;
-    }
-
     /**
      * @param \Newscoop\Entity\datetime $updated
      */
@@ -374,6 +282,32 @@ class Notice implements \DoctrineExtensions\Taggable\Taggable
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param \Newscoop\Entity\Newscoop\Entity\Publication $publication
+     */
+    public function setPublication($publication)
+    {
+        $this->publication = $publication;
+    }
+
+    /**
+     * @return \Newscoop\Entity\Newscoop\Entity\Publication
+     */
+    public function getPublication()
+    {
+        return $this->publication;
     }
 }
 

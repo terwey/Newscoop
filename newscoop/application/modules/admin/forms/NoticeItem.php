@@ -14,7 +14,7 @@ class Admin_Form_NoticeItem extends Zend_Form
     public function init()
     {
         $this->setAction('/admin/notice-rest');
-        $this->addElement('hidden', 'coords');
+        $this->addElement('hidden', 'id');
 
         $this->addElement('text', 'title', array(
             'label' => getGS('TITLE'),
@@ -28,8 +28,8 @@ class Admin_Form_NoticeItem extends Zend_Form
             'label' => getGS('Last name'),
         ));
 
-        $this->addElement('text', 'tags', array(
-            'label' => getGS('Tags'),
+        $this->addElement('text', 'categories', array(
+            'label' => getGS('Categories'),
         ));
 
         $this->addElement('textarea', 'body', array(
@@ -37,7 +37,7 @@ class Admin_Form_NoticeItem extends Zend_Form
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('speichern'),
+            'label' => getGS('save'),
         ));
 
 

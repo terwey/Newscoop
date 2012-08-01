@@ -6,7 +6,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @Gedmo\Tree(type="nested")
- * @Table(name="NoticeCategory")
+ * @Table(name="notice_category")
  * use repository for handy tree functions
  * @Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */

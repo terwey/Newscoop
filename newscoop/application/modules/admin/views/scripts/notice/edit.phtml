@@ -7,7 +7,7 @@
 
 <?php echo $this->noticeForm; ?>
 <ul>
-    <?php foreach ($this->notice->getTags() as $tag): ?>
-    <li><?php echo $tag->getName() ?></li>
+    <?php foreach ($this->notice->getCategories() as $category): ?>
+    <li><?php echo $category->getTitle() ?></li>
     <?php endforeach; ?>
 </ul>
