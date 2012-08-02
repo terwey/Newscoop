@@ -75,9 +75,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $loader->load('configs/services.yml');
 
-        $container->register('notice', 'Newscoop\Services\NoticeService')
-            ->addArgument(new sfServiceReference('em'));
-
         Zend_Registry::set('container', $container);
         return $container;
     }

@@ -1,5 +1,5 @@
 {
-    "hash": "91c06e126fad969d34577641fce601e5",
+    "hash": "0a6d0c6d99d0d0cab18c6e72236f8fb4",
     "packages": [
         {
             "package": "Smarty3",
@@ -20,32 +20,52 @@
         {
             "package": "doctrine/orm",
             "version": "2.1.x-dev",
-            "source-reference": "ab851ab91464596b8b3f2d25644764e360d704b7",
-            "commit-date": "1341323303"
-        },
-        {
-            "package": "fpn/doctrine-extensions-taggable",
-            "version": "dev-master",
-            "source-reference": "dac30481631608f8f0d0bb5ac88896b3efcb5f3b",
-            "commit-date": "1340829852"
+            "source-reference": "1c0f88f2b398a9709d32c6d62896c4db9f9f3c9a",
+            "commit-date": "1343556552"
         },
         {
             "package": "gedmo/doctrine-extensions",
             "version": "2.1"
         },
         {
-            "package": "sfDependencyInjection",
-            "version": "2.0"
-        },
-        {
             "package": "sfEventDispatcher",
             "version": "2.0"
         },
         {
-            "package": "symfony/console",
-            "version": "2.0.x-dev",
-            "source-reference": "3d0d961fa4e721ca282f2aba05f6eb2b9d20ad14",
-            "commit-date": "1342761932"
+            "package": "symfony/config",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/config",
+            "version": "dev-master",
+            "source-reference": "cb15ab7da9a69b123433c4edca68e23564345a31",
+            "commit-date": "1343512949"
+        },
+        {
+            "package": "symfony/dependency-injection",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/dependency-injection",
+            "version": "dev-master",
+            "source-reference": "ea5acc90c1c1937e8574968d577a5bbe9c6f680c",
+            "commit-date": "1343512949"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-BETA4",
+            "commit-date": "1342347231"
         },
         {
             "package": "zendframework/zendframework1",
@@ -57,7 +77,7 @@
 
     ],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "symfony/console": 20
-    }
+    "stability-flags": [
+
+    ]
 }
