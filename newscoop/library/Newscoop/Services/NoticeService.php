@@ -48,9 +48,9 @@ class NoticeService implements ObjectRepository
      *
      * @return mixed
      */
-    public function findAll($hydration = 1, $tags = array())
+    public function findAll($hydration = 1)
     {
-        return $this->getRepository()->getNotices($hydration, $tags);
+        return $this->getRepository()->getNotices($hydration);
     }
 
     /**

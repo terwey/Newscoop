@@ -16,6 +16,10 @@ class Admin_Form_NoticeItem extends Zend_Form
         $this->setAction('/admin/notice-rest');
         $this->addElement('hidden', 'id');
 
+        $this->addElement('hidden', 'categories', array(
+            'label' => getGS('Categories'),
+        ));
+
         $this->addElement('text', 'title', array(
             'label' => getGS('TITLE'),
         ));
@@ -28,12 +32,12 @@ class Admin_Form_NoticeItem extends Zend_Form
             'label' => getGS('Last name'),
         ));
 
-        $this->addElement('text', 'categories', array(
-            'label' => getGS('Categories'),
-        ));
-
         $this->addElement('textarea', 'body', array(
             'label' => getGS('CONTENT'),
+        ));
+
+        $this->addElement('text', 'published', array(
+            'label' => getGS('Date'),
         ));
 
         $this->addElement('submit', 'submit', array(
@@ -51,8 +55,13 @@ class Admin_Form_NoticeItem extends Zend_Form
      */
     public function setDefaultsFromEntity(\Newscoop\Entity\Notice $notice)
     {
+        $categories = $notice->getCategories();
+        foreach($categories as $cat){
+            $cats[] = $cat->getId();
+        }
         $this->setDefaults(array(
             'id' => $notice->getId(),
+            'categories' => implode($cats,','),
             'title' => $notice->getTitle(),
             'firstname' => $notice->getFirstname(),
             'lastname' => $notice->getLastname(),

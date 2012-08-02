@@ -42,12 +42,12 @@ class NoticeRepository extends DatatableSource
         //$qb->from('Newscoop\Entity\Comment\Commenter', 'c')
             //->from('Newscoop\Entity\Article', 'a');
         $andx = $qb->expr()->andx();
-        //$andx->add($qb->expr()->eq('e.language', new Expr\Literal('a.language')));
+        //$andx->add($qb->expr()->neq('e.status', new Expr\Literal('a.language')));
         //$andx->add($qb->expr()->eq('e.thread', new Expr\Literal('a.number')));
         //$andx->add($qb->expr()->eq('e.commenter', new Expr\Literal('c.id')));
 
         if (!empty($p_params['sSearch'])) {
-            $this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
+            //$this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
         }
 
         if (!empty($p_params['sFilter'])) {
@@ -55,35 +55,29 @@ class NoticeRepository extends DatatableSource
         }
 
         // sort
-        /*
         if (isset($p_params["iSortCol_0"])) {
             $cols = array_keys($p_cols);
             $sortId = $p_params["iSortCol_0"];
             $sortBy = $cols[$sortId];
             $dir = $p_params["sSortDir_0"] ? : 'asc';
             switch ($sortBy) {
-                case 'commenter':
-                    $qb->orderBy("c.name", $dir);
+                case 'user':
+                    $qb->orderBy("e.firstname", $dir);
                     break;
-                case 'thread':
-                    $qb->orderBy("a.name", $dir);
-                    break;
-                case 'threadorder':
-                    $qb->orderBy("e.thread_order", $dir);
-                    break;
-                case 'comment':
+                case 'notice':
                 case 'index':
-                    $qb->orderBy("e.time_created", $dir);
+                    $qb->orderBy("e.created", $dir);
                     break;
                 default:
                     $qb->orderBy("e." . $sortBy, $dir);
             }
-        }*/
+        }
         //$qb->where($andx);
         // limit
         if (isset($p_params['iDisplayLength'])) {
             $qb->setFirstResult((int)$p_params['iDisplayStart'])->setMaxResults((int)$p_params['iDisplayLength']);
         }
+
         return $qb->getQuery()->getResult();
     }
 
@@ -108,11 +102,11 @@ class NoticeRepository extends DatatableSource
         if (is_array($p_params) && !empty($p_params['sSearch'])) {
             $this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
         }
-
+*/
         if (is_array($p_params) && !empty($p_params['sFilter'])) {
-            $this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
+            //$this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
         }
-
+/*
         $qb->where($andx);*/
         $qb->select('COUNT(e)');
         return $qb->getQuery()->getSingleScalarResult();
@@ -152,23 +146,11 @@ class NoticeRepository extends DatatableSource
             $orx = $qb->expr()->orx();
             switch ($key) {
                 case 'status':
-                    $mapper = array_flip(Comment::$status_enum);
+                    //$mapper = array_flip(Notice::$status_enum);
                     foreach ($values as $value) {
-                        $orx->add($qb->expr()->eq('e.status', $mapper[$value]));
+                        $orx->add($qb->expr()->eq('e.status', $value));
                     }
                     break;
-                case 'id':
-                case 'forum':
-                case 'thread':
-                case 'language':
-                    foreach ($values as $value) {
-                        $orx->add($qb->expr()->eq("e.$key", $value));
-                    }
-                    break;
-                case 'recommended':
-                    foreach ($values as $value) {
-                        $orx->add($qb->expr()->eq('e.recommended', $value));
-                    }
             }
             $andx->add($orx);
         }

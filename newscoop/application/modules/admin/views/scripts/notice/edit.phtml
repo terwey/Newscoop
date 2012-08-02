@@ -1,3 +1,75 @@
+<script>
+
+    $.extend({
+        distinct : function(anArray,elementToRemove) {
+            var result = [];
+            console.log(elementToRemove);
+            $.each(anArray, function(i,v){
+                if ($.inArray(v, result) == -1 && v !== elementToRemove) result.push(v);
+            });
+            return result;
+        }
+    });
+
+    $(document).ready(function () {
+        $( "#published" ).datepicker({ dateFormat: "yy-mm-dd" });
+
+
+
+        var checkboxes = $("input[name='categories']");
+
+        checkboxes.bind("change", { c:checkboxes }, function (e) {
+
+            var cat_id = $(this).val();
+            var checked = $(this).attr('checked');
+            var csv_values = $('#categories').val();
+
+            if(checked){
+
+                if(csv_values != ""){
+
+                    var updated_values = [];
+
+                    csv_values.split(',').push(cat_id);
+                    updated_values = csv_values.split(',');
+                    updated_values.push(cat_id);
+
+                    console.log($.distinct(updated_values,cat_id));
+
+                    $('#categories').val($.distinct(updated_values).join(','));
+
+                }else{
+                    $('#categories').val($(this).val());
+                }
+            }else{
+                if(csv_values != ""){
+
+                    var updated_values = [];
+
+                    csv_values.split(',').push(cat_id);
+                    updated_values = csv_values.split(',');
+                    updated_values.push(cat_id);
+
+                    $('#categories').val($.distinct(updated_values,cat_id).join(','));
+
+                }else{
+                    $('#categories').val($(this).val());
+                }
+            }
+
+
+
+
+
+
+        });
+    });
+
+
+</script>
+
+
+
 <?php $this->placeholder('title')->captureStart(); ?>
 <?php putGS('Notices'); ?>
 <span class="inline-search">
@@ -5,9 +77,19 @@
 </span>
 <?php $this->placeholder('title')->captureEnd(); ?>
 
-<?php echo $this->noticeForm; ?>
-<ul>
-    <?php foreach ($this->notice->getCategories() as $category): ?>
-    <li><?php echo $category->getTitle() ?></li>
+<ul id="category_selection">
+    <?php foreach ($this->trees as $tree): ?>
+    <li>
+        <input type="checkbox" name="categories" value="<?php echo $tree['root']->getId() ?>"/><label for=""><?php echo $tree['root']->getTitle() ?></li></label>
+        <ul>
+            <?php foreach ($tree['children'] as $childNode): ?>
+            <li>
+                <input type="checkbox" name="categories" value="<?php echo $childNode['id'] ?>"/><label for=""> <?php echo $childNode['title'] ?></li></label>
+            <?php endforeach; ?>
+    </li>
+        </ul>
     <?php endforeach; ?>
 </ul>
+
+<?php echo $this->categories; ?>
+<?php echo $this->noticeForm; ?>

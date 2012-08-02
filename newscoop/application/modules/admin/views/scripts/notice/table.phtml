@@ -1,8 +1,8 @@
 <?php
-    /* @var Zend_View_Helper_HeadLink */
-    $headStyle = $this->headLink();
-    $headStyle->appendStylesheet($this->baseUrl('/admin-style/comments.css'));
-    $headStyle->offsetSetStylesheet('table','');
+/* @var Zend_View_Helper_HeadLink */
+$headStyle = $this->headLink();
+$headStyle->appendStylesheet($this->baseUrl('/admin-style/comments.css'));
+$headStyle->offsetSetStylesheet('table', '');
 ?>
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/doT.js')); ?>
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/jquery.ba-iff.js')); ?>
@@ -13,8 +13,8 @@
 <script>
     function putGS(str) {
         var msg = serverObj.translateObj[serverObj.languageObj.indexOf(str)]
-        for(i=1, counti=arguments.length; i<counti; i++) {
-            msg = msg.replace(new RegExp("\\$"+i,"g"),arguments[i]);
+        for (i = 1, counti = arguments.length; i < counti; i++) {
+            msg = msg.replace(new RegExp("\\$" + i, "g"), arguments[i]);
         }
         return msg;
     }
@@ -57,112 +57,102 @@
         '<?php putGS('Hidden'); ?>',
         '<?php putGS('Deleted'); ?>',
         '<?php putGS('Unable to reach Newscoop. Please check your internet connection.'); ?>',
-        <?php echo json_encode(getGS("You are about to permanently delete a comment.")); ?>,
-        <?php echo json_encode(getGS("You are about to permanently delete multiple comments.")); ?>,
-        <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>
+    <?php echo json_encode(getGS("You are about to permanently delete a comment.")); ?>,
+    <?php echo json_encode(getGS("You are about to permanently delete multiple comments.")); ?>,
+    <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>
     ];
 </script>
 <table>
     <tr>
-  </tr>
+    </tr>
 </table>
 
 <script id="comment-tmpl" type="text/html">
-<td colspan="4">
-    <table cellspacing="0" cellpadding="0" style="width:100%">
-            <tbody><tr>
-                    <td class="commentId sorting_1">
-                        <input type="checkbox" name="index[]" value="{{notice.id}}" class="table-checkbox">
-                        <span class="index">{{index}}.</span>
-                    </td>
-                    <td class="commentUser">
+    <td colspan="5">
+        <table cellspacing="0" cellpadding="0" style="width:100%">
+            <tbody>
+            <tr>
+                <td class="noticeId sorting_1">
+                    <input type="checkbox" name="index[]" value="{{notice.id}}" class="table-checkbox">
+                    <span class="index">{{notice.id}}.</span>
+                </td>
+                <td class="noticeUser">
+                    <p>
+                        {% if (user.firstname) %}{{user.firstname}} {{user.lastname}}{% endif %}
+                        {% if (!user.firstname) %}{{user.firstname}} (Anonymous){% endif %}
+                    </p>
+                </td>
+                <td class="commentMessage">
+                    <div class="dateCommentHolder">
+                        <h4>
+                            <span>{{notice.created.date}} <?php putGS('at'); ?> {{notice.created.time}}</span>
+                            <span class="commentSubject">{{notice.subject}}</span>
+                        </h4>
+
+                        <p class="noticeComment">{{notice.title}}</p>
+                    </div>
+
+                    <div class="dateCommentHolderReply">
+
+                    </div>
+                </td>
+                <td>
+                    <div class="noticeStatus">
+                        {{notice.status}}
+                    </div>
+                </td>
+                <td>
+                    <div class="noticeActionsHolder">
                         <p>
-                            {% if (user.firstname) %}{{user.firstname}} {{user.lastname}}{% endif %}
-                            {% if (!user.firstname) %}{{user.firstname}} (Anonymous){% endif %}
+                            <span>{{notice.categories}}</span>
                         </p>
-                    </td>
-                    <td class="commentMessage">
-                        <div class="dateCommentHolder">
-                            <h4>
-                                <span>{{notice.created.date}} <?php putGS('at'); ?> {{notice.created.time}}</span>
-                                <span class="commentSubject">{{notice.subject}}</span>
-                            </h4>
-                            <p class="noticeComment">{{notice.body}}</p>
-                        </div>
-
-                        <div class="dateCommentHolderEdit">
-                            <fieldset class="content-edit" style="display:none;">
-                                <?php //echo $this->editForm->setTemplate(array('comment')); ?>
-                            </fieldset>
-                        </div>
-
-                        <div class="dateCommentHolderReply">
-                            <fieldset class="content-reply" style="display:none;">
-                                <h3><?php putGS('Reply to comment'); ?></h3>
-                                <form action="{{notice.action.reply}}">
-                                    <input type="hidden" name="parent" value="{{notice.id}}" />
-                                    <?php echo SecurityToken::FormParameter(); ?>
-                                    <label><?php putGS('Subject'); ?></label>
-                                    <input name="subject" type="text" class="input_text">
-                                    <label><?php putGS('Comment'); ?></label>
-                                    <textarea name="message" class="input_text_area"></textarea>
-                                    <div class="buttonBar">
-                                        <input type="button" value="<?php putGS('Cancel'); ?>" class="button reply-cancel">
-                                        <input type="submit" value="<?php putGS('Submit'); ?>" class="button">
-                                    </div>
-                                </form>
-                            </fieldset>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="commentArticleHolder">
-                            <p>
-                                <a href="{{thread.link.get}}" class="articleLink">{{thread.name}}</a>
-                                <br>
-                                <span>{{thread.forum.name}}; <b><?php putGS('Section'); ?></b> {{thread.section.name}}</span>
-                            </p>
-                            <a class="goToArticle" href="{{thread.link.edit}}"><?php putGS('Go to edit article'); ?></a> </div>
-                    </td>
-                </tr></tbody>
+                        <a class="goToArticle" href="{{thread.link.edit}}"><?php putGS('Go to edit notice'); ?></a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
         </table>
         <div class="commentBtns">
             <ul>
                 <li>
-                    <input type="radio" name="action_comment_{{notice.id}}" class="action new" id="pending_{{notice.id}}" value="pending"/>
+                    <input type="radio" name="action_comment_{{notice.id}}" class="action new"
+                           id="pending_{{notice.id}}" value="pending"/>
                     <label for="pending_{{notice.id}}"><?php putGS('New'); ?></label>
                     &nbsp;&nbsp;
                 </li>
                 {% if(can.enable) %}
                 <li>
-                    <input type="radio" name="action_comment_{{notice.id}}" class="action approved" id="approved_{{notice.id}}" value="approved"/>
+                    <input type="radio" name="action_comment_{{notice.id}}" class="action approved"
+                           id="approved_{{notice.id}}" value="approved"/>
                     <label for="approved_{{notice.id}}"><?php putGS('Approved'); ?></label>
 
                     &nbsp;&nbsp;
                 </li>
                 <li>
-                    <input type="radio" name="action_comment_{{notice.id}}" class="action hidden" id="hidden_{{notice.id}}" value="hidden" style="height: auto"/>
+                    <input type="radio" name="action_comment_{{notice.id}}" class="action hidden"
+                           id="hidden_{{notice.id}}" value="hidden" style="height: auto"/>
                     <label for="hidden_{{notice.id}}"><?php putGS('Hidden'); ?></label>
                     &nbsp;&nbsp;
                 </li>
                 {% endif %}
 
 
-
                 {% if(can.edit) %}
                 <li><a href="javascript:;" class="actionButton action-edit"><?php putGS('Quick edit'); ?></a></li>
                 {% endif %}
                 {% if(can.enable) %}
-                <li><a href="javascript:;" id="deleted_{{notice.id}}" class="actionButton action"><?php putGS('Delete'); ?></a></li>
+                <li><a href="javascript:;" id="deleted_{{notice.id}}"
+                       class="actionButton action"><?php putGS('Delete'); ?></a></li>
                 {% endif %}
                 <!--
                 <li><a href="javascript:;" class="action-rating link icon-link"><span class="icon ui-icon-star"></span><?php putGS('Add rating'); ?></a></li>
                 -->
             </ul>
         </div>
-</td>
-<td style="display: none;"></td>
-<td style="display: none;"></td>
-<td style="display: none;"></td>
+    </td>
+    <td style="display: none;"></td>
+    <td style="display: none;"></td>
+    <td style="display: none;"></td>
 </script>
 
 <div class="wrapper">
@@ -170,23 +160,28 @@
         <div class="padded clearfix inner-tabs">
             <div class="tabs">
                 <ul>
-                    <li><a href="#tabs-1">Comments</a></li>
-                    <li><a href="#tabs-2">Users</a></li>
+<!--                    <li><a href="#tabs-1">Comments</a></li>-->
+<!--                    <li><a href="#tabs-2">Users</a></li>-->
                 </ul>
                 <div id="tabs-1">
                     <div id="showComments">
-                        <fieldset><legend><?php putGS('Show'); ?></legend>
+                        <fieldset>
+                            <legend><?php putGS('Show'); ?></legend>
                             <ul class="status_filter">
                                 <li class="published" style="display: none;"><input type="checkbox"
-                                                                                    id="show_published" value="approved"> <label for="show_published"><?php putGS('Published'); ?></label>
+                                                                                    id="show_published"
+                                                                                    value="approved"> <label
+                                    for="show_published"><?php putGS('Published'); ?></label>
                                 </li>
                                 <li class="new"><input type="checkbox" id="show_new" value="pending"> <label
-                                        for="show_new"><?php putGS('New'); ?></label></li>
+                                    for="show_new"><?php putGS('New'); ?></label></li>
                                 <li class="approved"><input type="checkbox" id="show_approved"
-                                                            value="approved"> <label for="show_approved"><?php putGS('Approved'); ?></label>
+                                                            value="approved"> <label
+                                    for="show_approved"><?php putGS('Approved'); ?></label>
                                 </li>
                                 <li class="hidden"><input type="checkbox" id="show_hidden"
-                                                          value="hidden"> <label for="show_hidden"><?php putGS('Hidden'); ?></label>
+                                                          value="hidden"> <label
+                                    for="show_hidden"><?php putGS('Hidden'); ?></label>
                                 </li>
                                 <!--
                                 /** @todo change this when the "cron job" like engine is done */
@@ -194,38 +189,41 @@
                                                            value="deleted"> <label for="show_deleted"><?php putGS('Deleted'); ?></label>
                                 </li>
                                 -->
-                            </ul><br>
+                            </ul>
+                            <br>
                         </fieldset>
                     </div>
-                        <div id="actionExpand" class="dataTables_actions">
-                            <!-- <a href="javascript:;" class="sort_tread"> <span
+                    <div id="actionExpand" class="dataTables_actions">
+                        <!-- <a href="javascript:;" class="sort_tread"> <span
                                     class="css_right ui-icon ui-icon-carat-2-n-s"></span> <?php putGS('Sort by Thread order'); ?>
                             </a>//--></div>
-                        <?php $this->renderDatatable(); ?></div>
-                </div>
+                    <?php $this->renderDatatable(); ?></div>
             </div>
         </div>
     </div>
-    <div id="fancybox-tmp"></div>
-    <div id="fancybox-loading">
-        <div></div>
-    </div>
-    <div id="fancybox-overlay"></div>
-    <div id="fancybox-wrap">
-        <div id="fancybox-outer">
-            <div class="fancybox-bg" id="fancybox-bg-n"></div>
-            <div class="fancybox-bg" id="fancybox-bg-ne"></div>
-            <div class="fancybox-bg" id="fancybox-bg-e"></div>
-            <div class="fancybox-bg" id="fancybox-bg-se"></div>
-            <div class="fancybox-bg" id="fancybox-bg-s"></div>
-            <div class="fancybox-bg" id="fancybox-bg-sw"></div>
-            <div class="fancybox-bg" id="fancybox-bg-w"></div>
-            <div class="fancybox-bg" id="fancybox-bg-nw"></div>
-            <div id="fancybox-content"></div>
-            <a id="fancybox-close"></a>
-            <div id="fancybox-title"></div>
-            <a href="javascript:;" id="fancybox-left"><span class="fancy-ico"
-                                                            id="fancybox-left-ico"></span></a><a href="javascript:;"
-                                                 id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div>
-    </div>
-    <div class="dialogPopup dialog-1" title="<?php putGS('Full notice');?>"></div>
+</div>
+<div id="fancybox-tmp"></div>
+<div id="fancybox-loading">
+    <div></div>
+</div>
+<div id="fancybox-overlay"></div>
+<div id="fancybox-wrap">
+    <div id="fancybox-outer">
+        <div class="fancybox-bg" id="fancybox-bg-n"></div>
+        <div class="fancybox-bg" id="fancybox-bg-ne"></div>
+        <div class="fancybox-bg" id="fancybox-bg-e"></div>
+        <div class="fancybox-bg" id="fancybox-bg-se"></div>
+        <div class="fancybox-bg" id="fancybox-bg-s"></div>
+        <div class="fancybox-bg" id="fancybox-bg-sw"></div>
+        <div class="fancybox-bg" id="fancybox-bg-w"></div>
+        <div class="fancybox-bg" id="fancybox-bg-nw"></div>
+        <div id="fancybox-content"></div>
+        <a id="fancybox-close"></a>
+
+        <div id="fancybox-title"></div>
+        <a href="javascript:;" id="fancybox-left"><span class="fancy-ico"
+                                                        id="fancybox-left-ico"></span></a><a href="javascript:;"
+                                                                                             id="fancybox-right"><span
+        class="fancy-ico" id="fancybox-right-ico"></span></a></div>
+</div>
+<div class="dialogPopup dialog-1" title="<?php putGS('Full notice');?>"></div>

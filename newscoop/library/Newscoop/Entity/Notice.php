@@ -105,6 +105,10 @@ class Notice
      */
     private $categories;
 
+    /**
+     * @var string to code mapper for status
+     */
+    static $status_enum = array('published', 'pending', 'saved','hidden', 'deleted');
 
     /**
      * @param int $number
