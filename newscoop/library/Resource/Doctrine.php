@@ -5,8 +5,16 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-use Doctrine\ORM\Configuration,
-    Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\Common\EventManager;
+use Doctrine\Common\ClassLoader;
+use Doctrine\ORM\Configuration;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
+use Gedmo\Timestampable\TimestampableListener;
+use Gedmo\Sluggable\SluggableListener;
+use Gedmo\Tree\TreeListener;
+
 
 /**
  * Doctrine Zend application resource
@@ -16,14 +24,11 @@ class Resource_Doctrine extends \Zend_Application_Resource_ResourceAbstract
     /** @var Doctrine\ORM\EntityManager */
     private $em;
 
-    /** @var Doctrine\ORM\EventManager */
+    /** @var Doctrine\Common\EventManager */
     private $evm;
 
-    /** @var Doctrine\ORM\EventManager */
-    private $driverChain;
-
-    /** @var DoctrineExtensions\Taggable\TagManager */
-    private $tagManager;
+    /** @var  */
+    private $options;
 
     /**
      * Init doctrine
@@ -47,38 +52,73 @@ class Resource_Doctrine extends \Zend_Application_Resource_ResourceAbstract
             return $this->em;
         }
 
+        $this->evm = new EventManager();
         $config = new Configuration();
         $options = $this->getOptions();
 
+        // timestampable
+        if (!empty($options['gedmo']['timestampable'])) {
+            $this->addTimestampable();
+        }
+        // sluggable
+        if (!empty($options['gedmo']['sluggable'])) {
+            $this->addSluggable();
+        }
+        // tree
+        if (!empty($options['gedmo']['tree'])) {
+            $this->addTree();
+        }
+        // profile logger
+        if (!empty($this->options['gedmo']['profile'])) {
+            $config->setSQLLogger(new EchoSQLLogger());
+        }
+
+
+        // set annotations reader
         $cache = new $options['cache'];
+        $driverImpl = $config->newDefaultAnnotationDriver(realpath($options['entity']['dir']));
 
-        // create a driver chain for metadata reading
-        $this->driverChain = new Doctrine\ORM\Mapping\Driver\DriverChain();
+        $this->registerAutoloadNamespaces();
 
-        // register default annotation driver for Newscoop entities
-        $defaultAnnotationDriver = $config->newDefaultAnnotationDriver(array(realpath($options['entity']['dir'])));
-        $this->driverChain->addDriver($defaultAnnotationDriver);
-        $this->driverChain->addDriver($defaultAnnotationDriver,'Newscoop\\Entity');
-
-        $this->driverChain->addDriver($defaultAnnotationDriver,'Newscoop\\Image');
-        $this->driverChain->addDriver($defaultAnnotationDriver,'Newscoop\\Package');
-
-        $config->setMetadataDriverImpl($this->driverChain);
+        //set cache
+        $config->setMetadataDriverImpl($driverImpl);
+        $config->setMetadataCacheImpl($cache);
+        $config->setQueryCacheImpl($cache);
 
         // set proxy
         $config->setProxyDir(realpath($options['proxy']['dir']));
         $config->setProxyNamespace($options['proxy']['namespace']);
         $config->setAutoGenerateProxyClasses($options['proxy']['autogenerate']);
 
-        // set cache
-        $config->setMetadataCacheImpl($cache);
-        $config->setQueryCacheImpl($cache);
-
         $config_file = APPLICATION_PATH . '/../conf/database_conf.php';
         if (empty($Campsite) && file_exists($config_file)) {
             require_once $config_file;
         }
 
+        if (isset($options['database'])) {
+            $database = $options['database'];
+        } else {
+            $database = $this->getDefaultDbConf($Campsite);
+        }
+
+        foreach ($options['functions'] as $function => $value)
+            $config->addCustomNumericFunction(strtoupper($function), $value);
+
+        $this->em = EntityManager::create(
+            $database,
+            $config,
+            $this->evm
+        );
+
+        return $this->em;
+    }
+
+    /**
+     * @param $Campsite
+     * @return array
+     */
+    protected function getDefaultDbConf($Campsite)
+    {
         // set database
         $database = array(
             'driver' => 'pdo_mysql',
@@ -90,41 +130,57 @@ class Resource_Doctrine extends \Zend_Application_Resource_ResourceAbstract
                 1002 => "SET NAMES 'UTF8'",
             ),
         );
-
-        if (isset($options['database'])) {
-            $database = $options['database'];
-        }
-
-        foreach ($options['functions'] as $function => $value)
-            $config->addCustomNumericFunction(strtoupper($function), $value);
-
-        $this->em = EntityManager::create($database, $config);
-
-        //enable gedmo extension if configured
-        if($options['gedmo']['enabled'] == true){
-            $this->enableGedmoExtensions();
-        }
-
-        $conn = $this->em->getConnection();
-        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('point', 'string');
-        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('mediumblob', 'string');
-        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('geometry', 'string');
-        $conn->getDatabasePlatform()->registerDoctrineTypeMapping('blob', 'string');
-
-        return $this->em;
+        return $database;
     }
 
-    public function enableGedmoExtensions(){
-        // autoload namespaces for Gedmo extensions
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-            'Gedmo\Mapping\Annotation',
-            APPLICATION_PATH . '/vendor/gedmo/doctrine-extensions/lib'
-        );
+    /**
+     * Register Autoload Namespaces
+     *
+     * @return void
+     */
+    protected function registerAutoloadNamespaces()
+    {
 
-        $this->em->getEventManager()->addEventSubscriber(new \Gedmo\Timestampable\TimestampableListener());
-        $this->em->getEventManager()->addEventSubscriber(new \Gedmo\Sluggable\SluggableListener());
-        $this->em->getEventManager()->addEventSubscriber(new \Gedmo\Tree\TreeListener());
-        //$this->em->getEventManager()->addEventSubscriber(new \Gedmo\Loggable\LoggableListener());
+        AnnotationRegistry::registerAutoloadNamespace(
+            'Gedmo\Mapping\Annotation',
+            realpath(APPLICATION_PATH . '/../../vendor/gedmo/doctrine-extensions/lib')
+        //,$this->modulePath . '/library'
+        );
+    }
+
+    /**
+     * Add Timestampable listener
+     *
+     * @return void
+     */
+    protected function addTimestampable()
+    {
+        if (!empty($this->evm)) {
+            $this->evm->addEventSubscriber(new TimestampableListener());
+        }
+    }
+
+    /**
+     * Add Sluggable listener
+     *
+     * @return void
+     */
+    protected function addSluggable()
+    {
+        if (!empty($this->evm)) {
+            $this->evm->addEventSubscriber(new SluggableListener());
+        }
+    }
+
+    /**
+     * Add Tree listener
+     *
+     * @return void
+     */
+    protected function addTree()
+    {
+        if (!empty($this->evm)) {
+            $this->evm->addEventSubscriber(new TreeListener());
+        }
     }
 }
