@@ -38,6 +38,7 @@
             var checked = $(this).attr('checked');
             var csv_values = $('#categories').val();
 
+            //@todo this code sucks and needs cleaning :)
             if (checked) {
 
                 if (csv_values != "") {
@@ -83,6 +84,7 @@
 </span>
 <?php $this->placeholder('title')->captureEnd(); ?>
 
+<?php if(isset($this->trees)):?>
 <ul id="category_selection">
     <?php foreach ($this->trees as $tree): ?>
     <li>
@@ -98,6 +100,7 @@
     </ul>
     <?php endforeach; ?>
 </ul>
+<?php endif;?>
 
-<?php echo $this->categories; ?>
+    <?php echo $this->categories; ?>
 <?php echo $this->noticeForm; ?>
