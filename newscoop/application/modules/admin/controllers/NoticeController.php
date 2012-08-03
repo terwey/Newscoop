@@ -180,9 +180,7 @@ class Admin_NoticeController extends Zend_Controller_Action
         $noticeId = $this->getRequest()->getParam('id',null);
         $repo = $this->em->getRepository('Newscoop\Entity\Notice');
         $noticeForm = new Admin_Form_NoticeItem();
-
-        $url = $this->view->url(array('module' => 'admin', 'controller' => 'notice-rest'),'default',true);
-        $noticeForm->setAction($this->view->baseUrl($url));
+        $noticeForm->setAction($this->view->baseUrl('admin/notice-rest'));
 
         $notice = $repo->find($noticeId);
         if(!$notice){
