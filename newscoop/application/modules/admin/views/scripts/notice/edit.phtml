@@ -84,7 +84,7 @@
 </span>
 <?php $this->placeholder('title')->captureEnd(); ?>
 
-<?php if(isset($this->trees)):?>
+<?php if(count($this->trees)):?>
 <ul id="category_selection">
     <?php foreach ($this->trees as $tree): ?>
     <li>
