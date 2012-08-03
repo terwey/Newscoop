@@ -179,13 +179,14 @@ class Admin_NoticeController extends Zend_Controller_Action
     {
         $noticeId = $this->getRequest()->getParam('id',null);
         $repo = $this->em->getRepository('Newscoop\Entity\Notice');
+        $noticeForm = new Admin_Form_NoticeItem();
 
         $notice = $repo->find($noticeId);
         if(!$notice){
             $notice = new \Newscoop\Entity\Notice();
+        }else{
+            $noticeForm->setDefaultsFromEntity($notice);
         }
-        $noticeForm = new Admin_Form_NoticeItem();
-
 
         $repo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
         $rootNodes = $this->view->categoryCollection = $repo->getRootNodes();
@@ -197,7 +198,6 @@ class Admin_NoticeController extends Zend_Controller_Action
         }
         $this->view->trees = $trees;
 
-        $noticeForm->setDefaultsFromEntity($notice);
         $this->view->noticeForm = $noticeForm;
         $this->view->notice = $notice;
     }
