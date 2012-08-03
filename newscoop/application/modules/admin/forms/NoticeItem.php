@@ -16,7 +16,7 @@ class Admin_Form_NoticeItem extends Zend_Form
         $this->setAction('/admin/notice-rest');
         $this->addElement('hidden', 'id');
 
-        $this->addElement('hidden', 'categories', array(
+        $this->addElement('text', 'categories', array(
             'label' => getGS('Categories'),
         ));
 
@@ -65,6 +65,7 @@ class Admin_Form_NoticeItem extends Zend_Form
             'title' => $notice->getTitle(),
             'firstname' => $notice->getFirstname(),
             'lastname' => $notice->getLastname(),
+            'published' => $notice->getPublished(),
             'body' => $notice->getBody()
         ));
         return $this;

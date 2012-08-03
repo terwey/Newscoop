@@ -12,20 +12,19 @@ use \Newscoop\Entity\Notice as Notice;
 class Admin_NoticeRestController extends Zend_Rest_Controller
 {
     private $em;
+    private $noticeRepo;
 
     public function init()
     {
-        ini_set('memory_limit', '3072M');
-
-        $this->service = $this->_helper->service('notice');
         $this->em = $this->_helper->service('em');
-
-        //$this->getHelper('contextSwitch')->addActionContext('index', 'json')->initContext();
-        //$this->getHelper('contextSwitch')->addActionContext('get', 'json')->initContext();
-
+        $this->noticeRepo = $this->em->getRepository('Newscoop\\Entity\\Notice');
     }
 
     public function headAction()
+    {
+    }
+
+    public function deleteAction()
     {
     }
 
@@ -39,31 +38,15 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
             $queryParts = array();
         }
 
-        $noticeRepo = $this->em->getRepository('Newscoop\\Entity\\Notice');
-
-        $noticeCollection = $noticeRepo->findAll(2, $queryParts);
+        $noticeCollection = $this->noticeRepo->findAll(2, $queryParts);
         $this->_helper->json($noticeCollection, true);
     }
 
     public function getAction()
     {
-        exit('mehz');
-        /*
-        $tagRepo = $this->em->getRepository('DoctrineExtensions\\Taggable\\Entity\\Tag');
-
-        // find all article ids matching a particular query
-        //$ids = $tagRepo->getResourceIdsForTag('notice', 'footag');
-
-        $tags = $tagRepo->getTagsWithCountArray('');
-        foreach ($tags as $name => $count) {
-            $cloud[$name] = $count;
-        }
-
-        */
         $id = $this->getRequest()->getParam('id', null);
-        if(isset($id)){
-
-            $noticeRecord = $this->service->find($id);
+        if (isset($id)) {
+            $noticeRecord = $this->noticeRepo->find($id);
             var_dump($noticeRecord->getTitle());
             $this->_helper->json($noticeRecord, true);
         }
@@ -82,11 +65,10 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
 
         if ($request->isPost() && $form->isValid($request->getPost())) {
 
-            if($form->id->getValue()){
-                $noticeRepo = $this->em->getRepository('Newscoop\\Entity\\Notice');
-                $noticeRecord = $noticeRepo->find($form->id->getValue());
-            }else{
-                $noticeRecord =  new \Newscoop\Entity\Notice();
+            if ($form->id->getValue()) {
+                $noticeRecord = $this->noticeRepo->find($form->id->getValue());
+            } else {
+                $noticeRecord = new \Newscoop\Entity\Notice();
             }
             $noticeRecord->setTitle($form->title->getValue());
             $noticeRecord->setBody($form->body->getValue());
@@ -97,14 +79,14 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
             $noticeRecord->setPublished($dateTime);
             $noticeRecord->setStatus('saved');
 
-            $catIds = explode(',',$form->categories->getValue());
+            $catIds = explode(',', $form->categories->getValue());
             $catRepo = $this->em->getRepository('Newscoop\\Entity\\NoticeCategory');
 
-            foreach($catIds as $id){
-                if($cat = $catRepo->find($id))
+            foreach ($catIds as $id) {
+                if ($cat = $catRepo->find($id))
                     $categories[] = $cat;
             }
-            if(count($categories)){
+            if (count($categories)) {
                 $noticeRecord->setCategories($categories);
             }
 
@@ -124,15 +106,6 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
         exit;
     }
 
-    public function deleteAction()
-    {
-        list($user, $ip) = explode(':', $this->_getParam('id'));
-        $this->_helper->service('subscription.ip')->delete(array(
-            'user' => $user,
-            'ip'   => $ip,
-        ));
-        $this->_helper->json(array());
-    }
 
     /**
      * Get values

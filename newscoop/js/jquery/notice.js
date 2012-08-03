@@ -78,7 +78,7 @@ var datatableCallback = {
                 if (!ids.length) return;
                 
                 
-                if (status == 'deleted' && !confirm(putGS('You are about to permanently delete multiple comments.') + '\n' + putGS('Are you sure you want to do it?'))) {
+                if (status == 'deleted' && !confirm(putGS('You are about to permanently delete multiple notics.') + '\n' + putGS('Are you sure you want to do it?'))) {
                     return false;
                 }
                 
@@ -90,7 +90,7 @@ var datatableCallback = {
                         "status": status
                     }, serverObj.security),
                     success: function (data) {
-                        flashMessage(putGS('Comments status change to $1.', statusMap[status]));
+                        flashMessage(putGS('Notice status change to $1.', statusMap[status]));
                         datatable.fnDraw(false);
                     },
                     error: function (rq, status, error) {
@@ -206,20 +206,20 @@ $(function () {
         var ids = [id.match(/\d+/)[0]];
         var status = id.match(/[^_]+/)[0];
 
-        if (status == 'deleted' && !confirm(putGS('You are about to permanently delete a comment.') + '\n' + putGS('Are you sure you want to do it?'))) {
+        if (status == 'deleted' && !confirm(putGS('You are about to permanently delete a Notice.') + '\n' + putGS('Are you sure you want to do it?'))) {
             return false;
         }
         
         $.ajax({
             type: 'POST',
-            url: 'comment/set-status/format/json',
+            url: 'notice/set-status/format/json',
             data: $.extend({
                 "notice": ids,
                 "status": status
             }, serverObj.security),
             success: function (data) {
-                if ('deleted' == status) flashMessage(putGS('Comment deleted.'));
-                else flashMessage(putGS('Comment status change to $1.', statusMap[status]));
+                if ('deleted' == status) flashMessage(putGS('Notice deleted.'));
+                else flashMessage(putGS('Notice status change to $1.', statusMap[status]));
                 datatable.fnDraw(false);
             },
             error: function (rq, status, error) {
@@ -242,7 +242,7 @@ $(function () {
             data: $(this).serialize(),
             success: function (data) {
                 datatable.fnDraw();
-                flashMessage(putGS('Comment updated.'));
+                flashMessage(putGS('Notice updated.'));
             },
             error: function (rq, status, error) {
                 if (status == 0 || status == -1) {
@@ -279,52 +279,7 @@ $(function () {
         td.find('.content-edit').hide();
         td.find('.content-reply').toggle("fast");
     });
-    
-    $('.datatable .action-recommend').live('click', function () {
-        var el = $(this);
-        var ids = [el.attr('id').replace('recommend_', '')];
-        
-        $.ajax({
-            type: 'POST',
-            url: 'comment/set-recommended/format/json',
-            data: $.extend({
-                'comment': ids,
-                'recommended': 1
-            }, serverObj.security),
-            success: function (data) {
-                flashMessage(putGS('Comment updated.'));
-                datatable.fnDraw();
-            },
-            error: function (rq, status, error) {
-                if (status == 0 || status == -1) {
-                    flashMessage(putGS('Unable to reach Newscoop. Please check your internet connection.'), "error");
-                }
-            }
-        });
-    });
-    
-    $('.datatable .action-unrecommend').live('click', function () {
-        var el = $(this);
-        var ids = [el.attr('id').replace('unrecommend_', '')];
-        
-        $.ajax({
-            type: 'POST',
-            url: 'comment/set-recommended/format/json',
-            data: $.extend({
-                'comment': ids,
-                'recommended': 0
-            }, serverObj.security),
-            success: function (data) {
-                flashMessage(putGS('Comment updated.'));
-                datatable.fnDraw();
-            },
-            error: function (rq, status, error) {
-                if (status == 0 || status == -1) {
-                    flashMessage(putGS('Unable to reach Newscoop. Please check your internet connection.'), "error");
-                }
-            }
-        });
-    });
+
 
     // Dialog
     $('.dialogPopup').dialog({

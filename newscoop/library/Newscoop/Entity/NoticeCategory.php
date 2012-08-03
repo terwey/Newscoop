@@ -3,7 +3,7 @@
 namespace Newscoop\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 /**
  * @Gedmo\Tree(type="nested")
  * @Table(name="notice_category")

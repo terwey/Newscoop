@@ -11,25 +11,19 @@ use \Newscoop\Entity\Notice as Notice;
  */
 class Admin_NoticeController extends Zend_Controller_Action
 {
+    private $em;
+
+    private $noticeRepo;
 
     public function init()
     {
-        camp_load_translation_strings('notices');
-
-        //$this->service = $this->_helper->service('notice');
         $this->em = $this->_helper->service('em');
-
-
         // get notice repository
-        $this->noticeRepository = $repo = $this->em->getRepository('Newscoop\Entity\Notice');
-        //$this->_helper->entity->getRepository('Newscoop\Entity\Notice');
+        $this->noticeRepo = $repo = $this->em->getRepository('Newscoop\Entity\Notice');
 
+        camp_load_translation_strings('notices');
         // get language repository
         $this->languageRepository = $this->_helper->entity->getRepository('Newscoop\Entity\Language');
-
-        $this->form = new Admin_Form_Comment;
-
-        $this->editForm = new Admin_Form_Comment_EditForm;
 
         return $this;
 
@@ -59,27 +53,27 @@ class Admin_NoticeController extends Zend_Controller_Action
 
         $this->view->Trees = $trees;
         /*
-                        $locations = new \Newscoop\Entity\NoticeCategory();
-                        $locations->setTitle('Ort');
+        $locations = new \Newscoop\Entity\NoticeCategory();
+        $locations->setTitle('Ort');
 
-                        $city0 = new \Newscoop\Entity\NoticeCategory();
-                        $city0->setTitle('Basel');
-                        $city0->setParent($locations);
+        $city0 = new \Newscoop\Entity\NoticeCategory();
+        $city0->setTitle('Basel');
+        $city0->setParent($locations);
 
-                        $city1 = new \Newscoop\Entity\NoticeCategory();
-                        $city1->setTitle('Wiehl');
-                        $city1->setParent($locations);
+        $city1 = new \Newscoop\Entity\NoticeCategory();
+        $city1->setTitle('Wiehl');
+        $city1->setParent($locations);
 
-                        $city3 = new \Newscoop\Entity\NoticeCategory();
-                        $city3->setTitle('Zürich');
-                        $city3->setParent($city1);
+        $city3 = new \Newscoop\Entity\NoticeCategory();
+        $city3->setTitle('Zürich');
+        $city3->setParent($city1);
 
-                        $this->em->persist($locations);
-                        $this->em->persist($city0);
-                        $this->em->persist($city1);
-                        $this->em->persist($city3);
-                        $this->em->flush();
-                        exit;
+        $this->em->persist($locations);
+        $this->em->persist($city0);
+        $this->em->persist($city1);
+        $this->em->persist($city3);
+        $this->em->flush();
+        exit;
         */
 
     }
@@ -98,7 +92,7 @@ class Admin_NoticeController extends Zend_Controller_Action
         $view = $this->view;
         $table = $this->getHelper('Datatable');
         /* @var $table Action_Helper_Datatable */
-        $table->setDataSource($this->noticeRepository);
+        $table->setDataSource($this->noticeRepo);
         $table->setOption('oLanguage', array('sSearch' => ''));
         $table->setCols(array('index' => $view->toggleCheckbox(), 'user' => getGS('Name'),
             'notice' => getGS('Date') . ' / ' . getGS('Notice'), 'status' => getGS('Status'),
@@ -171,9 +165,6 @@ class Admin_NoticeController extends Zend_Controller_Action
             array('index' => 'noticeId', 'user' => 'noticeUser', 'notice' => 'noticeTimeCreated',
                 'status' => 'noticeStatus','actions' => 'noticeActionsHolder'));
         $table->dispatch();
-
-        //    $this->editForm->setSimpleDecorate()->setAction($this->_helper->url('update'));
-        //    $this->view->editForm = $this->editForm;
     }
 
     public function index2Action()
