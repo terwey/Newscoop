@@ -80,13 +80,14 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
             $noticeRecord->setStatus('saved');
 
             $catIds = explode(',', $form->categories->getValue());
-            $catRepo = $this->em->getRepository('Newscoop\\Entity\\NoticeCategory');
+            $categories = array();
 
-            foreach ($catIds as $id) {
-                if ($cat = $catRepo->find($id))
-                    $categories[] = $cat;
-            }
-            if (count($categories)) {
+            if("" !== $catIds[0]){
+                $catRepo = $this->em->getRepository('Newscoop\\Entity\\NoticeCategory');
+                foreach ($catIds as $id) {
+                    if ($cat = $catRepo->find($id))
+                        $categories[] = $cat;
+                }
                 $noticeRecord->setCategories($categories);
             }
 
