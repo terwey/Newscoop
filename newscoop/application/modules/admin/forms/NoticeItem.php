@@ -13,7 +13,6 @@ class Admin_Form_NoticeItem extends Zend_Form
      */
     public function init()
     {
-        $this->setAction('/admin/notice-rest');
         $this->addElement('hidden', 'id');
 
         $this->addElement('hidden', 'categories', array(
@@ -69,7 +68,7 @@ class Admin_Form_NoticeItem extends Zend_Form
             'title' => $notice->getTitle(),
             'firstname' => $notice->getFirstname(),
             'lastname' => $notice->getLastname(),
-            'published' => $notice->getPublished(),
+            'published' => $notice->getPublished()->format('Y-m-d'),
             'body' => $notice->getBody()
         ));
         return $this;
