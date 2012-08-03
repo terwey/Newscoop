@@ -186,16 +186,15 @@ class Admin_NoticeController extends Zend_Controller_Action
         }
         $noticeForm = new Admin_Form_NoticeItem();
 
+
         $repo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
-
-
         $rootNodes = $this->view->categoryCollection = $repo->getRootNodes();
 
+        $trees = array();
         foreach ($rootNodes as $node) {
             $treeArray = $repo->childrenHierarchy($node);
             $trees[$node->getSlug()] = array('root' => $node, 'children' => $treeArray);
         }
-
         $this->view->trees = $trees;
 
         $noticeForm->setDefaultsFromEntity($notice);
