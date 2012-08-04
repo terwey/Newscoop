@@ -96,10 +96,7 @@ class Admin_NoticeController extends Zend_Controller_Action
             $this->em->persist($categoryRecord);
             $this->em->flush();
 
-            $this->_helper->redirector->gotoUrl($this->view->baseUrl('/admin/notice/category'));
-
-            $this->_helper->json(array('status' => 'ok'));
-
+            $this->_helper->redirector->gotoUrl('/admin/notice/category');
         } else {
             $this->_helper->json(array('status' => 'error', 'errors' => $categoryForm->getErrors()));
         }
