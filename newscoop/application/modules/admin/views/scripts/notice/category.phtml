@@ -7,14 +7,13 @@
 
 
 <?php foreach ($this->Trees as $slug => $tree): ?>
-<div style="border:1px solid #000000;">
+<div>
     <h3>
         <?php echo $tree['root']->getTitle()?></h3>
-    <?php echo $slug?>
     <?php echo $tree['children'];?>
 </div>
 <?php endforeach; ?>
 
 
 <?php print_r($this->result); ?>
-<?php echo $this->noticeForm; ?>
+<?php echo $this->categoryForm; ?>

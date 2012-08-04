@@ -38,7 +38,7 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
             $queryParts = array();
         }
 
-        $noticeCollection = $this->noticeRepo->findAll(2, $queryParts);
+        $noticeCollection = $this->noticeRepo->getNotices(2, $queryParts);
         $this->_helper->json($noticeCollection, true);
     }
 
@@ -75,8 +75,12 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
             $noticeRecord->setFirstname($form->firstname->getValue());
             $noticeRecord->setLastname($form->lastname->getValue());
 
-            $dateTime = new DateTime($form->published->getValue());
-            $noticeRecord->setPublished($dateTime);
+            $dateTimePub = new DateTime($form->published->getValue());
+            $noticeRecord->setPublished($dateTimePub);
+
+            $dateTimeUnpub = new DateTime($form->unpublished->getValue());
+            $noticeRecord->setUnpublished($dateTimeUnpub);
+
             $noticeRecord->setStatus('saved');
 
             $catIds = explode(',', $form->categories->getValue());
@@ -94,17 +98,9 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
             $this->em->persist($noticeRecord);
             $this->em->flush();
 
-            // Add a list of tags on your taggable resource..
-            //$this->tagManager->addTags($tags, $newNotice);
-            //$this->tagManager->saveTagging($newNotice);
-
-
             $this->_helper->flashMessenger("Notice created");
             $this->_helper->redirector->gotoUrl('/admin/notice');
         }
-
-
-        exit;
     }
 
 

@@ -39,19 +39,16 @@ class NoticeRepository extends DatatableSource
     public function getData(array $p_params, array $p_cols)
     {
         $qb = $this->createQueryBuilder('e');
-        //$qb->from('Newscoop\Entity\Comment\Commenter', 'c')
-            //->from('Newscoop\Entity\Article', 'a');
-        $andx = $qb->expr()->andx();
-        //$andx->add($qb->expr()->neq('e.status', new Expr\Literal('a.language')));
-        //$andx->add($qb->expr()->eq('e.thread', new Expr\Literal('a.number')));
-        //$andx->add($qb->expr()->eq('e.commenter', new Expr\Literal('c.id')));
 
         if (!empty($p_params['sSearch'])) {
             //$this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
         }
 
         if (!empty($p_params['sFilter'])) {
-            $this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
+            $andx = $qb->expr()->andx();
+
+            $andx = $this->buildFilter($p_cols, $p_params['sFilter'], $qb,$andx);
+            $qb->where($andx);
         }
 
         // sort
@@ -61,18 +58,21 @@ class NoticeRepository extends DatatableSource
             $sortBy = $cols[$sortId];
             $dir = $p_params["sSortDir_0"] ? : 'asc';
             switch ($sortBy) {
-                case 'user':
-                    $qb->orderBy("e.firstname", $dir);
+                case 'lastname':
+                    $qb->orderBy("e.lastname", $dir);
                     break;
-                case 'notice':
-                case 'index':
-                    $qb->orderBy("e.created", $dir);
+                case 'published':
+                    $qb->orderBy("e.published", $dir);
+                    break;
+                case 'id':
+                    $qb->orderBy("e.id", $dir);
                     break;
                 default:
                     $qb->orderBy("e." . $sortBy, $dir);
             }
         }
-        //$qb->where($andx);
+
+
         // limit
         if (isset($p_params['iDisplayLength'])) {
             $qb->setFirstResult((int)$p_params['iDisplayStart'])->setMaxResults((int)$p_params['iDisplayLength']);
@@ -80,6 +80,8 @@ class NoticeRepository extends DatatableSource
 
         return $qb->getQuery()->getResult();
     }
+
+
 
     /**
      * Get entity count
@@ -89,28 +91,25 @@ class NoticeRepository extends DatatableSource
      *
      * @return int
      */
-    public function getCount(array $p_params = null, array $p_cols = array())
+
+/*    public function getCount(array $p_params = null, array $p_cols = array())
     {
         $qb = $this->createQueryBuilder('e');
         //$qb->from('Newscoop\Entity\Comment\Commenter', 'c')
           //  ->from('Newscoop\Entity\Article', 'a');
-       /* $andx = $qb->expr()->andx();
+        $andx = $qb->expr()->andx();
         $andx->add($qb->expr()->eq('e.language', new Expr\Literal('a.language')));
-        $andx->add($qb->expr()->eq('e.thread', new Expr\Literal('a.number')));
-        $andx->add($qb->expr()->eq('e.commenter', new Expr\Literal('c.id')));
 
         if (is_array($p_params) && !empty($p_params['sSearch'])) {
-            $this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
+            //$this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
         }
-*/
         if (is_array($p_params) && !empty($p_params['sFilter'])) {
-            //$this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
+            $this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
         }
-/*
-        $qb->where($andx);*/
+        $qb->where($andx);
         $qb->select('COUNT(e)');
         return $qb->getQuery()->getSingleScalarResult();
-    }
+    }*/
 
     /**
      * Build where condition
@@ -119,16 +118,14 @@ class NoticeRepository extends DatatableSource
      * @param string $search
      * @return Doctrine\ORM\Query\Expr
      */
-    protected function buildWhere(array $p_cols, $p_search, $qb, $andx)
+    /*protected function buildWhere(array $p_cols, $p_search, $qb, $andx)
     {
         $orx = $qb->expr()->orx();
-        $orx->add($qb->expr()->like("c.name", $qb->expr()->literal("%{$p_search}%")));
-        $orx->add($qb->expr()->like("a.name", $qb->expr()->literal("%{$p_search}%")));
-        $orx->add($qb->expr()->like("e.subject", $qb->expr()->literal("%{$p_search}%")));
-        $orx->add($qb->expr()->like("e.message", $qb->expr()->literal("%{$p_search}%")));
+        $orx->add($qb->expr()->like("e.title", $qb->expr()->literal("%{$p_search}%")));
+        $orx->add($qb->expr()->like("e.body", $qb->expr()->literal("%{$p_search}%")));
         return $andx->add($orx);
     }
-
+*/
     /**
      * Build filter condition
      *
@@ -146,9 +143,11 @@ class NoticeRepository extends DatatableSource
             $orx = $qb->expr()->orx();
             switch ($key) {
                 case 'status':
-                    //$mapper = array_flip(Notice::$status_enum);
+                    $mapper = array_flip(Notice::$status_enum);
                     foreach ($values as $value) {
-                        $orx->add($qb->expr()->eq('e.status', $value));
+                        if(isset($mapper[$value])){
+                            $orx->add($qb->expr()->eq('e.status', $mapper[$value]));
+                        }
                     }
                     break;
             }
@@ -166,8 +165,9 @@ class NoticeRepository extends DatatableSource
     {
         $qb = $this->createQueryBuilder('n');
 
-        $qb->select('n');
-            //->leftJoin('n.tags', 't');
+        $qb->select('n,cat')
+            ->leftJoin('n.categories', 'cat')
+        ;
 
        /* if (isset($tags) && count($tags)) {
                 //->where('t.resource_id = n.id');
@@ -181,6 +181,8 @@ class NoticeRepository extends DatatableSource
         return $qb
             ->andWhere('n.published <= :published')
             ->setParameter('published', $now)
+            ->andWhere('n.status <= :status')
+            ->setParameter('status', 0)
             ->getQuery()
             ->getResult($hydration);
     }

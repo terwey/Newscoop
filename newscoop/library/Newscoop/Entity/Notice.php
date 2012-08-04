@@ -80,9 +80,15 @@ class Notice
     private $published;
 
     /**
-     * @var string $status
+     * @var datetime $published
      *
-     * @Column(type="string")
+     * @Column(type="datetime")
+     */
+    private $unpublished;
+
+    /**
+     * @column(type="smallint")
+     * @var int
      */
     private $status;
 
@@ -153,6 +159,9 @@ class Notice
         return $this->title;
     }
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
@@ -257,6 +266,20 @@ class Notice
     }
 
     /**
+     * @return string
+     */
+    public function getStatusName()
+    {
+        $status_enum = self::$status_enum;
+
+        $status_id = $this->getStatus();
+        if(key_exists($status_id,$status_enum)){
+            return $status_enum[$status_id];
+        }
+        return false;
+    }
+
+    /**
      * @param string $sub_title
      */
     public function setSubTitle($sub_title)
@@ -288,11 +311,17 @@ class Notice
         return $this->updated;
     }
 
+    /**
+     * @param $categories
+     */
     public function setCategories($categories)
     {
         $this->categories = $categories;
     }
 
+    /**
+     * @return mixed
+     */
     public function getCategories()
     {
         return $this->categories;
@@ -312,6 +341,22 @@ class Notice
     public function getPublication()
     {
         return $this->publication;
+    }
+
+    /**
+     * @param \Newscoop\Entity\datetime $unpublished
+     */
+    public function setUnpublished($unpublished)
+    {
+        $this->unpublished = $unpublished;
+    }
+
+    /**
+     * @return \Newscoop\Entity\datetime
+     */
+    public function getUnpublished()
+    {
+        return $this->unpublished;
     }
 }
 

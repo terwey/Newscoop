@@ -61,6 +61,23 @@ $headStyle->offsetSetStylesheet('table', '');
     <?php echo json_encode(getGS("You are about to permanently delete multiple notices.")); ?>,
     <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>
     ];
+    $(document).ready(function () {
+
+        var req = $.getJSON("/admin/notice-rest/index", {},
+            function (data) {
+                //data = $.parseJSON(data);
+                $.each(data, function (i, item) {
+                    console.log(item.title);
+                });
+            })
+            .success(function () {
+            })
+            .error(function () {
+                alert('There was problem loading.');
+            })
+            .complete(function () {
+            });
+    });
 </script>
 <table>
     <tr>
@@ -68,10 +85,7 @@ $headStyle->offsetSetStylesheet('table', '');
 </table>
 
 <script id="comment-tmpl" type="text/html">
-    <td colspan="5">
-        <table cellspacing="0" cellpadding="0" style="width:100%">
-            <tbody>
-            <tr>
+
                 <td class="noticeId sorting_1">
                     <input type="checkbox" name="index[]" value="{{notice.id}}" class="table-checkbox">
                     <span class="index">{{notice.id}}.</span>
@@ -82,77 +96,40 @@ $headStyle->offsetSetStylesheet('table', '');
                         {% if (!user.firstname) %}{{user.firstname}} (Anonymous){% endif %}
                     </p>
                 </td>
-                <td class="commentMessage">
+                <td class="noticeTitle">
                     <div class="dateCommentHolder">
-                        <h4>
-                            <span>{{notice.created.date}} <?php putGS('at'); ?> {{notice.created.time}}</span>
-                            <span class="commentSubject">{{notice.subject}}</span>
-                        </h4>
+                        <h3>
+                            <span class="commentSubject">{{notice.title}}</span>
+                        </h3>
 
-                        <p class="noticeComment">{{notice.title}}</p>
-                    </div>
-
-                    <div class="dateCommentHolderReply">
-
+                        <p class="noticeComment">{{notice.body}}</p>
                     </div>
                 </td>
-                <td>
-                    <div class="noticeStatus">
+
+                <td class="noticeCategories">
+                    <p>
+                        <span>{{notice.categories}}</span>
+                    </p>
+                </td>
+                <td class="noticeCreated">
+                    {{notice.created.date}}
+                </td>
+                <td class="noticePublished">
+                    {{notice.published.date}}
+                    <p>
+                        <small>{{notice.unpublished.date}}</small>
+                    </p>
+                </td>
+                <td class="noticeStatus">
                         {{notice.status}}
-                    </div>
                 </td>
-                <td>
-                    <div class="noticeActionsHolder">
-                        <p>
-                            <span>{{notice.categories}}</span>
-                        </p>
+                <td class="noticeActions">
+                    <div>
                         <a class="goToArticle" href="{{thread.link.edit}}"><?php putGS('Go to edit notice'); ?></a>
                     </div>
+
                 </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="commentBtns">
-            <ul>
-                <li>
-                    <input type="radio" name="action_comment_{{notice.id}}" class="action new"
-                           id="pending_{{notice.id}}" value="pending"/>
-                    <label for="pending_{{notice.id}}"><?php putGS('New'); ?></label>
-                    &nbsp;&nbsp;
-                </li>
-                {% if(can.enable) %}
-                <li>
-                    <input type="radio" name="action_comment_{{notice.id}}" class="action approved"
-                           id="approved_{{notice.id}}" value="approved"/>
-                    <label for="approved_{{notice.id}}"><?php putGS('Approved'); ?></label>
 
-                    &nbsp;&nbsp;
-                </li>
-                <li>
-                    <input type="radio" name="action_comment_{{notice.id}}" class="action hidden"
-                           id="hidden_{{notice.id}}" value="hidden" style="height: auto"/>
-                    <label for="hidden_{{notice.id}}"><?php putGS('Hidden'); ?></label>
-                    &nbsp;&nbsp;
-                </li>
-                {% endif %}
-
-
-                {% if(can.edit) %}
-                <li><a href="javascript:;" class="actionButton action-edit"><?php putGS('Quick edit'); ?></a></li>
-                {% endif %}
-                {% if(can.enable) %}
-                <li><a href="javascript:;" id="deleted_{{notice.id}}"
-                       class="actionButton action"><?php putGS('Delete'); ?></a></li>
-                {% endif %}
-                <!--
-                <li><a href="javascript:;" class="action-rating link icon-link"><span class="icon ui-icon-star"></span><?php putGS('Add rating'); ?></a></li>
-                -->
-            </ul>
-        </div>
-    </td>
-    <td style="display: none;"></td>
-    <td style="display: none;"></td>
-    <td style="display: none;"></td>
 </script>
 
 <div class="wrapper">
@@ -170,15 +147,11 @@ $headStyle->offsetSetStylesheet('table', '');
                             <ul class="status_filter">
                                 <li class="published" style="display: none;"><input type="checkbox"
                                                                                     id="show_published"
-                                                                                    value="approved"> <label
+                                                                                    value="published"> <label
                                     for="show_published"><?php putGS('Published'); ?></label>
                                 </li>
                                 <li class="new"><input type="checkbox" id="show_new" value="pending"> <label
                                     for="show_new"><?php putGS('New'); ?></label></li>
-                                <li class="approved"><input type="checkbox" id="show_approved"
-                                                            value="approved"> <label
-                                    for="show_approved"><?php putGS('Approved'); ?></label>
-                                </li>
                                 <li class="hidden"><input type="checkbox" id="show_hidden"
                                                           value="hidden"> <label
                                     for="show_hidden"><?php putGS('Hidden'); ?></label>
@@ -197,7 +170,8 @@ $headStyle->offsetSetStylesheet('table', '');
                         <!-- <a href="javascript:;" class="sort_tread"> <span
                                     class="css_right ui-icon ui-icon-carat-2-n-s"></span> <?php putGS('Sort by Thread order'); ?>
                             </a>//--></div>
-                    <?php $this->renderDatatable(); ?></div>
+                    <?php $this->renderDatatable(); ?>
+                </div>
             </div>
         </div>
     </div>

@@ -52,30 +52,70 @@ class Admin_NoticeController extends Zend_Controller_Action
         }
 
         $this->view->Trees = $trees;
-        /*
-        $locations = new \Newscoop\Entity\NoticeCategory();
-        $locations->setTitle('Ort');
+        $categoryForm = new Admin_Form_NoticeCategory();
+        $categoryArray = $this->getAllCategoriesArray();
+        $availableParentModules = array();
+        foreach ($categoryArray as $category) {
+            $availableParentModules[$category['id']] = str_repeat('-', $category['lvl']) . $category['title'];
+        }
+        $categoryForm->setCategories($availableParentModules);
+        $categoryForm->setAction($this->view->baseUrl('admin/notice/category-add'));
+        $this->view->categoryForm = $categoryForm;
 
-        $city0 = new \Newscoop\Entity\NoticeCategory();
-        $city0->setTitle('Basel');
-        $city0->setParent($locations);
+    }
 
-        $city1 = new \Newscoop\Entity\NoticeCategory();
-        $city1->setTitle('Wiehl');
-        $city1->setParent($locations);
+    public function categoryAddAction()
+    {
+        $request = $this->getRequest();
 
-        $city3 = new \Newscoop\Entity\NoticeCategory();
-        $city3->setTitle('Zürich');
-        $city3->setParent($city1);
+        $categoryForm = new Admin_Form_NoticeCategory();
+        $categoriesArray = $this->getAllCategoriesArray();
 
-        $this->em->persist($locations);
-        $this->em->persist($city0);
-        $this->em->persist($city1);
-        $this->em->persist($city3);
-        $this->em->flush();
-        exit;
-        */
+        if (count($categoriesArray)) {
+            $availableParentCategories = array();
+            foreach ($categoriesArray as $module) {
+                $availableParentCategories[$module['id']] = str_repeat('-', $module['lvl']) . $module['title'];
+            }
+            $categoryForm->setModules($availableParentCategories);
+        }
 
+        if ($request->isPost() && $categoryForm->isValid($request->getPost())) {
+
+
+            $categoryRecord = new \Newscoop\Entity\NoticeCategory();
+            $categoryRecord->setTitle($categoryForm->title->getValue());
+
+            if ('' !== $categoryForm->parent->getValue()) {
+                $categoryRepo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
+
+                $parentCategory = $categoryRepo->findOneById($categoryForm->parent->getValue());
+                $categoryRecord->setParent($parentCategory);
+            }
+
+            $this->em->persist($categoryRecord);
+            $this->em->flush();
+
+            $this->_helper->redirector->gotoUrl($this->view->baseUrl('admin/notice/category'));
+
+            $this->_helper->json(array('status' => 'ok'));
+
+        } else {
+            $this->_helper->json(array('status' => 'error', 'errors' => $categoryForm->getErrors()));
+        }
+
+    }
+
+    private function getAllCategoriesArray()
+    {
+        // create query to fetch tree nodes
+        $query = $this->em
+            ->createQueryBuilder()
+            ->select('category')
+            ->from('Newscoop\Entity\NoticeCategory', 'category')
+            ->orderBy('category.root, category.lft', 'ASC')
+            ->getQuery();
+
+        return $query->getArrayResult();
     }
 
     public function indexAction()
@@ -94,11 +134,19 @@ class Admin_NoticeController extends Zend_Controller_Action
         /* @var $table Action_Helper_Datatable */
         $table->setDataSource($this->noticeRepo);
         $table->setOption('oLanguage', array('sSearch' => ''));
-        $table->setCols(array('index' => $view->toggleCheckbox(), 'user' => getGS('Name'),
-            'notice' => getGS('Date') . ' / ' . getGS('Notice'), 'status' => getGS('Status'),
-            'actions' => 'Actions'), array('index' => false,'actions' => false));
+        $table->setCols(
+            array('id' => $view->toggleCheckbox(),
+                'lastname' => getGS('Name'),
+                'title' => getGS('Notice'),
+                'categories' => getGS('Categories'),
+                'created' => getGS('Creation date'),
+                'published' => getGS('Publish date'),
+                'status' => getGS('Status'),
+                'actions' => 'Actions'),
+            array('id' => false,'actions' => false));
 
-        $table->setInitialSorting(array('notice' => 'desc'));
+        //$table->setSorting(array('published' => 'desc'));
+        $table->setInitialSorting(array('id' => 'desc'));
 
         $index = 1;
         $acl = array();
@@ -113,30 +161,25 @@ class Admin_NoticeController extends Zend_Controller_Action
                 $categoriesArray[] = $category->getTitle();
             }
 
-            return array('index' => $index++, 'can' => array('enable' => $acl['enable'], 'edit' => $acl['edit']),
+            return array(
+                'index' => $index++,
+                'can' => array('enable' => $acl['enable'], 'edit' => $acl['edit']),
                 'user' =>
                 array(
                     'firstname' => $notice->getFirstname(),
                     'lastname' => $notice->getLastname(),
-                    'usernameEncoded' => urlencode('empt_placehoölder'),
-                    'email' => 'empt_placehoölder',
-                    'avatar' => (string)$view->getAvatar('mail@tail.de', array('img_size' => 50,
-                        'default_img' => 'wavatar')),
-                    'ip' => 'meeh', 'url' => 'meeh',
-                    'banurl' => $view->url(
-                        array('controller' => 'comment-commenter', 'action' => 'toggle-ban',
-                            'user' => 'meeh', 'thread' => 'meeh', 'language' => 2))),
+                ),
                 'notice' => array(
                     'id' => $notice->getId(),
-                    'created' => array('date' => 'meeh',
-                        'time' => 'meeh'),
-                    'subject' => 'meeh',
+                    'created' => array('date' => $notice->getCreated()->format('Y-m-d')),
+                    'published' => array('date' => $notice->getPublished()->format('Y-m-d')),
+                    'unpublished' => array('date' => $notice->getUnpublished()->format('Y-m-d')),
                     'title' => $view->escape($notice->getTitle()),
                     'body' => $view->escape($notice->getBody()),
                     'likes' => '',
                     'dislikes' => '',
-                    'categories' => implode(',',$categoriesArray),
-                    'status' => $notice->getStatus(),
+                    'categories' => implode(',', $categoriesArray),
+                    'status' => $notice->getStatusName(),
                     'recommended' => 'meeh',
                     'action' => array('update' => $view->url(
                         array('action' => 'update', 'format' => 'json')),
@@ -145,9 +188,7 @@ class Admin_NoticeController extends Zend_Controller_Action
                 'thread' => array('name' => $view->escape('meeh'),
                     'link' => array
                     ('edit' => $view->baseUrl("admin/notice/edit/id/") . $notice->getId(),
-                        'get' => $view->baseUrl("admin/articles/get.php?") . 'meeh'),
-                    'forum' => array('name' => $view->escape('meeh')),
-                    'section' => array('name' => ($section) ? $view->escape($section->getName()) : null)),);
+                        'get' => $view->baseUrl("admin/articles/get.php?") . 'meeh')));
         });
 
         $table->setOption('fnDrawCallback', 'datatableCallback.draw')
@@ -158,34 +199,48 @@ class Admin_NoticeController extends Zend_Controller_Action
             ->setStripClasses()
             ->toggleAutomaticWidth(false)
             ->setDataProp(
-            array('index' => null, 'user' => null, 'notice' => null, 'status' => null,
+            array('id' => null,
+                'lastname' => null,
+                'title' => null,
+                'categories' => null,
+                'created' => null,
+                'published' => null,
+                'status' => null,
                 'actions' => null))
-            ->setVisible(array('index' => false))
+            //->setVisible(array('actions' => false))
             ->setClasses(
-            array('index' => 'noticeId', 'user' => 'noticeUser', 'notice' => 'noticeTimeCreated',
-                'status' => 'noticeStatus','actions' => 'noticeActionsHolder'));
+            array('id' => 'noticeId',
+                'lastname' => 'noticeUser',
+                'title'=> 'noticeTitle',
+                'created' => 'noticeCategories',
+                'created' => 'noticeCreated',
+                'published' => 'noticePublished',
+                'status' => 'noticeStatus',
+                'actions' => 'noticeActions'));
         $table->dispatch();
+
     }
 
     public function index2Action()
     {
-        $notices = $this->service->findAll(1);
+        $notices = $this->noticeRepo->findAll(1);
 
         $this->view->noticeCollection = $notices;
         $this->view->noticeForm = new Admin_Form_NoticeItem();
     }
 
+
     public function editAction()
     {
-        $noticeId = $this->getRequest()->getParam('id',null);
+        $noticeId = $this->getRequest()->getParam('id', null);
         $repo = $this->em->getRepository('Newscoop\Entity\Notice');
         $noticeForm = new Admin_Form_NoticeItem();
         $noticeForm->setAction($this->view->baseUrl('admin/notice-rest'));
 
         $notice = $repo->find($noticeId);
-        if(!$notice){
+        if (!$notice) {
             $notice = new \Newscoop\Entity\Notice();
-        }else{
+        } else {
             $noticeForm->setDefaultsFromEntity($notice);
         }
 
@@ -249,13 +304,15 @@ class Admin_NoticeController extends Zend_Controller_Action
 
         $repo = $this->em->getRepository('Newscoop\Entity\Notice');
 
+        $status_enum = array_flip(Notice::$status_enum);
+
         try {
             foreach ($notices as $id) {
                 $notice = $repo->find($id);
                 $msg = getGS('Notice "$2" status was changed to $3 by $1', Zend_Registry::get('user')->getName(),
                     $notice->getTitle(), $status);
                 $this->_helper->flashMessenger($msg);
-                $notice->setStatus($status);
+                $notice->setStatus($status_enum[$status]);
                 $this->em->persist($notice);
             }
             $this->em->flush();

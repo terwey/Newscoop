@@ -2,34 +2,21 @@ var statusMap = {
     'pending': 'new',
     'hidden': 'hidden',
     'deleted': 'deleted',
+    'published': 'published',
     'approved': 'approved'
 };
-var recommendedMap = {
-	'recommended': 'recommended',
-	'unrecommended': 'unrecommended'
-};
+
 var datatableCallback = {
     serverData: {},
     loading: false,
     addServerData: function (sSource, aoData, fnCallback) {
         that = datatableCallback;
         for (i in that.serverData) {
-			if (i == 'pending' || i == 'processed' || i == 'starred' || i == 'deleted' || i == 'approved' || i == 'hidden') {
+			if (i == 'pending' || i == 'processed' || i == 'starred' || i == 'deleted' || i == 'published' || i == 'hidden') {
 				if (that.serverData[i]) {
 					aoData.push({
 						"name": "sFilter[status][]",
 						"value": i
-					});
-				}
-			}
-			else {
-				if (that.serverData[i]) {
-					if (i == 'recommended') var value = 1;
-					else var value = 0;
-					
-					aoData.push({
-						"name": "sFilter[recommended][]",
-						"value": value
 					});
 				}
 			}
@@ -43,15 +30,15 @@ var datatableCallback = {
 		$(nRow)
             .addClass('status_' + statusMap[aData.notice.status])
             .tmpl('#comment-tmpl', aData)
-            .find("input."+ statusMap[aData.notice.status]).attr("checked","checked");
+            //.find("input."+ statusMap[aData.notice.status]).attr("checked","checked");
         return nRow;
     },
     draw: function () {
-        $(".commentsHolder table tbody tr").hover(function () {
+        /*$(".commentsHolder table tbody tr").hover(function () {
             $(this).find(".commentBtns").css("visibility", "visible");
         }, function () {
             $(this).find(".commentBtns").css("visibility", "hidden");
-        });
+        });*/
         datatableCallback.loading = false;
     },
     init: function() {
@@ -61,11 +48,14 @@ var datatableCallback = {
                                 <select class="input_select actions">\
                                     <option value="">' + putGS('Select status') + '</option>\
                                     <option value="pending">' + putGS('New') + '</option>\
-                                    <option value="approved">' + putGS('Approved') + '</option>\
+                                    <option value="published">' + putGS('Published') + '</option>\
                                     <option value="hidden">' + putGS('Hidden') + '</option>\
                                     <option value="deleted">' + putGS('Deleted')+ '</option>\
                                 </select>\
-                              </fieldset>');
+                                <a style="float:right;font-size:1.5em" class="goToArticle" href="/admin/notice/edit"><b>+</b> Add Notice</a>\
+                              </fieldset>'
+
+        );
         $('.actions').change(function () {
             action = $(this);
             var status = action.val();
@@ -251,33 +241,6 @@ $(function () {
             }
         });
         return false;
-    });
-    $('.dateCommentHolderEdit .edit-cancel,.dateCommentHolderReply .reply-cancel').live('click', function () {
-        var el = $(this);
-        var td = el.parents('td');
-        var form = el.parents('form');
-        $(form).each(function () {
-            this.reset();
-        });
-        td.find('.commentSubject,.commentBody').slideDown("fast");
-        td.find('.content-edit').hide();
-        td.find('.content-reply').hide();
-    });
-
-    $('.datatable .action-edit').live('click', function () {
-        var el = $(this);
-        var td = el.parents('td');
-        td.find('.content-reply').hide();
-        td.find('.commentSubject').toggle("fast");
-        td.find('.commentBody').toggle("fast");
-        td.find('.content-edit').toggle("fast");
-    });
-
-    $('.datatable .action-reply').live('click', function () {
-        var el = $(this);
-        var td = el.parents('td');
-        td.find('.content-edit').hide();
-        td.find('.content-reply').toggle("fast");
     });
 
 

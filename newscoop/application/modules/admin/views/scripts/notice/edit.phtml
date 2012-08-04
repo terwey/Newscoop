@@ -13,6 +13,7 @@
 
     $(document).ready(function () {
         $("#published").datepicker({ dateFormat:"yy-mm-dd" });
+        $("#unpublished").datepicker({ dateFormat:"yy-mm-dd" });
 
         var tagIds = $('#categories').val().split(',');
         console.log(tagIds);

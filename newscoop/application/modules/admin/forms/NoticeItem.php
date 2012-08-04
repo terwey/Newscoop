@@ -36,7 +36,13 @@ class Admin_Form_NoticeItem extends Zend_Form
         ));
 
         $this->addElement('text', 'published', array(
-            'label' => getGS('Date'),
+            'label' => getGS('Date of publication'),
+            'required' => true
+        ));
+
+        $this->addElement('text', 'unpublished', array(
+            'label' => getGS('Date of depublication'),
+            'required' => true
         ));
 
         $this->addElement('submit', 'submit', array(
@@ -69,6 +75,7 @@ class Admin_Form_NoticeItem extends Zend_Form
             'firstname' => $notice->getFirstname(),
             'lastname' => $notice->getLastname(),
             'published' => $notice->getPublished()->format('Y-m-d'),
+            'unpublished' => $notice->getUnpublished()->format('Y-m-d'),
             'body' => $notice->getBody()
         ));
         return $this;
