@@ -61,23 +61,7 @@ $headStyle->offsetSetStylesheet('table', '');
     <?php echo json_encode(getGS("You are about to permanently delete multiple notices.")); ?>,
     <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>
     ];
-    $(document).ready(function () {
-
-        var req = $.getJSON("/admin/notice-rest/index", {},
-            function (data) {
-                //data = $.parseJSON(data);
-                $.each(data, function (i, item) {
-                    console.log(item.title);
-                });
-            })
-            .success(function () {
-            })
-            .error(function () {
-                alert('There was problem loading.');
-            })
-            .complete(function () {
-            });
-    });
+    
 </script>
 <table>
     <tr>
