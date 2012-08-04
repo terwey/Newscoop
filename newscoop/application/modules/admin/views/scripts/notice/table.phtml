@@ -61,7 +61,7 @@ $headStyle->offsetSetStylesheet('table', '');
     <?php echo json_encode(getGS("You are about to permanently delete multiple notices.")); ?>,
     <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>
     ];
-    
+
 </script>
 <table>
     <tr>
@@ -120,10 +120,6 @@ $headStyle->offsetSetStylesheet('table', '');
     <div class="ui-widget-content small-block block-shadow commentsHolder">
         <div class="padded clearfix inner-tabs">
             <div class="tabs">
-                <ul>
-<!--                    <li><a href="#tabs-1">Comments</a></li>-->
-<!--                    <li><a href="#tabs-2">Users</a></li>-->
-                </ul>
                 <div id="tabs-1">
                     <div id="showComments">
                         <fieldset>
@@ -160,28 +156,11 @@ $headStyle->offsetSetStylesheet('table', '');
         </div>
     </div>
 </div>
-<div id="fancybox-tmp"></div>
-<div id="fancybox-loading">
-    <div></div>
-</div>
-<div id="fancybox-overlay"></div>
-<div id="fancybox-wrap">
-    <div id="fancybox-outer">
-        <div class="fancybox-bg" id="fancybox-bg-n"></div>
-        <div class="fancybox-bg" id="fancybox-bg-ne"></div>
-        <div class="fancybox-bg" id="fancybox-bg-e"></div>
-        <div class="fancybox-bg" id="fancybox-bg-se"></div>
-        <div class="fancybox-bg" id="fancybox-bg-s"></div>
-        <div class="fancybox-bg" id="fancybox-bg-sw"></div>
-        <div class="fancybox-bg" id="fancybox-bg-w"></div>
-        <div class="fancybox-bg" id="fancybox-bg-nw"></div>
-        <div id="fancybox-content"></div>
-        <a id="fancybox-close"></a>
 
-        <div id="fancybox-title"></div>
-        <a href="javascript:;" id="fancybox-left"><span class="fancy-ico"
-                                                        id="fancybox-left-ico"></span></a><a href="javascript:;"
-                                                                                             id="fancybox-right"><span
-        class="fancy-ico" id="fancybox-right-ico"></span></a></div>
-</div>
-<div class="dialogPopup dialog-1" title="<?php putGS('Full notice');?>"></div>
+    <div id="manageLinks"">
+        <p>
+            <a class="goToArticle" href="<?php echo $this->baseUrl('/admin/notice/category')?>">Manage Categories</a>
+            <br/><br/>
+            <a style="font-size:1.5em" class="goToArticle" href="<?php echo $this->baseUrl('/admin/notice/edit')?>"><b>+</b> Add Notice</a>
+        </p>
+    </div>

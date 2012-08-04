@@ -52,10 +52,13 @@ var datatableCallback = {
                                     <option value="hidden">' + putGS('Hidden') + '</option>\
                                     <option value="deleted">' + putGS('Deleted')+ '</option>\
                                 </select>\
-                                <a style="float:right;font-size:1.5em" class="goToArticle" href="/admin/notice/edit"><b>+</b> Add Notice</a>\
+                                <div id="manageLinksTarget" style="float:right"></div>\
                               </fieldset>'
 
         );
+        var manageLinks = $('#manageLinks').remove();
+        manageLinks.appendTo('#manageLinksTarget');
+
         $('.actions').change(function () {
             action = $(this);
             var status = action.val();
