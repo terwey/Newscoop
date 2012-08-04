@@ -1,5 +1,5 @@
 {
-    "hash": "0a6d0c6d99d0d0cab18c6e72236f8fb4",
+    "hash": "36a745c67dcd164a6d5a4697aa33cd22",
     "packages": [
         {
             "package": "Smarty3",
@@ -40,7 +40,19 @@
         {
             "package": "symfony/config",
             "version": "dev-master",
-            "source-reference": "cb15ab7da9a69b123433c4edca68e23564345a31",
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1343512949"
+        },
+        {
+            "package": "symfony/console",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/console",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-RC1",
             "commit-date": "1343512949"
         },
         {
@@ -52,8 +64,8 @@
         {
             "package": "symfony/dependency-injection",
             "version": "dev-master",
-            "source-reference": "ea5acc90c1c1937e8574968d577a5bbe9c6f680c",
-            "commit-date": "1343512949"
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1343997870"
         },
         {
             "package": "symfony/yaml",
@@ -64,7 +76,7 @@
         {
             "package": "symfony/yaml",
             "version": "dev-master",
-            "source-reference": "v2.1.0-BETA4",
+            "source-reference": "v2.1.0-RC1",
             "commit-date": "1342347231"
         },
         {
