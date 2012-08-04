@@ -77,7 +77,7 @@ class Admin_NoticeController extends Zend_Controller_Action
             foreach ($categoriesArray as $module) {
                 $availableParentCategories[$module['id']] = str_repeat('-', $module['lvl']) . $module['title'];
             }
-            $categoryForm->setModules($availableParentCategories);
+            $categoryForm->setCategories($availableParentCategories);
         }
 
         if ($request->isPost() && $categoryForm->isValid($request->getPost())) {
