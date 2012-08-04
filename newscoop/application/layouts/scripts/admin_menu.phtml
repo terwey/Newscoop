@@ -80,6 +80,15 @@ $pages[1]['pages'][] = array(
 );
 
 $pages[1]['pages'][] = array(
+    'label' => getGS('Notices'),
+    'module' => 'admin',
+    'controller' => 'notice',
+    'action' => 'index',
+    'resource' => 'notice',
+    'privilege' => 'manage',
+);
+
+$pages[1]['pages'][] = array(
     'label' => getGS('Feedback'),
     'module' => 'admin',
     'controller' => 'feedback',
