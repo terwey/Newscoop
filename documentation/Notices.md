@@ -1,49 +1,42 @@
 #Newscoop Notices
 ## Family announcements, notices, classified ads
 
-### Requirements
-- Admin Backend
- - manage notices and categories
- 
-- Frontend
- - display notices and make them searchable
+See https://wiki.sourcefabric.org/display/CS/Family+announcements
 
-
-### currently available endpoints/controllers
+### Available endpoints/controllers
 Admin_NoticeController
- - list 
- - edit (currently creating new ones)
+ - list/manage 
+ - add/edit Notice
  - list Categories
  - edit Categories
- 
-Admin_NoticeRestController 
+ - configure notices
+
+NoticeRestController (API being used by frontend)
  - list (queries with tags)
  - get  (by id)
- - post 
- [..]
- 
-Default_NoticeController (placeholder for now)
-
 
 ### Services 
- - registered
- - NoticeService (encapsulates calls to repo)
-
-## 1. Mapped Entities/Data Models
+ - I decided not to wrap EntityRepository methods into a service class
+ - Just use the already existing Service pattern of doctrine (Repositories)
+ 
+### Mapped Entities/Data Models
 introduced two new extensions/dependencies
 for more documentation please check
 https://github.com/l3pp4rd/DoctrineExtensions and 
-https://github.com/FabienPennequin/DoctrineExtensions-Taggable
 
-NoticeCategory (Tree and sluggable)
- - currently not related to Notices
- - used as a blueprint for available tags (later on maybe tag types)
+NoticeCategory (Tree, sluggable, timestampable)
+ - used as a blueprint for available categories and category groups
+ - Notices are related to NoticeCategories through a join table (many2many)
 
 Notice
  - has many tags
  - can be queried with tags
-     - /admin/notice-rest
-     - /admin/notice-rest/?query=Geburtsanzeigen/Basel
+     - /notice-rest
+     - /notice-rest/?query=Geburtsanzeigen/Basel
 
-Tagging (cross table between Notice and Tag)
-Tag
+
+##ToDos:
+ - Controllers and Repositories are to be cleaned up (coding style, encapsulation + proper comments and doc blocks)
+
+Newscoop localization needs work, we should bring wording etc. to a final state and then localize.
+ - spec and features seem to be a slightly moving target - lets see how much clutter there is to come
