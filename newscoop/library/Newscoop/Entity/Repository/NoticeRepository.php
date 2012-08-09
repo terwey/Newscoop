@@ -161,31 +161,78 @@ class NoticeRepository extends DatatableSource
      *
      * @return array
      */
-    public function getNotices($hydration = 1)
+    public function getNotices($hydration = 1, $queryParts)
     {
         $qb = $this->createQueryBuilder('n');
 
+        if (isset($queryParts) && count($queryParts)) {
+            $ids = array();
+            foreach ($queryParts as $catId) {
+                $ids[] = $catId;
+            }
+            //$qb->expr()->gt($qb->expr()->count('cat_counter'), count($ids));
+            //$qb->add('where', $qb->expr()->in('cat.id', $ids));
+        }
+
         $qb->select('n,cat')
-            ->leftJoin('n.categories', 'cat')
+            //->select('n, cat2, COUNT(cat2.id) AS cat_counter')
+            ->leftjoin('n.categories', 'cat')
+            ->leftjoin('n.categories', 'cat2')
+
         ;
 
-       /* if (isset($tags) && count($tags)) {
-                //->where('t.resource_id = n.id');
-            foreach ($tags as $tag) {
-                $qb->andWhere('t.name = :tag_name')
-                    ->setParameter('tag_name', $tag);
-            }
-        }*/
+        if(count($ids)){
+            $qb->andwhere($qb->expr()->in('cat.id',$ids));
+            $qb->addGroupBy('cat2.id')
+                ->having($qb->expr()->gte($qb->expr()->count('cat.id'), count($ids)));
+        }
+
 
         $now = new \DateTime('now');
-        return $qb
+        $test = $qb
             ->andWhere('n.published <= :published')
             ->setParameter('published', $now)
             ->andWhere('n.status <= :status')
             ->setParameter('status', 0)
-            ->getQuery()
-            ->getResult($hydration);
+            ->orderBy('n.id','DESC')
+            ->getQuery();
+        //var_dump($test->getSql());
+        //exit;
+            return $test->getResult($hydration);
     }
 
+
+    /**
+     * Returns a query builder built to return tag counts for a given type
+     *
+     * @see getTagsWithCountArray
+     * @param $taggableType
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getTagsWithCountArrayQueryBuilder($taggableType)
+    {
+        $qb = $this->getTagsQueryBuilder($taggableType)
+            ->groupBy('tagging.tag')
+            ->select('tag.'.$this->tagQueryField.', COUNT(tagging.tag) as tag_count')
+            ->orderBy('tag_count', 'DESC')
+        ;
+
+        return $qb;
+    }
+
+    /**
+     * Returns a query builder returning tags for a given type
+     *
+     * @param string $taggableType
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getTagsQueryBuilder($taggableType)
+    {
+        return $this->createQueryBuilder('tag')
+            ->join('tag.tagging', 'tagging')
+            ->where('tagging.resourceType = :resourceType')
+            ->setParameter('resourceType', $taggableType)
+            ;
+    }
 
 }

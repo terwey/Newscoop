@@ -25,19 +25,39 @@ class Notice
     private $id;
 
     /**
-     * ManyToOne(targetEntity="Newscoop\Entity\Publication")
-     * JoinColumn(name="IdPublication", referencedColumnName="Id")
+     * @ManyToOne(targetEntity="Newscoop\Entity\Publication")
+     * @JoinColumn(name="publication_id", referencedColumnName="Id")
      * @var Newscoop\Entity\Publication
      */
     private $publication;
 
     /**
-     * ManyToOne(targetEntity="Newscoop\Entity\Language")
-     * JoinColumn(name="IdLanguage", referencedColumnName="Id")
+     * @ManyToOne(targetEntity="Newscoop\Entity\Language")
+     * @JoinColumn(name="language_id", referencedColumnName="Id")
      * @var Newscoop\Entity\Language
      */
     private $language;
 
+    /**
+     * @ManyToOne(targetEntity="Newscoop\Entity\User")
+     * @JoinColumn(name="user_id", referencedColumnName="Id")
+     * @var Newscoop\Entity\User
+     */
+    private $author;
+
+    /**
+     * @var string $firstname
+     *
+     * @Column(type="string")
+     */
+    private $firstname;
+
+    /**
+     * @var string $lastname
+     *
+     * @Column(type="string")
+     */
+    private $lastname;
     /**
      * @Column(name="title")
      * @var string
@@ -55,6 +75,24 @@ class Notice
      * @var string
      */
     private $body = '';
+
+    /**
+     * @Column(name="zipcode")
+     * @var string
+     */
+    private $zipcode = '';
+
+    /**
+     * @Column(name="phone")
+     * @var string
+     */
+    private $phone = '';
+
+    /**
+     * @Column(name="adress")
+     * @var string
+     */
+    private $adress = '';
 
     /**
      * @var datetime $created
@@ -77,6 +115,13 @@ class Notice
      *
      * @Column(type="datetime")
      */
+    private $date;
+
+    /**
+     * @var datetime $published
+     *
+     * @Column(type="datetime")
+     */
     private $published;
 
     /**
@@ -90,21 +135,14 @@ class Notice
      * @column(type="smallint")
      * @var int
      */
+    private $priority;
+
+    /**
+     * @column(type="smallint")
+     * @var int
+     */
     private $status;
 
-    /**
-     * @var string $firstname
-     *
-     * @Column(type="string")
-     */
-    private $firstname;
-
-    /**
-     * @var string $lastname
-     *
-     * @Column(type="string")
-     */
-    private $lastname;
 
     /**
      * @ManyToMany(targetEntity="Newscoop\Entity\NoticeCategory")
@@ -114,7 +152,7 @@ class Notice
     /**
      * @var string to code mapper for status
      */
-    static $status_enum = array('published', 'pending', 'saved','hidden', 'deleted');
+    static $status_enum = array('published', 'submitted', 'deleted');
 
     /**
      * @param int $number
@@ -357,6 +395,102 @@ class Notice
     public function getUnpublished()
     {
         return $this->unpublished;
+    }
+
+    /**
+     * @param string $adress
+     */
+    public function setAdress($adress)
+    {
+        $this->adress = $adress;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdress()
+    {
+        return $this->adress;
+    }
+
+    /**
+     * @param \Newscoop\Entity\datetime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return \Newscoop\Entity\datetime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string $zipcode
+     */
+    public function setZipcode($zipcode)
+    {
+        $this->zipcode = $zipcode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZipcode()
+    {
+        return $this->zipcode;
+    }
+
+    /**
+     * @param \Newscoop\Entity\Newscoop\Entity\User $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @return \Newscoop\Entity\Newscoop\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param int $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority()
+    {
+        return $this->priority;
     }
 }
 

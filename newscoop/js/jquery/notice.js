@@ -1,9 +1,7 @@
 var statusMap = {
-    'pending': 'new',
-    'hidden': 'hidden',
-    'deleted': 'deleted',
+    'saved': 'submitted',
     'published': 'published',
-    'approved': 'approved'
+    'deleted': 'deleted'
 };
 
 var datatableCallback = {
@@ -12,7 +10,7 @@ var datatableCallback = {
     addServerData: function (sSource, aoData, fnCallback) {
         that = datatableCallback;
         for (i in that.serverData) {
-			if (i == 'pending' || i == 'processed' || i == 'starred' || i == 'deleted' || i == 'published' || i == 'hidden') {
+			if (i == 'submitted' || i == 'published' || i == 'deleted') {
 				if (that.serverData[i]) {
 					aoData.push({
 						"name": "sFilter[status][]",
@@ -47,9 +45,8 @@ var datatableCallback = {
                                 <legend>' + putGS('Actions') + '</legend> \
                                 <select class="input_select actions">\
                                     <option value="">' + putGS('Select status') + '</option>\
-                                    <option value="pending">' + putGS('New') + '</option>\
+                                    <option value="submitted">' + putGS('Submitted') + '</option>\
                                     <option value="published">' + putGS('Published') + '</option>\
-                                    <option value="hidden">' + putGS('Hidden') + '</option>\
                                     <option value="deleted">' + putGS('Deleted')+ '</option>\
                                 </select>\
                                 <div id="manageLinksTarget" style="float:right"></div>\

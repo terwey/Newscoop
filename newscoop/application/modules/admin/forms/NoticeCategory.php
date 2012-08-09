@@ -16,8 +16,8 @@ class Admin_Form_NoticeCategory extends Zend_Form
         $this->addElement('hidden', 'id');
 
         $parent = new Zend_Form_Element_Select('parent');
-        $parent->setLabel('As child of:');
-        $parent->addMultiOption('', 'Create new Category');
+        $parent->setLabel('Type');
+        $parent->addMultiOption('', 'Create new Category Type');
         $this->addElement($parent);
 
         $this->addElement('text', 'title', array(

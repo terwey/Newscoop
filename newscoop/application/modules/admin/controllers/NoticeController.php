@@ -11,10 +11,19 @@ use \Newscoop\Entity\Notice as Notice;
  */
 class Admin_NoticeController extends Zend_Controller_Action
 {
+    /**
+     * @var
+     */
     private $em;
 
+    /**
+     * @var
+     */
     private $noticeRepo;
 
+    /**
+     * @return Admin_NoticeController
+     */
     public function init()
     {
         $this->em = $this->_helper->service('em');
@@ -26,10 +35,11 @@ class Admin_NoticeController extends Zend_Controller_Action
         $this->languageRepository = $this->_helper->entity->getRepository('Newscoop\Entity\Language');
 
         return $this;
-
-
     }
 
+    /**
+     *
+     */
     public function categoryAction()
     {
         //$this->getHelper('contextSwitch')->addActionContext('get', 'json')->initContext();
@@ -39,32 +49,28 @@ class Admin_NoticeController extends Zend_Controller_Action
 
         $trees = array();
         foreach ($rootNodes as $node) {
-
-            $htmlTree = $repo->childrenHierarchy(
-                $node, /* starting from root nodes */
-                false, /* load all children, not only direct */
-                true, /* render html */
-                array(
-                    'decorate' => true,
-                    'representationField' => 'title'
-                )
-            );
-            $trees[$node->getSlug()] = array('root' => $node, 'children' => $htmlTree);
+            $leafNodes = $repo->getLeafs($node,'lft');
+            $trees[$node->getSlug()] = array('root' => $node, 'children' => $leafNodes);
         }
 
         $this->view->Trees = $trees;
         $categoryForm = new Admin_Form_NoticeCategory();
         $categoryArray = $this->getAllCategoriesArray();
-        $availableParentModules = array();
+        $availableParentCategories = array();
         foreach ($categoryArray as $category) {
-            $availableParentModules[$category['id']] = str_repeat('-', $category['lvl']) . $category['title'];
+            if($category['lvl'] == 0){
+                $availableParentCategories[$category['id']] = str_repeat('-', $category['lvl']) . $category['title'];
+            }
         }
-        $categoryForm->setCategories($availableParentModules);
+        $categoryForm->setCategories($availableParentCategories);
         $categoryForm->setAction($this->view->baseUrl('admin/notice/category-add'));
         $this->view->categoryForm = $categoryForm;
 
     }
 
+    /**
+     *
+     */
     public function categoryAddAction()
     {
         $request = $this->getRequest();
@@ -72,10 +78,14 @@ class Admin_NoticeController extends Zend_Controller_Action
         $categoryForm = new Admin_Form_NoticeCategory();
         $categoriesArray = $this->getAllCategoriesArray();
 
+        $categoryRepo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
+
         if (count($categoriesArray)) {
             $availableParentCategories = array();
-            foreach ($categoriesArray as $module) {
-                $availableParentCategories[$module['id']] = str_repeat('-', $module['lvl']) . $module['title'];
+            foreach ($categoriesArray as $category) {
+                if($category['lvl'] == 0){
+                    $availableParentCategories[$category['id']] = str_repeat('-', $category['lvl']) . $category['title'];
+                }
             }
             $categoryForm->setCategories($availableParentCategories);
         }
@@ -87,15 +97,15 @@ class Admin_NoticeController extends Zend_Controller_Action
             $categoryRecord->setTitle($categoryForm->title->getValue());
 
             if ('' !== $categoryForm->parent->getValue()) {
-                $categoryRepo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
-
                 $parentCategory = $categoryRepo->findOneById($categoryForm->parent->getValue());
                 $categoryRecord->setParent($parentCategory);
+                $categoryRepo->reorder($parentCategory, 'title','ASC');
+
             }
 
             $this->em->persist($categoryRecord);
-            $this->em->flush();
 
+            $this->em->flush();
             $this->_helper->redirector->gotoUrl('/admin/notice/category');
         } else {
             $this->_helper->json(array('status' => 'error', 'errors' => $categoryForm->getErrors()));
@@ -103,8 +113,12 @@ class Admin_NoticeController extends Zend_Controller_Action
 
     }
 
+    /**
+     * @return mixed
+     */
     private function getAllCategoriesArray()
     {
+
         // create query to fetch tree nodes
         $query = $this->em
             ->createQueryBuilder()
@@ -116,6 +130,9 @@ class Admin_NoticeController extends Zend_Controller_Action
         return $query->getArrayResult();
     }
 
+    /**
+     *
+     */
     public function indexAction()
     {
         $this->_forward('table');
@@ -135,13 +152,14 @@ class Admin_NoticeController extends Zend_Controller_Action
         $table->setCols(
             array('id' => $view->toggleCheckbox(),
                 'lastname' => getGS('Name'),
-                'title' => getGS('Notice'),
+                'firstname' => getGS('First Name'),
+                'title' => getGS('Text'),
                 'categories' => getGS('Categories'),
-                'created' => getGS('Creation date'),
-                'published' => getGS('Publish date'),
+                'priority' => getGS('Prio'),
+                'author' => getGS('Author'),
                 'status' => getGS('Status'),
-                'actions' => 'Actions'),
-            array('id' => false,'actions' => false));
+                'published' => 'Publish/Unpublish'),
+            array('id' => false));
 
         //$table->setSorting(array('published' => 'desc'));
         $table->setInitialSorting(array('id' => 'desc'));
@@ -173,20 +191,25 @@ class Admin_NoticeController extends Zend_Controller_Action
                     'published' => array('date' => $notice->getPublished()->format('Y-m-d')),
                     'unpublished' => array('date' => $notice->getUnpublished()->format('Y-m-d')),
                     'title' => $view->escape($notice->getTitle()),
+                    'sub_title' => $view->escape($notice->getSubTitle()),
                     'body' => $view->escape($notice->getBody()),
-                    'likes' => '',
-                    'dislikes' => '',
+                    'author' => $notice->getAuthor()->getName(),
+                    'priority' => $notice->getPriority(),
                     'categories' => implode(',', $categoriesArray),
                     'status' => $notice->getStatusName(),
                     'recommended' => 'meeh',
-                    'action' => array('update' => $view->url(
-                        array('action' => 'update', 'format' => 'json')),
+                    'action' => array(
+                        'update' => $view->url(
+                            array(
+                                'action' => 'update',
+                                'format' => 'json')),
                         'reply' => $view->url(
-                            array('action' => 'reply', 'format' => 'json')))),
-                'thread' => array('name' => $view->escape('meeh'),
-                    'link' => array
-                    ('edit' => $view->baseUrl("admin/notice/edit/id/") . $notice->getId(),
-                        'get' => $view->baseUrl("admin/articles/get.php?") . 'meeh')));
+                            array('action' => 'reply',
+                                'format' => 'json'))),
+                    'link' => array(
+                        'edit' => $view->baseUrl("admin/notice/edit/id/") . $notice->getId(),
+                        'get' => $view->baseUrl("admin/articles/get.php?") . 'meeh'))
+            );
         });
 
         $table->setOption('fnDrawCallback', 'datatableCallback.draw')
@@ -199,63 +222,122 @@ class Admin_NoticeController extends Zend_Controller_Action
             ->setDataProp(
             array('id' => null,
                 'lastname' => null,
+                'firstname' => null,
                 'title' => null,
                 'categories' => null,
-                'created' => null,
-                'published' => null,
+                'priority' => null,
+                'author' => null,
                 'status' => null,
-                'actions' => null))
+                'published' => null))
             //->setVisible(array('actions' => false))
             ->setClasses(
             array('id' => 'noticeId',
-                'lastname' => 'noticeUser',
+                'lastname' => 'noticeLastname',
+                'firstname' => 'noticeFirstname',
                 'title'=> 'noticeTitle',
-                'created' => 'noticeCategories',
-                'created' => 'noticeCreated',
-                'published' => 'noticePublished',
+                'categories' => 'noticeCategories',
+                'priority' => 'noticePriority',
+                'author' => 'noticeAuthor',
                 'status' => 'noticeStatus',
-                'actions' => 'noticeActions'));
+                'published' => 'noticePublished'
+            ));
         $table->dispatch();
 
     }
 
-    public function index2Action()
-    {
-        $notices = $this->noticeRepo->findAll(1);
-
-        $this->view->noticeCollection = $notices;
-        $this->view->noticeForm = new Admin_Form_NoticeItem();
-    }
-
-
+    /**
+     *
+     */
     public function editAction()
     {
-        $noticeId = $this->getRequest()->getParam('id', null);
-        $repo = $this->em->getRepository('Newscoop\Entity\Notice');
-        $noticeForm = new Admin_Form_NoticeItem();
-        $noticeForm->setAction($this->view->baseUrl('admin/notice-rest'));
+        $request = $this->getRequest();
+        $noticeForm = new \Admin_Form_NoticeItem();
+        $noticeForm->setAction($this->view->baseUrl('admin/notice/edit'));
 
-        $notice = $repo->find($noticeId);
-        if (!$notice) {
-            $notice = new \Newscoop\Entity\Notice();
-        } else {
-            $noticeForm->setDefaultsFromEntity($notice);
+
+        if ($request->isPost() && $noticeForm->isValid($request->getPost())) {
+
+            if ($noticeForm->id->getValue()) {
+                $noticeRecord = $this->noticeRepo->find($noticeForm->id->getValue());
+            } else {
+                $noticeRecord = new \Newscoop\Entity\Notice();
+            }
+            $noticeRecord->setTitle($noticeForm->title->getValue());
+            $noticeRecord->setSubTitle($noticeForm->sub_title->getValue());
+            $noticeRecord->setBody($noticeForm->body->getValue());
+            $noticeRecord->setFirstname($noticeForm->firstname->getValue());
+            $noticeRecord->setLastname($noticeForm->lastname->getValue());
+
+            $userRecord = Zend_Registry::get('user');
+            $noticeRecord->setAuthor($userRecord);
+
+            $dateTimeDate = new DateTime($noticeForm->date->getValue());
+            $noticeRecord->setDate($dateTimeDate);
+
+            $dateTimePub = new DateTime($noticeForm->published->getValue());
+            $noticeRecord->setPublished($dateTimePub);
+
+            $dateTimeUnpub = new DateTime($noticeForm->unpublished->getValue());
+            $noticeRecord->setUnpublished($dateTimeUnpub);
+
+            $noticeRecord->setStatus('saved');
+
+            $noticeRecord->setPriority($noticeForm->priority->getValue());
+
+            $catIds = explode(',', $noticeForm->categories->getValue());
+            $categories = array();
+
+            if("" !== $catIds[0]){
+                $catRepo = $this->em->getRepository('Newscoop\\Entity\\NoticeCategory');
+                foreach ($catIds as $id) {
+                    if ($cat = $catRepo->find($id))
+                        $categories[] = $cat;
+                }
+                $noticeRecord->setCategories($categories);
+            }
+
+            $this->em->persist($noticeRecord);
+            $this->em->flush();
+
+            $this->_helper->flashMessenger("Notice saved");
+
+            if(!$noticeForm->submit->getValue()){
+                $this->_helper->redirector->gotoUrl('/admin/notice/edit');
+            }
+            $this->_helper->redirector->gotoUrl('/admin/notice');
+
+        }else{
+
+            $noticeId = $this->getRequest()->getParam('id', null);
+            $repo = $this->em->getRepository('Newscoop\Entity\Notice');
+
+            $notice = $repo->find($noticeId);
+            if (!$notice) {
+                $notice = new \Newscoop\Entity\Notice();
+            } else {
+                $noticeForm->setDefaultsFromEntity($notice);
+            }
+
+            $repo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
+            $rootNodes = $this->view->categoryCollection = $repo->getRootNodes();
+
+            $trees = array();
+            foreach ($rootNodes as $node) {
+                $treeArray = $repo->childrenHierarchy($node);
+                $trees[$node->getSlug()] = array('root' => $node, 'children' => $treeArray);
+            }
+            $this->view->trees = $trees;
+
+            $this->view->noticeForm = $noticeForm;
+            $this->view->notice = $notice;
+
         }
 
-        $repo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
-        $rootNodes = $this->view->categoryCollection = $repo->getRootNodes();
-
-        $trees = array();
-        foreach ($rootNodes as $node) {
-            $treeArray = $repo->childrenHierarchy($node);
-            $trees[$node->getSlug()] = array('root' => $node, 'children' => $treeArray);
-        }
-        $this->view->trees = $trees;
-
-        $this->view->noticeForm = $noticeForm;
-        $this->view->notice = $notice;
     }
 
+    /**
+     *
+     */
     public function deleteAction()
     {
         $noticeId = $this->getRequest()->getParam('id');
@@ -271,6 +353,9 @@ class Admin_NoticeController extends Zend_Controller_Action
     }
 
 
+    /**
+     *
+     */
     public function deletecatAction()
     {
         $repo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');

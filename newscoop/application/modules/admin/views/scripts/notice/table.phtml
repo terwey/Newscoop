@@ -1,7 +1,7 @@
 <?php
 /* @var Zend_View_Helper_HeadLink */
 $headStyle = $this->headLink();
-$headStyle->appendStylesheet($this->baseUrl('/admin-style/comments.css'));
+$headStyle->appendStylesheet($this->baseUrl('/admin-style/notices.css'));
 $headStyle->offsetSetStylesheet('table', '');
 ?>
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/doT.js')); ?>
@@ -9,7 +9,7 @@ $headStyle->offsetSetStylesheet('table', '');
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/jquery.version.js')); ?>
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/notice.js')); ?>
 
-<?php $this->placeholder('title')->set(getGS('Notices')); ?>
+<?php $this->placeholder('title')->set(getGS('Manage notices')); ?>
 <script>
     function putGS(str) {
         var msg = serverObj.translateObj[serverObj.languageObj.indexOf(str)]
@@ -32,9 +32,8 @@ $headStyle->offsetSetStylesheet('table', '');
         'Notice status change to $1.',
         'Actions',
         'Select status',
-        'New',
-        'Approved',
-        'Hidden',
+        'Submitted',
+        'Published',
         'Deleted',
         'Unable to reach Newscoop. Please check your internet connection.',
         'You are about to permanently delete a notice.',
@@ -52,9 +51,8 @@ $headStyle->offsetSetStylesheet('table', '');
         '<?php putGS('Notice status change to $1.'); ?>',
         '<?php putGS('Actions'); ?>',
         '<?php putGS('Select status'); ?>',
-        '<?php putGS('New'); ?>',
-        '<?php putGS('Approved'); ?>',
-        '<?php putGS('Hidden'); ?>',
+        '<?php putGS('Submitted'); ?>',
+        '<?php putGS('Published'); ?>',
         '<?php putGS('Deleted'); ?>',
         '<?php putGS('Unable to reach Newscoop. Please check your internet connection.'); ?>',
     <?php echo json_encode(getGS("You are about to permanently delete a notice.")); ?>,
@@ -63,31 +61,25 @@ $headStyle->offsetSetStylesheet('table', '');
     ];
 
 </script>
-<table>
-    <tr>
-    </tr>
-</table>
+
 
 <script id="comment-tmpl" type="text/html">
 
                 <td class="noticeId sorting_1">
                     <input type="checkbox" name="index[]" value="{{notice.id}}" class="table-checkbox">
-                    <span class="index">{{notice.id}}.</span>
+                    <span>#{{notice.id}}</span>
                 </td>
-                <td class="noticeUser">
-                    <p>
-                        {% if (user.firstname) %}{{user.firstname}} {{user.lastname}}{% endif %}
-                        {% if (!user.firstname) %}{{user.firstname}} (Anonymous){% endif %}
-                    </p>
+                <td class="noticeLastname">
+                        {% if (user.lastname) %}{{user.lastname}}{% endif %}
                 </td>
-                <td class="noticeTitle">
-                    <div class="dateCommentHolder">
-                        <h3>
-                            <span class="commentSubject">{{notice.title}}</span>
-                        </h3>
 
-                        <p class="noticeComment">{{notice.body}}</p>
-                    </div>
+                <td class="noticeFirstname">
+                        {% if (user.firstname) %}{{user.firstname}}{% endif %}
+                </td>
+
+                <td class="noticeTitle">
+                    <a class="goToNotice" href="{{notice.link.edit}}">{{notice.title}}</a>
+                    <p>{{notice.body}}</p>
                 </td>
 
                 <td class="noticeCategories">
@@ -95,25 +87,22 @@ $headStyle->offsetSetStylesheet('table', '');
                         <span>{{notice.categories}}</span>
                     </p>
                 </td>
-                <td class="noticeCreated">
-                    {{notice.created.date}}
+                <td class="noticePriority">
+                    <p>{{notice.priority}}</p>
+
                 </td>
-                <td class="noticePublished">
-                    {{notice.published.date}}
-                    <p>
-                        <small>{{notice.unpublished.date}}</small>
-                    </p>
+                <td class="noticeAuthor">
+                    {{notice.author}}
                 </td>
                 <td class="noticeStatus">
                         {{notice.status}}
                 </td>
-                <td class="noticeActions">
-                    <div>
-                        <a class="goToArticle" href="{{thread.link.edit}}"><?php putGS('Go to edit notice'); ?></a>
-                    </div>
-
+                <td class="noticePublished">
+                    {{notice.published.date}}
+                    <p>
+                        {{notice.unpublished.date}}
+                    </p>
                 </td>
-
 </script>
 
 <div class="wrapper">
@@ -121,27 +110,18 @@ $headStyle->offsetSetStylesheet('table', '');
         <div class="padded clearfix inner-tabs">
             <div class="tabs">
                 <div id="tabs-1">
-                    <div id="showComments">
+                    <div id="showNotices">
                         <fieldset>
                             <legend><?php putGS('Show'); ?></legend>
                             <ul class="status_filter">
-                                <li class="published" style="display: none;"><input type="checkbox"
+                                <li class="published"><input type="checkbox"
                                                                                     id="show_published"
                                                                                     value="published"> <label
                                     for="show_published"><?php putGS('Published'); ?></label>
                                 </li>
-                                <li class="new"><input type="checkbox" id="show_new" value="pending"> <label
-                                    for="show_new"><?php putGS('New'); ?></label></li>
-                                <li class="hidden"><input type="checkbox" id="show_hidden"
-                                                          value="hidden"> <label
-                                    for="show_hidden"><?php putGS('Hidden'); ?></label>
+                                <li class="new"><input type="checkbox" id="show_new" value="submitted"> <label
+                                    for="show_new"><?php putGS('New'); ?></label>
                                 </li>
-                                <!--
-                                /** @todo change this when the "cron job" like engine is done */
-                                <li class="deleted"><input type="checkbox" id="show_deleted"
-                                                           value="deleted"> <label for="show_deleted"><?php putGS('Deleted'); ?></label>
-                                </li>
-                                -->
                             </ul>
                             <br>
                         </fieldset>
@@ -159,8 +139,6 @@ $headStyle->offsetSetStylesheet('table', '');
 
     <div id="manageLinks"">
         <p>
-            <a class="goToArticle" href="<?php echo $this->baseUrl('/admin/notice/category')?>">Manage Categories</a>
-            <br/><br/>
             <a style="font-size:1.5em" class="goToArticle" href="<?php echo $this->baseUrl('/admin/notice/edit')?>"><b>+</b> Add Notice</a>
         </p>
     </div>

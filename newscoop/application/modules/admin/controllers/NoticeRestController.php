@@ -30,16 +30,18 @@ class Admin_NoticeRestController extends Zend_Rest_Controller
 
     public function indexAction()
     {
-        $query = $this->getRequest()->getParam('query', null);
+        $query = $this->getRequest()->getParam('q', null);
 
-        if (isset($query)) {
+        if (isset($query) && !empty($query)) {
             $queryParts = explode('/', $query);
         } else {
             $queryParts = array();
         }
 
         $noticeCollection = $this->noticeRepo->getNotices(2, $queryParts);
-        $this->_helper->json($noticeCollection, true);
+        $result = array('status' => 'ok', 'data' => array('notices' => $noticeCollection));
+
+        $this->_helper->json($result, true);
     }
 
     public function getAction()

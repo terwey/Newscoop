@@ -19,8 +19,18 @@ class Admin_Form_NoticeItem extends Zend_Form
             'label' => getGS('Categories'),
         ));
 
+        $parent = new Zend_Form_Element_Select('priority');
+        $parent->setLabel(getGS('Priority'));
+        $parent->addMultiOptions(array(0 => 'Set priority',1 => '1', 2 => '2',3 => '3',4 => '4',5 => '5'));
+
+        $this->addElement($parent);
+
         $this->addElement('text', 'title', array(
-            'label' => getGS('TITLE'),
+            'label' => getGS('Title'),
+        ));
+
+        $this->addElement('text', 'sub_title', array(
+            'label' => getGS('Sub title'),
         ));
 
         $this->addElement('text', 'firstname', array(
@@ -35,6 +45,11 @@ class Admin_Form_NoticeItem extends Zend_Form
             'label' => getGS('CONTENT'),
         ));
 
+        $this->addElement('text', 'date', array(
+            'label' => getGS('Date'),
+            'required' => true
+        ));
+
         $this->addElement('text', 'published', array(
             'label' => getGS('Date of publication'),
             'required' => true
@@ -47,6 +62,10 @@ class Admin_Form_NoticeItem extends Zend_Form
 
         $this->addElement('submit', 'submit', array(
             'label' => getGS('save'),
+        ));
+
+        $this->addElement('submit', 'submit_next', array(
+            'label' => getGS('Save and next'),
         ));
 
 
@@ -72,8 +91,10 @@ class Admin_Form_NoticeItem extends Zend_Form
             'id' => $notice->getId(),
             'categories' => implode($cats,','),
             'title' => $notice->getTitle(),
+            'sub_title' => $notice->getSubTitle(),
             'firstname' => $notice->getFirstname(),
             'lastname' => $notice->getLastname(),
+            'date' => $notice->getDate()->format('Y-m-d'),
             'published' => $notice->getPublished()->format('Y-m-d'),
             'unpublished' => $notice->getUnpublished()->format('Y-m-d'),
             'body' => $notice->getBody()

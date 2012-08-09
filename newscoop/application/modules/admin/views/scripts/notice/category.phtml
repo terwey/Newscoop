@@ -1,18 +1,29 @@
+<?php
+$headStyle = $this->headLink();
+$headStyle->appendStylesheet($this->baseUrl('/admin-style/notices.css'));
+?>
 <?php $this->placeholder('title')->captureStart(); ?>
-<?php putGS('Notices'); ?>
-<span class="inline-search">
-    <input type="text" name="q"/> <button id="notice-search" class="search"><?php putGS('Search'); ?></button>
-</span>
+<?php putGS('Manage notice categories'); ?>
 <?php $this->placeholder('title')->captureEnd(); ?>
-
+<div id="noticeCategories">
 
 <?php foreach ($this->Trees as $slug => $tree): ?>
-<div>
-    <h3>
-        <?php echo $tree['root']->getTitle()?></h3>
-    <?php echo $tree['children'];?>
+    <fieldset>
+        <legend><?php echo $tree['root']->getTitle() ?>             <a href="#">x</a>
+        </legend>
+        <ul>
+
+    <?php foreach ($tree['children'] as $leaf): ?>
+            <li><?php echo $leaf->getTitle()?>
+            <a href="#">edit</a>
+                <a href="#">x</a>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+        </fieldset>
+    <?php endforeach;?>
 </div>
-<?php endforeach; ?>
+
 
 
 <?php print_r($this->result); ?>

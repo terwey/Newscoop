@@ -1,5 +1,9 @@
-<script>
+<?php
+$headStyle = $this->headLink();
+$headStyle->appendStylesheet($this->baseUrl('/admin-style/notices.css'));
+?>
 
+<script>
     $.extend({
         distinct:function (anArray, elementToRemove) {
             var result = [];
@@ -12,6 +16,7 @@
     });
 
     $(document).ready(function () {
+        $("#date").datepicker({ dateFormat:"yy-mm-dd" });
         $("#published").datepicker({ dateFormat:"yy-mm-dd" });
         $("#unpublished").datepicker({ dateFormat:"yy-mm-dd" });
 
@@ -79,29 +84,39 @@
 
 
 <?php $this->placeholder('title')->captureStart(); ?>
-<?php putGS('Notices'); ?>
-<span class="inline-search">
-    <input type="text" name="q"/> <button id="notice-search" class="search"><?php putGS('Search'); ?></button>
-</span>
+
+<?php
+if($this->noticeForm->getValue('id')){
+    putGS('Edit Notice');
+}else{
+    putGS('Add Notice');
+}
+?>
 <?php $this->placeholder('title')->captureEnd(); ?>
 
-<?php if(count($this->trees)):?>
-<ul id="category_selection">
+<?php if (count($this->trees)): ?>
+<div id="noticeCategories">
     <?php foreach ($this->trees as $tree): ?>
-    <li>
-        <input type="checkbox" class="category" name="category" value="<?php echo $tree['root']->getId() ?>"/><label
-        for=""><?php echo $tree['root']->getTitle() ?></li></label>
-    <ul>
-        <?php foreach ($tree['children'] as $childNode): ?>
-        <li>
-            <input type="checkbox" class="category" name="category" value="<?php echo $childNode['id'] ?>"/><label
-            for=""> <?php echo $childNode['title'] ?></li></label>
-        <?php endforeach; ?>
-        </li>
-    </ul>
+        <fieldset>
+            <legend><?php echo $tree['root']->getTitle() ?></legend>
+            <ul>
+                <?php foreach ($tree['children'] as $childNode): ?>
+                <li>
+                    <input type="checkbox" class="category" name="category" id="<?php echo $childNode['id'] ?>"
+                           value="<?php echo $childNode['id'] ?>"/>
+                    <label for="<?php echo $childNode['id'] ?>">
+                        <?php echo $childNode['title'] ?>
+                    </label>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <br>
+        </fieldset>
     <?php endforeach; ?>
-</ul>
-<?php endif;?>
+</div>
+<?php endif; ?>
+<?php echo $this->categories; ?>
 
-    <?php echo $this->categories; ?>
+
+
 <?php echo $this->noticeForm; ?>
