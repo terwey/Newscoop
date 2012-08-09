@@ -20,11 +20,10 @@ NoticeRestController (API being used by frontend)
  - Just use the already existing Service pattern of doctrine (Repositories)
  
 ### Mapped Entities/Data Models
-introduced two new extensions/dependencies
-for more documentation please check
-https://github.com/l3pp4rd/DoctrineExtensions and 
+Using gedmo extensions for doctrine
+https://github.com/l3pp4rd/DoctrineExtensions
 
-NoticeCategory (Tree, sluggable, timestampable)
+NoticeCategory (tree, sluggable, timestampable)
  - used as a blueprint for available categories and category groups
  - Notices are related to NoticeCategories through a join table (many2many)
 
