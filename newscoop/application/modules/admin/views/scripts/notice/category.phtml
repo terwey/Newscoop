@@ -16,7 +16,7 @@ $headStyle->appendStylesheet($this->baseUrl('/admin-style/notices.css'));
     <?php foreach ($tree['children'] as $leaf): ?>
             <li><?php echo $leaf->getTitle()?>
             <a href="#">edit</a>
-                <a href="#">x</a>
+                <a href="<?php echo $this->baseUrl('/admin/notice/deletecat/id/'.$leaf->getId())?>">x</a>
             </li>
         <?php endforeach; ?>
         </ul>

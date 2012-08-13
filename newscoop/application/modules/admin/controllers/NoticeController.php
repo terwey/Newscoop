@@ -359,11 +359,14 @@ class Admin_NoticeController extends Zend_Controller_Action
      */
     public function deletecatAction()
     {
+        $categoryId = $this->getRequest()->getParam('id');
+
         $repo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
-        $treeToRemove = $repo->find(9);
+        $treeToRemove = $repo->find($categoryId);
         $this->em->remove($treeToRemove);
         $this->em->flush();
-        exit;
+        $this->_helper->redirector->gotoUrl('/admin/notice/category');
+
     }
 
     /**
