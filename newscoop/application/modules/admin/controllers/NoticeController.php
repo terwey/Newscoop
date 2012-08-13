@@ -99,13 +99,13 @@ class Admin_NoticeController extends Zend_Controller_Action
             if ('' !== $categoryForm->parent->getValue()) {
                 $parentCategory = $categoryRepo->findOneById($categoryForm->parent->getValue());
                 $categoryRecord->setParent($parentCategory);
-                $categoryRepo->reorder($parentCategory, 'title','ASC');
-
             }
 
             $this->em->persist($categoryRecord);
 
             $this->em->flush();
+            $categoryRepo->reorder($parentCategory, 'title','ASC');
+
             $this->_helper->redirector->gotoUrl('/admin/notice/category');
         } else {
             $this->_helper->json(array('status' => 'error', 'errors' => $categoryForm->getErrors()));
@@ -254,6 +254,7 @@ class Admin_NoticeController extends Zend_Controller_Action
         $noticeForm = new \Admin_Form_NoticeItem();
         $noticeForm->setAction($this->view->baseUrl('admin/notice/edit'));
 
+        //$noticeForm->disableFields(array('priority','date'));
 
         if ($request->isPost() && $noticeForm->isValid($request->getPost())) {
 
