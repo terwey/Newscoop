@@ -101,4 +101,16 @@ class Admin_Form_NoticeItem extends Zend_Form
         ));
         return $this;
     }
+
+
+    public function disableFields(array $fields){
+
+        foreach($fields as $field){
+            $field = $this->getElement($field);
+            $field->removeDecorator('HtmlTag');
+            $field->removeDecorator('Label');
+            $field->removeDecorator('ViewHelper');
+            $field->setRequired(false);
+        }
+    }
 }

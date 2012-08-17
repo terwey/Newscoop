@@ -163,7 +163,11 @@ class Admin_NoticeController extends Zend_Controller_Action
         $noticeForm = new \Admin_Form_NoticeItem();
         $noticeForm->setAction($this->view->baseUrl('admin/notice/edit'));
 
-        //$noticeForm->disableFields(array('priority','date'));
+        //get config storage ready
+        $confRepo = $this->em->getRepository('Newscoop\Entity\NoticeConf');
+        $confRecord = $confRepo->findOneBy(array('conf_name'=>'notice_hidden_elements'));
+
+        $noticeForm->disableFields($confRecord->getOptions());
 
         if ($request->isPost() && $noticeForm->isValid($request->getPost())) {
 
@@ -405,6 +409,55 @@ class Admin_NoticeController extends Zend_Controller_Action
         $this->em->remove($treeToRemove);
         $this->em->flush();
         $this->_helper->redirector->gotoUrl('/admin/notice/category');
+
+    }
+
+    public function configureFormDisplayAction(){
+        $noticeForm = new \Admin_Form_NoticeItem();
+
+        $fixedElements = array('id','categories','published','submit','submit_next');
+        $elements = $noticeForm->getElements();
+
+        $configurables = array();
+        foreach($elements as $name => $element){
+            if(!in_array($name,$fixedElements)){
+                $configurables[$name] = $element->getLabel();
+            }
+        }
+
+        //get config storage ready
+        $confRepo = $this->em->getRepository('Newscoop\Entity\NoticeConf');
+        $confRecord = $confRepo->findOneBy(array('conf_name'=>'notice_hidden_elements'));
+
+        if(empty($confRecord)){
+
+            $confRecord = new \Newscoop\Entity\NoticeConf;
+            $confRecord->setConfName('notice_hidden_elements');
+            $confRecord->setOptions(array('date'));
+            $this->em->persist($confRecord);
+            $this->em->flush();
+        }
+
+        $confForm = new \Admin_Form_NoticeElementsConf();
+        $confForm->init($configurables);
+
+        if ($this->_request->isPost() && $confForm->isValid($this->_request->getPost())) {
+            $formValues = $confForm->getValues();
+
+            if(isset($formValues['notice_elements'])){
+                $confRecord->setOptions($formValues['notice_elements']);
+                $this->em->persist($confRecord);
+                $this->em->flush();
+            }
+
+            $confForm->setDefaults($formValues);
+        }else{
+            $confArray = $confRecord->getOptions();
+            $confRecord->getId();
+            $confForm->setDefault('notice_elements',$confArray);
+        }
+
+        $this->view->configForm =  $confForm;
 
     }
 }
