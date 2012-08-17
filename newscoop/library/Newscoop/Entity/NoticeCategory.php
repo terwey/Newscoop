@@ -97,4 +97,9 @@ class NoticeCategory
     {
         return $this->slug;
     }
+
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
 }
