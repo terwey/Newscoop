@@ -113,7 +113,7 @@ class Notice
     /**
      * @var datetime $published
      *
-     * @Column(type="datetime")
+     * @Column(type="datetime",nullable=true)
      */
     private $date;
 
@@ -132,7 +132,7 @@ class Notice
     private $unpublished;
 
     /**
-     * @column(type="smallint")
+     * @column(type="smallint",nullable=true)
      * @var int
      */
     private $priority;

@@ -8,7 +8,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  * @Gedmo\Tree(type="nested")
  * @Table(name="notice_category")
  * use repository for handy tree functions
- * @Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @Entity(repositoryClass="Newscoop\Entity\Repository\NoticeCategoryRepository")
  */
 class NoticeCategory
 {

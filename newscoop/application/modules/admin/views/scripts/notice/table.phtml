@@ -63,8 +63,7 @@ $headStyle->offsetSetStylesheet('table', '');
 </script>
 
 
-<script id="comment-tmpl" type="text/html">
-
+<script id="notice-tmpl" type="text/html">
                 <td class="noticeId sorting_1">
                     <input type="checkbox" name="index[]" value="{{notice.id}}" class="table-checkbox">
                     <span>#{{notice.id}}</span>
@@ -103,6 +102,7 @@ $headStyle->offsetSetStylesheet('table', '');
                         {{notice.unpublished.date}}
                     </p>
                 </td>
+
 </script>
 
 <div class="wrapper">
@@ -121,6 +121,9 @@ $headStyle->offsetSetStylesheet('table', '');
                                 </li>
                                 <li class="new"><input type="checkbox" id="show_new" value="submitted"> <label
                                     for="show_new"><?php putGS('New'); ?></label>
+                                </li>
+                                <li class="deleted"><input type="checkbox" id="show_deleted" value="deleted"> <label
+                                    for="deleted"><?php putGS('Deleted'); ?></label>
                                 </li>
                             </ul>
                             <br>

@@ -10,14 +10,16 @@ var datatableCallback = {
     addServerData: function (sSource, aoData, fnCallback) {
         that = datatableCallback;
         for (i in that.serverData) {
-			if (i == 'submitted' || i == 'published' || i == 'deleted') {
-				if (that.serverData[i]) {
-					aoData.push({
-						"name": "sFilter[status][]",
-						"value": i
-					});
-				}
-			}
+            console.log(aoData);
+
+            if (i == 'submitted' || i == 'published' || i == 'deleted') {
+                if (that.serverData[i]) {
+                    aoData.push({
+                        "name": "sFilter[status][]",
+                        "value": i
+                    });
+                }
+            }
         }
         $.getJSON(sSource, aoData, function (json) {
             fnCallback(json);
@@ -27,16 +29,16 @@ var datatableCallback = {
 
 		$(nRow)
             .addClass('status_' + statusMap[aData.notice.status])
-            .tmpl('#comment-tmpl', aData)
+            .tmpl('#notice-tmpl', aData)
             //.find("input."+ statusMap[aData.notice.status]).attr("checked","checked");
         return nRow;
     },
     draw: function () {
-        /*$(".commentsHolder table tbody tr").hover(function () {
+        $(".commentsHolder table tbody tr").hover(function () {
             $(this).find(".commentBtns").css("visibility", "visible");
         }, function () {
             $(this).find(".commentBtns").css("visibility", "hidden");
-        });*/
+        });
         datatableCallback.loading = false;
     },
     init: function() {
