@@ -9,15 +9,17 @@ $headStyle->appendStylesheet($this->baseUrl('/admin-style/notices.css'));
 
 <?php foreach ($this->Trees as $slug => $tree): ?>
     <fieldset>
-        <legend><?php echo $tree['root']->getTitle() ?>             <a href="#">x</a>
+        <legend><?php echo $tree['root']->getTitle() ?>             <a href="<?php echo $this->baseUrl('/admin/notice/deletecat/id/'.$tree['root']->getId())?>">x</a>
         </legend>
         <ul>
 
     <?php foreach ($tree['children'] as $leaf): ?>
+            <?php if($leaf->getLvl() !== 0){?>
             <li><?php echo $leaf->getTitle()?>
             <a href="#">edit</a>
                 <a href="<?php echo $this->baseUrl('/admin/notice/deletecat/id/'.$leaf->getId())?>">x</a>
             </li>
+                <?php } ?>
         <?php endforeach; ?>
         </ul>
         </fieldset>

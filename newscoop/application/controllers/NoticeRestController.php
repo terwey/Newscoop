@@ -6,7 +6,7 @@
  */
 use \Newscoop\Entity\Notice as Notice;
 
-class NoticeRestController extends Zend_Rest_Controller
+class NoticeRestController extends Zend_Controller_Action
 {
     private $em;
     private $noticeRepo;
@@ -40,14 +40,22 @@ class NoticeRestController extends Zend_Rest_Controller
         $this->_helper->json($result, true);
     }
 
-    public function getAction()
+    public function categoryAction()
     {
-        /*$id = $this->getRequest()->getParam('id', null);
-        if (isset($id)) {
-            $noticeRecord = $this->noticeRepo->find($id);
-            var_dump($noticeRecord->getTitle());
-            $this->_helper->json($noticeRecord, true);
-        }*/
+        $categoryRepo = $this->em->getRepository('Newscoop\Entity\NoticeCategory');
+        $rootNodes = $categoryRepo->getRootNodes();
+
+        $trees = array();
+        foreach ($rootNodes as $node) {
+            $leafNodes = $categoryRepo->getLeafs($node, 'lft');
+            $children = array();
+                foreach($leafNodes as $leaf){
+                    $children[] = array('title' => $leaf->getTitle(),'id' => $leaf->getId());
+                }
+            $trees['categories'][] = array('title' => $node->getTitle(), 'children' => $children);
+        }
+
+        $this->_helper->json(array('status' => 'ok', 'data' => $trees), true);
     }
 
     public function putAction()

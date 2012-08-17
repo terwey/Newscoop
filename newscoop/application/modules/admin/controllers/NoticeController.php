@@ -344,7 +344,7 @@ class Admin_NoticeController extends Zend_Controller_Action
     }
 
     /**
-     *
+     * add category action
      */
     public function categoryAddAction()
     {

@@ -148,18 +148,16 @@ class NoticeRepository extends DatatableSource
             foreach ($queryParts as $catId) {
                 $ids[] = $catId;
             }
-            //$qb->expr()->gt($qb->expr()->count('cat_counter'), count($ids));
-            //$qb->add('where', $qb->expr()->in('cat.id', $ids));
+
         }
 
-        $qb->select('n,cat')
-            ->leftjoin('n.categories', 'cat')
-            ->leftjoin('n.categories', 'cat2');
+        $qb->select('n')
+           ->addSelect('cat')
 
+            ->leftjoin('n.categories', 'cat');
         if (count($ids)) {
             $qb->andwhere($qb->expr()->in('cat.id', $ids));
-            $qb->addGroupBy('cat2.id')
-                ->having($qb->expr()->gte($qb->expr()->count('cat.id'), count($ids)));
+            $qb->addGroupBy('n.id')->having($qb->expr()->gte($qb->expr()->count('cat.id'), count($ids)));
         }
 
 
@@ -171,8 +169,8 @@ class NoticeRepository extends DatatableSource
             ->setParameter('status', 0)
             ->orderBy('n.id', 'DESC')
             ->getQuery();
-        //var_dump($test->getSql());
-        //exit;
+ /*       var_dump($test->getSql());
+        exit;*/
 
 
         return $test->getResult($hydration);
