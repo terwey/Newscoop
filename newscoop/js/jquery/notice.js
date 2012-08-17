@@ -103,21 +103,7 @@ var datatableCallback = {
 };
 $(function () {
 	
-	
-    //$('.tabs').tabs();
-    //$('.tabs').tabs('select', '#tabs-1');    
-    var commentFilterTriggerCount = 0;
-    $("#commentFilterTrigger").click(function () {
-		if (commentFilterTriggerCount == 0) {
-            $("#commentFilterSearch").css("display", "block");
-            $(this).addClass("collapsed");
-            commentFilterTriggerCount = 1;
-        } else {
-            $("#commentFilterSearch").css("display", "none");
-            $(this).removeClass("collapsed");
-            commentFilterTriggerCount = 0;
-        }
-    });
+
 
     $(".addFilterBtn").click(function () {
         $('#commentFilterSearch fieldset ul').append('<li><select class="input_select"><option>1</option><option>2</option></select><input type="text" class="input_text" /></li>');
@@ -235,44 +221,6 @@ $(function () {
             success: function (data) {
                 datatable.fnDraw();
                 flashMessage(putGS('Notice updated.'));
-            },
-            error: function (rq, status, error) {
-                if (status == 0 || status == -1) {
-                    flashMessage(putGS('Unable to reach Newscoop. Please check your internet connection.'), "error");
-                }
-            }
-        });
-        return false;
-    });
-
-
-    // Dialog
-    $('.dialogPopup').dialog({
-        autoOpen: false,
-        width: 600,
-        height: 560,
-        position: 'right',
-        buttons: {
-            "Cancel": function () {
-                $(this).dialog("close");
-            }
-        }
-    });
-    // Dialog Link
-    $('.articleLink').live('click', function () {
-        var that = this;
-        $.ajax({
-            type: 'GET',
-            url: $(this).attr('href'),
-            success: function (data) {
-				data = $.parseJSON(data);                
-                var content = '<h3><a href="#">' + $(that).html() + '</a></h3>';
-                for (i in data) {
-                    content += '<h4>' + i + '</h4>';
-                    content += '<p>' + data[i] + '</p>';
-                }
-                $('.dialogPopup').html(content);
-                $('.dialogPopup').dialog('open');
             },
             error: function (rq, status, error) {
                 if (status == 0 || status == -1) {

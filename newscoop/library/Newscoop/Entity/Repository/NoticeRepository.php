@@ -38,16 +38,20 @@ class NoticeRepository extends DatatableSource
      */
     public function getData(array $p_params, array $p_cols)
     {
-        $qb = $this->createQueryBuilder('e');
+        $qb = $this->createQueryBuilder('n');
+        $andx = $qb->expr()->andx();
 
         if (!empty($p_params['sSearch'])) {
-            //$this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
+            $orx = $this->buildWhere($p_cols, $p_params['sSearch'], $qb);
+            $andx->add($orx);
         }
 
-        if (!empty($p_params['sFilter'])) {
-            $andx = $qb->expr()->andx();
 
-            $andx = $this->buildFilter($p_cols, $p_params['sFilter'], $qb,$andx);
+        if (!empty($p_params['sFilter'])) {
+            $andx = $this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
+        }
+
+        if($andx->count()){
             $qb->where($andx);
         }
 
@@ -59,16 +63,16 @@ class NoticeRepository extends DatatableSource
             $dir = $p_params["sSortDir_0"] ? : 'asc';
             switch ($sortBy) {
                 case 'lastname':
-                    $qb->orderBy("e.lastname", $dir);
+                    $qb->orderBy("n.lastname", $dir);
                     break;
                 case 'published':
-                    $qb->orderBy("e.published", $dir);
+                    $qb->orderBy("n.published", $dir);
                     break;
                 case 'id':
-                    $qb->orderBy("e.id", $dir);
+                    $qb->orderBy("n.id", $dir);
                     break;
                 default:
-                    $qb->orderBy("e." . $sortBy, $dir);
+                    $qb->orderBy("n." . $sortBy, $dir);
             }
         }
 
@@ -82,7 +86,6 @@ class NoticeRepository extends DatatableSource
     }
 
 
-
     /**
      * Get entity count
      *
@@ -91,41 +94,16 @@ class NoticeRepository extends DatatableSource
      *
      * @return int
      */
-
-/*    public function getCount(array $p_params = null, array $p_cols = array())
+    public function getCount(array $p_params = null, array $p_cols = null)
     {
-        $qb = $this->createQueryBuilder('e');
-        //$qb->from('Newscoop\Entity\Comment\Commenter', 'c')
-          //  ->from('Newscoop\Entity\Article', 'a');
-        $andx = $qb->expr()->andx();
-        $andx->add($qb->expr()->eq('e.language', new Expr\Literal('a.language')));
-
+        $qb = $this->createQueryBuilder('n')
+            ->select('COUNT(n)');
         if (is_array($p_params) && !empty($p_params['sSearch'])) {
-            //$this->buildWhere($p_cols, $p_params['sSearch'], $qb, $andx);
+            $qb->where($this->buildWhere($p_cols, $p_params['sSearch'], $qb));
         }
-        if (is_array($p_params) && !empty($p_params['sFilter'])) {
-            $this->buildFilter($p_cols, $p_params['sFilter'], $qb, $andx);
-        }
-        $qb->where($andx);
-        $qb->select('COUNT(e)');
         return $qb->getQuery()->getSingleScalarResult();
-    }*/
-
-    /**
-     * Build where condition
-     *
-     * @param array $cols
-     * @param string $search
-     * @return Doctrine\ORM\Query\Expr
-     */
-    /*protected function buildWhere(array $p_cols, $p_search, $qb, $andx)
-    {
-        $orx = $qb->expr()->orx();
-        $orx->add($qb->expr()->like("e.title", $qb->expr()->literal("%{$p_search}%")));
-        $orx->add($qb->expr()->like("e.body", $qb->expr()->literal("%{$p_search}%")));
-        return $andx->add($orx);
     }
-*/
+
     /**
      * Build filter condition
      *
@@ -145,8 +123,8 @@ class NoticeRepository extends DatatableSource
                 case 'status':
                     $mapper = array_flip(Notice::$status_enum);
                     foreach ($values as $value) {
-                        if(isset($mapper[$value])){
-                            $orx->add($qb->expr()->eq('e.status', $mapper[$value]));
+                        if (isset($mapper[$value])) {
+                            $orx->add($qb->expr()->eq('n.status', $mapper[$value]));
                         }
                     }
                     break;
@@ -175,14 +153,11 @@ class NoticeRepository extends DatatableSource
         }
 
         $qb->select('n,cat')
-            //->select('n, cat2, COUNT(cat2.id) AS cat_counter')
             ->leftjoin('n.categories', 'cat')
-            ->leftjoin('n.categories', 'cat2')
+            ->leftjoin('n.categories', 'cat2');
 
-        ;
-
-        if(count($ids)){
-            $qb->andwhere($qb->expr()->in('cat.id',$ids));
+        if (count($ids)) {
+            $qb->andwhere($qb->expr()->in('cat.id', $ids));
             $qb->addGroupBy('cat2.id')
                 ->having($qb->expr()->gte($qb->expr()->count('cat.id'), count($ids)));
         }
@@ -194,45 +169,31 @@ class NoticeRepository extends DatatableSource
             ->setParameter('published', $now)
             ->andWhere('n.status <= :status')
             ->setParameter('status', 0)
-            ->orderBy('n.id','DESC')
+            ->orderBy('n.id', 'DESC')
             ->getQuery();
         //var_dump($test->getSql());
         //exit;
-            return $test->getResult($hydration);
-    }
 
 
-    /**
-     * Returns a query builder built to return tag counts for a given type
-     *
-     * @see getTagsWithCountArray
-     * @param $taggableType
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getTagsWithCountArrayQueryBuilder($taggableType)
-    {
-        $qb = $this->getTagsQueryBuilder($taggableType)
-            ->groupBy('tagging.tag')
-            ->select('tag.'.$this->tagQueryField.', COUNT(tagging.tag) as tag_count')
-            ->orderBy('tag_count', 'DESC')
-        ;
-
-        return $qb;
+        return $test->getResult($hydration);
     }
 
     /**
-     * Returns a query builder returning tags for a given type
+     * Build where condition
      *
-     * @param string $taggableType
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param array $cols
+     * @param string $search
+     * @return Doctrine\ORM\Query\Expr
      */
-    public function getTagsQueryBuilder($taggableType)
+    private function buildWhere(array $p_cols, $p_search, $qb)
     {
-        return $this->createQueryBuilder('tag')
-            ->join('tag.tagging', 'tagging')
-            ->where('tagging.resourceType = :resourceType')
-            ->setParameter('resourceType', $taggableType)
-            ;
+        $orx = $qb->expr()->orx();
+        $orx->add($qb->expr()->like("n.lastname", $qb->expr()->literal("%{$p_search}%")));
+        $orx->add($qb->expr()->like("n.firstname", $qb->expr()->literal("%{$p_search}%")));
+        $orx->add($qb->expr()->like("n.title", $qb->expr()->literal("%{$p_search}%")));
+        $orx->add($qb->expr()->like("n.body", $qb->expr()->literal("%{$p_search}%")));
+
+        return $orx;
     }
 
 }

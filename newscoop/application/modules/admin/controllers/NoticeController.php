@@ -64,7 +64,7 @@ class Admin_NoticeController extends Zend_Controller_Action
                 'author' => getGS('Author'),
                 'status' => getGS('Status'),
                 'published' => 'Publish/Unpublish'),
-            array('id' => false));
+            array('id' => false,'categories' => false));
 
         //$table->setSorting(array('published' => 'desc'));
         $table->setInitialSorting(array('id' => 'desc'));
@@ -112,8 +112,8 @@ class Admin_NoticeController extends Zend_Controller_Action
                             array('action' => 'reply',
                                 'format' => 'json'))),
                     'link' => array(
-                        'edit' => $view->baseUrl("admin/notice/edit/id/") . $notice->getId(),
-                        'get' => $view->baseUrl("admin/articles/get.php?") . 'meeh'))
+                        'edit' => $view->baseUrl("admin/notice/edit/id/") . $notice->getId()
+                    ))
             );
         });
 
@@ -146,8 +146,12 @@ class Admin_NoticeController extends Zend_Controller_Action
                 'status' => 'noticeStatus',
                 'published' => 'noticePublished'
             ));
-        $table->dispatch();
 
+        try{
+            $table->dispatch();
+        }catch(Exception $e){
+            Doctrine\Common\Util\Debug::dump($e);
+        }
     }
 
     /**
