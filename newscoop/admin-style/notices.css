@@ -101,6 +101,94 @@ body#comments {
     margin-bottom: 8px;
 }
 
+#showNotices fieldset {
+    padding: 10px;
+}
+
+#showNotices fieldset ul {
+    overflow: hidden;
+}
+
+#showNotices fieldset ul li {
+    float: left;
+    height: 25px;
+    min-width: 100px;
+    margin-right: 8px;
+    padding: 0px 10px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border--radius: 4px;
+    -khtml-border-radius: 4px;
+}
+
+#showNotices fieldset ul li.published, #showNotices fieldset ul li.approved  {
+    border: 1px solid #cccccc;
+    background: #fff;
+}
+
+#showNotices fieldset ul li.new {
+    background: #eaf7da;
+    border: 1px solid #bee78d;
+}
+
+/*#showComments fieldset ul li.approved {
+    background: #ccecff;
+    border: 1px solid #7ac8ff;
+}*/
+
+#showNotices fieldset ul li.hidden {
+    background: #f2f2f2;
+    border: 1px solid #cccccc;
+}
+
+#showNotices fieldset ul li.deleted {
+    background: #ffd9da;
+    border: 1px solid #ffabad;
+}
+
+#showNotices fieldset ul li.none {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+}
+
+#showNotices fieldset ul li.image {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+}
+
+#showNotices fieldset ul li.document {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+}
+
+#showNotices fieldset ul li input {
+    float: left;
+    margin: 6px 6px 0 0;
+}
+
+#showNotices fieldset ul li label {
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 25px;
+}
+
+#showNotices fieldset ul li.published label, #showNotices fieldset ul li.submitted label {
+    color: #585858;
+}
+
+#showNotices fieldset ul li.new label {
+    color: #006b0e;
+}
+
+/*#showComments fieldset ul li.approved label {
+    color: #004987;
+}*/
+
+#showNotices fieldset ul li.deleted label {
+    color: #9e0013;
+}
+
 #commentFilterSearchHolder {
     position: relative;
     padding: 0 0 20px;
@@ -408,14 +496,14 @@ select.actions {
     text-decoration: underline;
 }
 
-.commentBtns {
+.noticeBtns {
     height: 30px;
 
     background: rgba(212, 212, 212, 0.5);
     visibility: hidden;
 }
 
-.commentBtns ul {
+.noticeBtns ul {
     overflow: hidden;
     padding-left: 280px;
     margin: 0px;
@@ -423,7 +511,7 @@ select.actions {
     padding-top: 5px;
 }
 
-.commentBtns ul li {
+.noticeBtns ul li {
     float: left;
     margin-right: 5px;
     display: block;
@@ -432,11 +520,11 @@ select.actions {
     padding: 0;
 }
 
-.commentBtns ul li.last {
+.noticeBtns ul li.last {
     float: right;
 }
 
-.commentBtns ul li a,.commentBtns ul li a.link {
+.noticeBtns ul li a,.noticeBtns ul li a.link {
     display: block;
     float: left;
     height: 18px;
@@ -445,7 +533,7 @@ select.actions {
     color: #007FB3;
 }
 
-.commentBtns ul li a.link {
+.noticeBtns ul li a.link {
     padding-left: 24px;
     line-height: 20px;
     line-height: 22px;
@@ -453,7 +541,7 @@ select.actions {
     /*border-left: 1px solid #cccccc;*/
 }
 
-.commentBtns ul li a.link .icon {
+.noticeBtns ul li a.link .icon {
     left: 6px;
     margin: 0 3px 0 0;
     overflow: hidden;
@@ -462,40 +550,40 @@ select.actions {
     width: 16px;
 }
 
-.commentBtns ul li a.quickEditBtn {
+.noticeBtns ul li a.quickEditBtn {
     padding-left: 25px;
     line-height: 20px;
     background: url(images/quick-edit-btn.png) 10px 4px no-repeat;
     border-left: 1px solid #cccccc;
 }
 
-.commentBtns ul li a.addRatingBtn {
+.noticeBtns ul li a.addRatingBtn {
     padding-left: 25px;
     line-height: 20px;
     background: url(images/add-rating-btn.png) 10px 4px no-repeat;
     border-left: 1px solid #cccccc;
 }
 
-.commentBtns ul li a.new, .commentBtns ul li.new {
+.noticeBtns ul li a.new, .noticeBtns ul li.new {
     color: #006b0e;
     background: #eaf7da;
     border: 1px solid #2a8921;
 }
 
-.commentBtns ul li a.approved, .commentBtns ul li.approved {
+.noticeBtns ul li a.approved, .noticeBtns ul li.approved {
     color: #585858;
     background: #fff;
     border: 1px solid #5b5b5b;
 }
 
-.commentBtns ul li.hidden, .commentBtns ul li.hidden {
+.noticeBtns ul li.hidden, .noticeBtns ul li.hidden {
     color: #969696;
     background: #f2f2f2;
     border: 1px solid #838383;
 }
 
 
-.commentBtns ul li.new, .commentBtns ul li.approved, .commentBtns ul li.hidden {
+.noticeBtns ul li.new, .noticeBtns ul li.approved, .noticeBtns ul li.hidden {
     padding-right:10px;
     border-radius: 4px;
     -moz-border-radius: 3px;
@@ -503,16 +591,16 @@ select.actions {
     -khtml-border-radius: 3px;
 	margin-right:4px;
 }
-.commentBtns ul li.hidden {
+.noticeBtns ul li.hidden {
 	margin-right:16px;
 }
-.commentBtns ul li a.deleted {
+.noticeBtns ul li a.deleted {
     color: #9e0013;
     background: #ffd9da;
     border: 1px solid #ffabad;
 }
 
-.commentBtns ul li a.banUser, a.banUser {
+.noticeBtns ul li a.banUser, a.banUser {
     color: #000000 !important;
 	background-color:#ff9c9c;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffd9da), to(#ff9c9c));
@@ -525,7 +613,7 @@ select.actions {
 	margin-top:3px;
 }
 
-.commentBtns ul li a.actionButton {
+.noticeBtns ul li a.actionButton {
     color: #444444 !important;
 	background-color:#ebebeb;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fafafa), to(#ebebeb));
@@ -536,7 +624,7 @@ select.actions {
     line-height: 20px;
     padding: 0 10px 0 10px;
 }
-.commentBtns ul li a.actionButton:hover {
+.noticeBtns ul li a.actionButton:hover {
     color: #444444 !important;
 	background-color:#d9d9d9;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fafafa), to(#d9d9d9));
@@ -547,26 +635,26 @@ select.actions {
     box-shadow: 0 1px 1px rgba(0,0,0,.20);
 }
 
-.commentBtns ul li a.new:hover {
+.noticeBtns ul li a.new:hover {
     border: 1px solid #2a8921;
 }
-.commentBtns ul li a.approved:hover  {
+.noticeBtns ul li a.approved:hover  {
     border: 1px solid #5b5b5b;
 }
-.commentBtns ul li a.hidden:hover  {
+.noticeBtns ul li a.hidden:hover  {
     border: 1px solid #838383;
 }
-.commentBtns ul li a.deleted:hover {
+.noticeBtns ul li a.deleted:hover {
     border: 1px solid #ce3843;
 }
-.commentBtns ul li a.banUser span, a.banUser span {
+.noticeBtns ul li a.banUser span, a.banUser span {
     display: block;
     height: 18px;
     padding-left: 20px;
     background: url(images/ban-user-icon.png) left 3px no-repeat;
 }
 
-.commentBtns ul li a.banUser:hover, a.banUser:hover {
+.noticeBtns ul li a.banUser:hover, a.banUser:hover {
     border: 1px solid #9a0000;
 	background-color:#ff7575;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffd9da), to(#ff7575));
