@@ -22,8 +22,8 @@ class Admin_View_Helper_LinkDelete extends Zend_View_Helper_Abstract
     public function linkDelete( $p_url, $p_params = null)
     {
         $params = array_merge(array(
-            'name'  => getGS('Delete'),
-            'title' => getGS('Delete'),
+            'name'  => $this->translator->trans('Delete'),
+            'title' => $this->translator->trans('Delete'),
             'class' => array('delete','confirm'),
             'attributes' => array()
         ),is_null($p_params)? array():$p_params);

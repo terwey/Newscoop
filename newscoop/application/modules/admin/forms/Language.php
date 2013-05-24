@@ -17,36 +17,36 @@ class Admin_Form_Language extends Zend_Form
     {
         $this->addElement('text', 'name', array(
             'required' => TRUE,
-            'label' => getGS('Name'),
+            'label' => $this->translator->trans('Name'),
         ));
 
         $this->addElement('text', 'native_name', array(
             'required' => TRUE,
-            'label' => getGS('Native Name'),
+            'label' => $this->translator->trans('Native Name'),
         ));
 
         $this->addElement('text', 'code_page', array(
             'required' => TRUE,
-            'label' => getGS('Code Page'),
+            'label' => $this->translator->trans('Code Page'),
         ));
 
         $this->addElement('text', 'code', array(
             'required' => TRUE,
-            'label' => getGS('Code'),
+            'label' => $this->translator->trans('Code'),
         ));
 
-        $this->addElement('text', 'month1', array('label' => getGS('January')));
-        $this->addElement('text', 'month2', array('label' => getGS('February')));
-        $this->addElement('text', 'month3', array('label' => getGS('March')));
-        $this->addElement('text', 'month4', array('label' => getGS('April')));
-        $this->addElement('text', 'month5', array('label' => getGS('May')));
-        $this->addElement('text', 'month6', array('label' => getGS('June')));
-        $this->addElement('text', 'month7', array('label' => getGS('July')));
-        $this->addElement('text', 'month8', array('label' => getGS('August')));
-        $this->addElement('text', 'month9', array('label' => getGS('September')));
-        $this->addElement('text', 'month10', array('label' => getGS('October')));
-        $this->addElement('text', 'month11', array('label' => getGS('November')));
-        $this->addElement('text', 'month12', array('label' => getGS('December')));
+        $this->addElement('text', 'month1', array('label' => $this->translator->trans('January')));
+        $this->addElement('text', 'month2', array('label' => $this->translator->trans('February')));
+        $this->addElement('text', 'month3', array('label' => $this->translator->trans('March')));
+        $this->addElement('text', 'month4', array('label' => $this->translator->trans('April')));
+        $this->addElement('text', 'month5', array('label' => $this->translator->trans('May')));
+        $this->addElement('text', 'month6', array('label' => $this->translator->trans('June')));
+        $this->addElement('text', 'month7', array('label' => $this->translator->trans('July')));
+        $this->addElement('text', 'month8', array('label' => $this->translator->trans('August')));
+        $this->addElement('text', 'month9', array('label' => $this->translator->trans('September')));
+        $this->addElement('text', 'month10', array('label' => $this->translator->trans('October')));
+        $this->addElement('text', 'month11', array('label' => $this->translator->trans('November')));
+        $this->addElement('text', 'month12', array('label' => $this->translator->trans('December')));
 
         $this->addDisplayGroup(array(
             'month1',
@@ -62,23 +62,23 @@ class Admin_Form_Language extends Zend_Form
             'month11',
             'month12',
         ), 'months_longname', array(
-            'legend' => getGS('Edit month names'),
+            'legend' => $this->translator->trans('Edit month names'),
             'class' => 'toggle',
             'order' => 20,
         ));
 
-        $this->addElement('text', 'short_month1', array('label' => getGS('Jan')));
-        $this->addElement('text', 'short_month2', array('label' => getGS('Feb')));
-        $this->addElement('text', 'short_month3', array('label' => getGS('Mar')));
-        $this->addElement('text', 'short_month4', array('label' => getGS('Apr')));
-        $this->addElement('text', 'short_month5', array('label' => getGS('May')));
-        $this->addElement('text', 'short_month6', array('label' => getGS('Jun')));
-        $this->addElement('text', 'short_month7', array('label' => getGS('Jul')));
-        $this->addElement('text', 'short_month8', array('label' => getGS('Aug')));
-        $this->addElement('text', 'short_month9', array('label' => getGS('Sep')));
-        $this->addElement('text', 'short_month10', array('label' => getGS('Oct')));
-        $this->addElement('text', 'short_month11', array('label' => getGS('Nov')));
-        $this->addElement('text', 'short_month12', array('label' => getGS('Dec')));
+        $this->addElement('text', 'short_month1', array('label' => $this->translator->trans('Jan')));
+        $this->addElement('text', 'short_month2', array('label' => $this->translator->trans('Feb')));
+        $this->addElement('text', 'short_month3', array('label' => $this->translator->trans('Mar')));
+        $this->addElement('text', 'short_month4', array('label' => $this->translator->trans('Apr')));
+        $this->addElement('text', 'short_month5', array('label' => $this->translator->trans('May')));
+        $this->addElement('text', 'short_month6', array('label' => $this->translator->trans('Jun')));
+        $this->addElement('text', 'short_month7', array('label' => $this->translator->trans('Jul')));
+        $this->addElement('text', 'short_month8', array('label' => $this->translator->trans('Aug')));
+        $this->addElement('text', 'short_month9', array('label' => $this->translator->trans('Sep')));
+        $this->addElement('text', 'short_month10', array('label' => $this->translator->trans('Oct')));
+        $this->addElement('text', 'short_month11', array('label' => $this->translator->trans('Nov')));
+        $this->addElement('text', 'short_month12', array('label' => $this->translator->trans('Dec')));
 
         $this->addDisplayGroup(array(
             'short_month1',
@@ -94,18 +94,18 @@ class Admin_Form_Language extends Zend_Form
             'short_month11',
             'short_month12',
         ), 'months_shortname', array(
-            'legend' => getGS('Edit short month names'),
+            'legend' => $this->translator->trans('Edit short month names'),
             'class' => 'toggle',
             'order' => 40,
         ));
 
-        $this->addElement('text', 'day1', array('label' => getGS('Sunday')));
-        $this->addElement('text', 'day2', array('label' => getGS('Monday')));
-        $this->addElement('text', 'day3', array('label' => getGS('Tuesday')));
-        $this->addElement('text', 'day4', array('label' => getGS('Wednesday')));
-        $this->addElement('text', 'day5', array('label' => getGS('Thursday')));
-        $this->addElement('text', 'day6', array('label' => getGS('Friday')));
-        $this->addElement('text', 'day7', array('label' => getGS('Saturday')));
+        $this->addElement('text', 'day1', array('label' => $this->translator->trans('Sunday')));
+        $this->addElement('text', 'day2', array('label' => $this->translator->trans('Monday')));
+        $this->addElement('text', 'day3', array('label' => $this->translator->trans('Tuesday')));
+        $this->addElement('text', 'day4', array('label' => $this->translator->trans('Wednesday')));
+        $this->addElement('text', 'day5', array('label' => $this->translator->trans('Thursday')));
+        $this->addElement('text', 'day6', array('label' => $this->translator->trans('Friday')));
+        $this->addElement('text', 'day7', array('label' => $this->translator->trans('Saturday')));
 
         $this->addDisplayGroup(array(
             'day1',
@@ -116,18 +116,18 @@ class Admin_Form_Language extends Zend_Form
             'day6',
             'day7',
         ), 'days_name', array(
-            'legend' => getGS('Edit day names'),
+            'legend' => $this->translator->trans('Edit day names'),
             'class' => 'toggle',
             'order' => 60,
         ));
 
-        $this->addElement('text', 'short_day1', array('label' => getGS('Su')));
-        $this->addElement('text', 'short_day2', array('label' => getGS('Mo')));
-        $this->addElement('text', 'short_day3', array('label' => getGS('Tu')));
-        $this->addElement('text', 'short_day4', array('label' => getGS('We')));
-        $this->addElement('text', 'short_day5', array('label' => getGS('Th')));
-        $this->addElement('text', 'short_day6', array('label' => getGS('Fr')));
-        $this->addElement('text', 'short_day7', array('label' => getGS('Sa')));
+        $this->addElement('text', 'short_day1', array('label' => $this->translator->trans('Su')));
+        $this->addElement('text', 'short_day2', array('label' => $this->translator->trans('Mo')));
+        $this->addElement('text', 'short_day3', array('label' => $this->translator->trans('Tu')));
+        $this->addElement('text', 'short_day4', array('label' => $this->translator->trans('We')));
+        $this->addElement('text', 'short_day5', array('label' => $this->translator->trans('Th')));
+        $this->addElement('text', 'short_day6', array('label' => $this->translator->trans('Fr')));
+        $this->addElement('text', 'short_day7', array('label' => $this->translator->trans('Sa')));
 
         $this->addDisplayGroup(array(
             'short_day1',
@@ -138,13 +138,13 @@ class Admin_Form_Language extends Zend_Form
             'short_day6',
             'short_day7',
         ), 'days_shortname', array(
-            'legend' => getGS('Edit short day names'),
+            'legend' => $this->translator->trans('Edit short day names'),
             'class' => 'toggle',
             'order' => 70,
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
             'order' => 99,
         ));
     }

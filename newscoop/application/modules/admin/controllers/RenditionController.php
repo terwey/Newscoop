@@ -46,7 +46,7 @@ class Admin_RenditionController extends Zend_Controller_Action
         }
 
         $this->_helper->service('image.rendition')->reloadRenditions();
-        $this->_helper->flashMessenger(getGS('Renditions reloaded'));
+        $this->_helper->flashMessenger($this->translator->trans('Renditions reloaded'));
         $this->_helper->redirector('index', 'rendition', 'admin');
     }
 }

@@ -55,24 +55,24 @@ class Admin_FeedbackController extends Zend_Controller_Action
         /* @var $table Action_Helper_Datatable */
         $table->setDataSource($this->feedbackRepository);
         $table->setOption('oLanguage', array('oPaginate' => array(
-                'sFirst' => getGS('First'),
-                'sLast' => getGS('Last'),
-                'sNext' => getGS('Next'),
-                'sPrevious' => getGS('Previous'),
+                'sFirst' => $this->translator->trans('First'),
+                'sLast' => $this->translator->trans('Last'),
+                'sNext' => $this->translator->trans('Next'),
+                'sPrevious' => $this->translator->trans('Previous'),
             ),
-            'sZeroRecords' => getGS('No records found.'),
-            'sSearch' => getGS('Search'),
-            'sInfo' => getGS('Showing _START_ to _END_ of _TOTAL_ entries'),
-            'sEmpty' => getGS('No entries to show'),
-            'sInfoFiltered' => getGS(' - filtering from _MAX_ records'),
-            'sLengthMenu' => getGS('Display _MENU_ records'),
+            'sZeroRecords' => $this->translator->trans('No records found.'),
+            'sSearch' => $this->translator->trans('Search'),
+            'sInfo' => $this->translator->trans('Showing _START_ to _END_ of _TOTAL_ entries'),
+            'sEmpty' => $this->translator->trans('No entries to show'),
+            'sInfoFiltered' => $this->translator->trans(' - filtering from _MAX_ records'),
+            'sLengthMenu' => $this->translator->trans('Display _MENU_ records'),
             'sInfoEmpty' => '')
         );
         $table->setCols(
             array(
-                'index' => $view->toggleCheckbox(), 'user' => getGS('User'),
-                'message' => getGS('Date') . ' / ' . getGS('Message'),
-                'url' => getGS('Coming from')
+                'index' => $view->toggleCheckbox(), 'user' => $this->translator->trans('User'),
+                'message' => $this->translator->trans('Date') . ' / ' . $this->translator->trans('Message'),
+                'url' => $this->translator->trans('Coming from')
             ),
             array('index' => false)
         );
@@ -93,7 +93,7 @@ class Admin_FeedbackController extends Zend_Controller_Action
                     $article_url = $view->linkArticle($article);
                 }
                 else {
-                    $article_name = getGS('None');
+                    $article_name = $this->translator->trans('None');
                     $article_url = $view->baseUrl('admin/feedback');
                 }
                 
@@ -101,7 +101,7 @@ class Admin_FeedbackController extends Zend_Controller_Action
                     $section_name = $section->getName();
                 }
                 else {
-                    $section_name = getGS('None');
+                    $section_name = $this->translator->trans('None');
                 }
                 
                 $attachment = array();
@@ -201,7 +201,7 @@ class Admin_FeedbackController extends Zend_Controller_Action
         $this->getHelper('contextSwitch')->addActionContext('set-status', 'json')->initContext();
         if (!SecurityToken::isValid()) {
             $this->view->status = 401;
-            $this->view->message = getGS('Invalid security token!');
+            $this->view->message = $this->translator->trans('Invalid security token!');
             return;
         }
 

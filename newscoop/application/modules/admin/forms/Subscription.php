@@ -13,15 +13,15 @@ class Admin_Form_Subscription extends Zend_Form
     public function init()
     {
         $this->addElement('select', 'publication', array(
-            'label' => getGS('Publication'),
+            'label' => $this->translator->trans('Publication'),
             'required' => true,
         ));
 
         $this->addElement('select', 'language_set', array(
-            'label' => getGS('Language'),
+            'label' => $this->translator->trans('Language'),
             'multioptions' => array(
-                'select' => getGS('Individual languages'),
-                'all' => getGS('Regardless of the language'),
+                'select' => $this->translator->trans('Individual languages'),
+                'all' => $this->translator->trans('Regardless of the language'),
             ),
         ));
 
@@ -37,30 +37,30 @@ class Admin_Form_Subscription extends Zend_Form
         $this->getElement('languages')->setAutoInsertNotEmptyValidator(false);
 
         $this->addElement('select', 'sections', array(
-            'label' => getGS('Sections'),
+            'label' => $this->translator->trans('Sections'),
             'multioptions' => array(
-                'Y' => getGS('Add sections now'),
-                'N' => getGS('Add sections later'),
+                'Y' => $this->translator->trans('Add sections now'),
+                'N' => $this->translator->trans('Add sections later'),
             ),
         ));
 
         $this->addElement('text', 'start_date', array(
-            'label' => getGS('Start'),
+            'label' => $this->translator->trans('Start'),
             'required' => true,
             'class' => 'date',
         ));
 
         $this->addElement('select', 'type', array(
-            'label' => getGS('Subscription Type'),
+            'label' => $this->translator->trans('Subscription Type'),
             'multioptions' => array(
-                'PN' => getGS('Paid (confirm payment now)'),
-                'PL' => getGS('Paid (payment will be confirmed later)'),
-                'T' => getGS('Trial'),
+                'PN' => $this->translator->trans('Paid (confirm payment now)'),
+                'PL' => $this->translator->trans('Paid (payment will be confirmed later)'),
+                'T' => $this->translator->trans('Trial'),
             ),
         ));
 
         $this->addElement('text', 'days', array(
-            'label' => getGS('Days'),
+            'label' => $this->translator->trans('Days'),
             'required' => true,
             'validators' => array(
                 array('greaterThan', false, array(0)),
@@ -68,12 +68,12 @@ class Admin_Form_Subscription extends Zend_Form
         ));
 
         $this->addElement('checkbox', 'active', array(
-            'label' => getGS('Active'),
+            'label' => $this->translator->trans('Active'),
             'value' => 1,
         ));
     
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Add'),
+            'label' => $this->translator->trans('Add'),
         ));
     }
 }

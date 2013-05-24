@@ -14,20 +14,20 @@ class Admin_Form_Slideshow extends Zend_Form
     public function init()
     {
         $this->addElement('text', 'headline', array(
-            'label' => getGS('Headline'),
+            'label' => $this->translator->trans('Headline'),
             'required' => true,
         ));
 
         $this->addElement('text', 'slug', array(
-            'label' => getGS('Slug'),
+            'label' => $this->translator->trans('Slug'),
         ));
 
         $this->addElement('text', 'description', array(
-            'label' => getGS('Description'),
+            'label' => $this->translator->trans('Description'),
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
             'ignore' => true,
         ));
     }

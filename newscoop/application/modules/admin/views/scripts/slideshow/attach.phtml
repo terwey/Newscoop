@@ -19,8 +19,8 @@
             'action' => 'attach',
     ))); ?>">
     <div style="margin-left: 10px;">
-        <input type="text" placeholder="<?php echo(getGS('Search')); ?>" name="q" value="<?php if ($this->q) echo $this->escape($this->q); ?>">
-        <input type="submit" value="<?php echo(getGS('Search')); ?>">
+        <input type="text" placeholder="<?php echo($this->translator->trans('Search')); ?>" name="q" value="<?php if ($this->q) echo $this->escape($this->q); ?>">
+        <input type="submit" value="<?php echo($this->translator->trans('Search')); ?>">
     </div>
     </form>
 </section>
@@ -129,7 +129,7 @@
     });
 
     var AddSlideshowView = SlideshowView.extend({
-        hint: <?php echo json_encode(getGS('Attach')); ?>,
+        hint: <?php echo json_encode($this->translator->trans('Attach')); ?>,
 
         action: function() {
             this.model.addToArticle(window.article);
@@ -137,7 +137,7 @@
     });
 
     var RemoveSlideshowView = SlideshowView.extend({
-        hint: <?php echo json_encode(getGS('Detach')); ?>,
+        hint: <?php echo json_encode($this->translator->trans('Detach')); ?>,
 
         action: function() {
             this.model.removeFromArticle(window.article);

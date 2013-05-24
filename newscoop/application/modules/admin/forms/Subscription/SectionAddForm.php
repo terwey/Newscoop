@@ -10,35 +10,35 @@ class Admin_Form_Subscription_SectionAddForm extends Zend_Form
     public function init()
     {
         $this->addElement('select', 'language', array(
-            'label' => getGS('Language'),
+            'label' => $this->translator->trans('Language'),
             'multioptions' => array(
-                'select' => getGS('Individual languages'),
-                'all' => getGS('Regardless of the language'),
+                'select' => $this->translator->trans('Individual languages'),
+                'all' => $this->translator->trans('Regardless of the language'),
             ),
         ));
 
         $this->addElement('multiselect', 'sections_select', array(
-            'label' => getGS('Sections'),
+            'label' => $this->translator->trans('Sections'),
             // multioptions from controller
         ));
 
         $this->addElement('multiselect', 'sections_all', array(
-            'label' => getGS('Sections'),
+            'label' => $this->translator->trans('Sections'),
         ));
 
         $this->addElement('text', 'start_date', array(
-            'label' => getGS('Start'),
+            'label' => $this->translator->trans('Start'),
             'required' => true,
             'class' => 'date',
         ));
 
         $this->addElement('text', 'days', array(
-            'label' => getGS('Days'),
+            'label' => $this->translator->trans('Days'),
             'required' => true,
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
         ));
     }
 }

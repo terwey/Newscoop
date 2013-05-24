@@ -1,7 +1,7 @@
 <?php $this->placeholder('title')->set('Renditions'); ?>
 
 <?php if (count($this->renditions) === 0) {
-echo '<p class="message">', getGS('No renditions defined.'), '</p>';
+echo '<p class="message">', $this->translator->trans('No renditions defined.'), '</p>';
 return;
 } ?>
 
@@ -32,15 +32,15 @@ $(function() {
         e.preventDefault();
         var form = $(this);
         var button = form.find('button');
-        button.text(<?php echo json_encode(getGS('Saving...')); ?>);
+        button.text(<?php echo json_encode($this->translator->trans('Saving...')); ?>);
         $.post(<?php echo json_encode($this->url(array(
             'module' => 'admin',
             'controller' => 'rendition',
             'action' => 'index',
         ))); ?>, {'order': $('#rendition-list').sortable('toArray'), 'labels': form.serializeArray()}, function(data, textStatus) {
-            button.text(<?php echo json_encode(getGS('Saved')); ?>);
+            button.text(<?php echo json_encode($this->translator->trans('Saved')); ?>);
             window.setTimeout(function() {
-                button.text(<?php echo json_encode(getGS('Save')); ?>);
+                button.text(<?php echo json_encode($this->translator->trans('Save')); ?>);
             }, 3000);
         });
     });

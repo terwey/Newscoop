@@ -22,8 +22,8 @@ class Admin_View_Helper_LinkEdit extends Zend_View_Helper_Abstract
     public function linkEdit( $p_url, $p_params = null)
     {
         $params = array_merge(array(
-            'name'  => getGS('Edit'),
-            'title' => getGS('Edit'),
+            'name'  => $this->translator->trans('Edit'),
+            'title' => $this->translator->trans('Edit'),
             'class' => array('edit','confirm'),
             'attributes' => array()
         ),is_null($p_params)? array():$p_params);

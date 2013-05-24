@@ -70,7 +70,7 @@ class Admin_IngestController extends Zend_Controller_Action
         try {
             $entry = $this->service->find($this->_getParam('entry'));
             $article = $this->service->publish($entry, 'N');
-            $this->_helper->flashMessenger(getGS("Entry '$1' prepared for publishing", $entry->getTitle()));
+            $this->_helper->flashMessenger($this->translator->trans("Entry '$1' prepared for publishing", $entry->getTitle()));
             $this->_helper->redirector->gotoUrl($this->_helper->article->getEditLink($article));
         } catch (Exception $e) {
             var_dump($e);
@@ -82,7 +82,7 @@ class Admin_IngestController extends Zend_Controller_Action
     {
         try {
             $this->service->deleteEntryById($this->_getParam('entry'));
-            $this->_helper->flashMessenger(getGS("Entry deleted"));
+            $this->_helper->flashMessenger($this->translator->trans("Entry deleted"));
             $this->_helper->redirector('index', 'ingest');
         } catch (Exception $e) {
             var_dump($e);
@@ -97,7 +97,7 @@ class Admin_IngestController extends Zend_Controller_Action
         $request = $this->getRequest();
         if ($request->isPost() && $form->isValid($request->getPost())) {
             $feed = $this->_helper->service('ingest.feed')->save($form->getValues());
-            $this->_helper->flashMessenger(getGS('Feed saved'));
+            $this->_helper->flashMessenger($this->translator->trans('Feed saved'));
             $this->_helper->redirector('index');
         }
 
@@ -114,7 +114,7 @@ class Admin_IngestController extends Zend_Controller_Action
     {
         $item = $this->_helper->service('ingest.item')->find($this->_getParam('item', null));
         $this->_helper->service('ingest.item')->publish($item);
-        $this->_helper->flashMessenger(getGS('Item published'));
+        $this->_helper->flashMessenger($this->translator->trans('Item published'));
         $this->_helper->redirector('index', 'ingest', 'admin', array(
             'item' => null,
         ));
@@ -135,7 +135,7 @@ class Admin_IngestController extends Zend_Controller_Action
         $request = $this->getRequest();
         if ($request->isPost() && $form->isValid($request->getPost())) {
             $this->_helper->service('ingest.settings')->save($form->getValues(), $settings);
-            $this->_helper->flashMessenger(getGS('Settings saved'));
+            $this->_helper->flashMessenger($this->translator->trans('Settings saved'));
             $this->_helper->redirector('settings');
         }
 

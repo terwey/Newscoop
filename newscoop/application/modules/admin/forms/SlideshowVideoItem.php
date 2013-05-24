@@ -14,12 +14,12 @@ class Admin_Form_SlideshowVideoItem extends Zend_Form
     public function init()
     {
         $this->addElement('text', 'url', array(
-            'label' => getGS('URL'),
+            'label' => $this->translator->trans('URL'),
             'required' => true,
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Add video'),
+            'label' => $this->translator->trans('Add video'),
             'ignore' => true,
         ));
     }

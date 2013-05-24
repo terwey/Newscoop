@@ -8,7 +8,7 @@
                 'action' => 'edit',
                 'rendition' => $this->rendition->getName(),
                 'format' => null,
-            )); ?>" title="<?php echo $this->escape(getGS("Edit $1", $this->rendition->getName())); ?>"><?php echo $this->thumbnail->getImg($this); ?></a>
+            )); ?>" title="<?php echo $this->escape($this->translator->trans("Edit $1", $this->rendition->getName())); ?>"><?php echo $this->thumbnail->getImg($this); ?></a>
             <?php } ?>
         </div>
     </dt>

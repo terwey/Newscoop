@@ -81,23 +81,23 @@ class Admin_CommentCommenterController extends Zend_Controller_Action
 
         $table->setDataSource($this->commenterRepository);
         $table->setOption('oLanguage', array('oPaginate' => array(
-                'sFirst' => getGS('First'),
-                'sLast' => getGS('Last'),
-                'sNext' => getGS('Next'),
-                'sPrevious' => getGS('Previous'),
+                'sFirst' => $this->translator->trans('First'),
+                'sLast' => $this->translator->trans('Last'),
+                'sNext' => $this->translator->trans('Next'),
+                'sPrevious' => $this->translator->trans('Previous'),
             ),
-            'sZeroRecords' => getGS('No records found.'),
-            'sSearch' => getGS('Search'),
-            'sInfo' => getGS('Showing _START_ to _END_ of _TOTAL_ entries'),
-            'sEmpty' => getGS('No entries to show'),
-            'sInfoFiltered' => getGS(' - filtering from _MAX_ records'),
-            'sLengthMenu' => getGS('Display _MENU_ records'),
+            'sZeroRecords' => $this->translator->trans('No records found.'),
+            'sSearch' => $this->translator->trans('Search'),
+            'sInfo' => $this->translator->trans('Showing _START_ to _END_ of _TOTAL_ entries'),
+            'sEmpty' => $this->translator->trans('No entries to show'),
+            'sInfoFiltered' => $this->translator->trans(' - filtering from _MAX_ records'),
+            'sLengthMenu' => $this->translator->trans('Display _MENU_ records'),
             'sInfoEmpty' => '')
         );
         $table->setCols(
-            array('time_created' => getGS('Date Created'), 'name' => getGS('Name'), 'user' => getGS('Username'),
-                 'email' => getGS('Email'), 'url' => getGS('Website'), 'ip' => getGS('Ip'), 'edit' => getGS('Edit'),
-                 'ban' => getGS('Ban'), 'delete' => getGS('Delete')));
+            array('time_created' => $this->translator->trans('Date Created'), 'name' => $this->translator->trans('Name'), 'user' => $this->translator->trans('Username'),
+                 'email' => $this->translator->trans('Email'), 'url' => $this->translator->trans('Website'), 'ip' => $this->translator->trans('Ip'), 'edit' => $this->translator->trans('Edit'),
+                 'ban' => $this->translator->trans('Ban'), 'delete' => $this->translator->trans('Delete')));
 
         $view = $this->view;
         $table->setHandle(function($commenter) use ($view)
@@ -156,7 +156,7 @@ class Admin_CommentCommenterController extends Zend_Controller_Action
         if ($commenter) {
             $this->commenterRepository->delete($commenter);
             $this->commenterRepository->flush();
-            $this->_helper->flashMessenger(getGS('Commenter "$1" deleted.', $commenter->getName()));
+            $this->_helper->flashMessenger($this->translator->trans('Commenter "$1" deleted.', $commenter->getName()));
             $this->_helper->redirector->gotoSimple('index');
         }
     }
@@ -194,7 +194,7 @@ class Admin_CommentCommenterController extends Zend_Controller_Action
                 $values = $p_form->getValues();
                 $this->acceptanceRepository->saveBanned($p_commenter, $p_publication, $values);
                 $this->acceptanceRepository->flush();
-                $this->_helper->flashMessenger(getGS('Ban for commenter "$1" saved.', $p_commenter->getName()));
+                $this->_helper->flashMessenger($this->translator->trans('Ban for commenter "$1" saved.', $p_commenter->getName()));
                 if ($p_form->getDeleteComments()->isChecked()) {
                     $this->commenterRepository->delete($p_commenter, $p_form->getValues());
                     $this->commenterRepository->flush();
@@ -218,7 +218,7 @@ class Admin_CommentCommenterController extends Zend_Controller_Action
             $values['time_created'] = new DateTime;
             $this->commenterRepository->save($p_commenter, $values);
             $this->commenterRepository->flush();
-            $this->_helper->flashMessenger(getGS('Commenter "$1" saved.', $p_commenter->getName()));
+            $this->_helper->flashMessenger($this->translator->trans('Commenter "$1" saved.', $p_commenter->getName()));
             $this->_helper->redirector->gotoSimple('index');
         }
     }

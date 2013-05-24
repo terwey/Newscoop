@@ -16,7 +16,7 @@ class Admin_Form_Blog extends Zend_Form
         $this->addElement('hash', 'csrf');
 
         $this->addElement('text', 'title', array(
-            'label' => getGS('Title'),
+            'label' => $this->translator->trans('Title'),
             'required' => TRUE,
             'filters' => array(
                 'stringTrim',
@@ -24,7 +24,7 @@ class Admin_Form_Blog extends Zend_Form
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Create'),
+            'label' => $this->translator->trans('Create'),
             'ignore' => true,
         ));
     }

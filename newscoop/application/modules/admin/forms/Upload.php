@@ -14,7 +14,7 @@ class Admin_Form_Upload extends Zend_Form
         $this->addElement('hash', 'csrf');
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Upload'),
+            'label' => $this->translator->trans('Upload'),
             'ignore' => TRUE,
         ));
     }

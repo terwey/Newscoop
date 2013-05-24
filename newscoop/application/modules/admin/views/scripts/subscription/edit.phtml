@@ -1,4 +1,4 @@
-<?php $this->placeholder('title')->set(getGS('Subscription sections')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('Subscription sections')); ?>
 <header>
     <h1><?php putGS('Subscriptions'); ?></h1>
     <a class="btn prime" href="<?php echo $this->url(array('controller' => 'subscription', 'action' => 'index', 'subscription' => null, 'user' => $this->subscriber)); ?>"><?php putGS('Done'); ?></a>
@@ -28,7 +28,7 @@
 
 <script type="text/template" id="section-row-template">
 <td><%= section.name %></td>
-<td><%= language ? language.name : <?php echo json_encode(getGS('Any')); ?> %></td>
+<td><%= language ? language.name : <?php echo json_encode($this->translator->trans('Any')); ?> %></td>
 <td><input type="text" name="startDate" class="start-date" value="<%= startDate %>" /></td>
 <td><input type="number" name="days" class="days" min="1" value="<%= days %>" /></td>
 <td><input type="number" name="paidDays" class="paid-days" min="0" value="<%= paidDays %>" /></td>
@@ -142,7 +142,7 @@
 
         validate: function(attr) {
             if (attr.days < 0) {
-                throw <?php echo json_encode(getGS("Days must be number")); ?>;
+                throw <?php echo json_encode($this->translator->trans("Days must be number")); ?>;
             }
         },
 

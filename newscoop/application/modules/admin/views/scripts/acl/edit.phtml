@@ -14,7 +14,7 @@
         <?php foreach ($this->actions[$resource] as $action) { ?>
         <li class="<?php echo $this->acl->isAllowed($this->role, $resource, $action) ? '' : 'deny'; ?>">
             <input type="checkbox" id="_<?php echo $resource, '_', $action; ?>" name="<?php echo $resource; ?>" value="<?php echo $action; ?>" <?php echo $this->acl->isAllowed($this->role, $resource, $action) ? ' checked="checked"' : ''; ?> />
-            <label for="_<?php echo $resource, '_', $action; ?>"><?php echo isset($this->actionNames[$action]) ? $this->actionNames[$action] : getGS($action); ?></label>
+            <label for="_<?php echo $resource, '_', $action; ?>"><?php echo isset($this->actionNames[$action]) ? $this->actionNames[$action] : $this->translator->trans($action); ?></label>
         </li>
         <?php } ?>
     </ul>
@@ -71,10 +71,10 @@ $(function() {
             'action': action
         }, function(data, textStatus, jqXHR) {
             if (data.error) {
-                flashMessage(<?php echo json_encode(getGS('Error: ')); ?> + data.error, 'error');
+                flashMessage(<?php echo json_encode($this->translator->trans('Error: ')); ?> + data.error, 'error');
                 input.closest('li').removeClass('deny');
             } else {
-                flashMessage(<?php echo json_encode(getGS('Permissions updated')); ?>);
+                flashMessage(<?php echo json_encode($this->translator->trans('Permissions updated')); ?>);
             }
         }, 'json');
 

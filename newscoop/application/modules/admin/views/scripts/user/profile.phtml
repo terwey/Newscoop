@@ -6,6 +6,6 @@
 parent.$('.edit-image img').attr('src', <?php echo json_encode($this->image); ?>);
 <?php } ?>
 parent.$.fancybox.close();
-parent.flashMessage(<?php echo json_encode(getGS("Profile saved.")); ?>);
+parent.flashMessage(<?php echo json_encode($this->translator->trans("Profile saved.")); ?>);
 </script>
 <?php } ?>

@@ -67,7 +67,7 @@ class Admin_SubscriptionController extends Zend_Controller_Action
 
         $publications = $this->_helper->entity->getRepository('Newscoop\Entity\Publication')->getSubscriberOptions($subscriber);
         if (empty($publications)) {
-            $this->_helper->flashMessenger(getGS('Subscriptions exist for all available publications.'));
+            $this->_helper->flashMessenger($this->translator->trans('Subscriptions exist for all available publications.'));
             $this->redirect();
         }
 
@@ -84,7 +84,7 @@ class Admin_SubscriptionController extends Zend_Controller_Action
             $repository->save($subscription, $subscriber, $form->getValues());
             $this->_helper->entity->flushManager();
 
-            $this->_helper->flashMessenger(getGS('Subscription $1', getGS('saved')));
+            $this->_helper->flashMessenger($this->translator->trans('Subscription $1', $this->translator->trans('saved')));
             $this->redirect();
         }
 
@@ -108,7 +108,7 @@ class Admin_SubscriptionController extends Zend_Controller_Action
             $subscription->setToPay($values['to_pay']);
             $this->_helper->entity->flushManager();
 
-            $this->_helper->flashMessenger(getGS('Subscription $1', getGS('saved')));
+            $this->_helper->flashMessenger($this->translator->trans('Subscription $1', $this->translator->trans('saved')));
             $this->redirect();
         }
 
@@ -123,7 +123,7 @@ class Admin_SubscriptionController extends Zend_Controller_Action
         $subscription->setActive(!$subscription->isActive());
         $em->flush();
 
-        $this->_helper->flashMessenger(getGS('Subscription $1', $subscription->isActive() ? getGS('activated') : getGS('deactivated')));
+        $this->_helper->flashMessenger($this->translator->trans('Subscription $1', $subscription->isActive() ? $this->translator->trans('activated') : $this->translator->trans('deactivated')));
         $this->redirect();
     }
 
@@ -134,7 +134,7 @@ class Admin_SubscriptionController extends Zend_Controller_Action
             ->delete($subscription);
         $this->_helper->entity->flushManager();
 
-        $this->_helper->flashMessenger(getGS('Subscription $1', getGS('removed')));
+        $this->_helper->flashMessenger($this->translator->trans('Subscription $1', $this->translator->trans('removed')));
         $this->redirect();
     }
 
@@ -172,12 +172,12 @@ class Admin_SubscriptionController extends Zend_Controller_Action
         $form = new Zend_Form;
 
         $form->addElement('text', 'to_pay', array(
-            'label' => getGS('Left to pay'),
+            'label' => $this->translator->trans('Left to pay'),
             'required' => true,
         ));
 
         $form->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
         ));
 
         return $form;

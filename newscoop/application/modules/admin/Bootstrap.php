@@ -109,7 +109,7 @@ class Admin_Bootstrap extends Zend_Application_Module_Bootstrap
     {
         global $Campsite;
 
-        $title = !empty($Campsite['site']['title']) ? htmlspecialchars($Campsite['site']['title']) : getGS('Newscoop') . $Campsite['VERSION'];
+        $title = !empty($Campsite['site']['title']) ? htmlspecialchars($Campsite['site']['title']) : $this->translator->trans('Newscoop') . $Campsite['VERSION'];
 
         $view = $this->getResource('view');
         $view->headTitle($title)
@@ -180,11 +180,11 @@ class Admin_Bootstrap extends Zend_Application_Module_Bootstrap
             'adapter' => 'array',
             'disableNotices' => TRUE,
             'content' => array(
-                "Value is required and can't be empty" => getGS("Value is required and can't be empty"),
-                "'%value%' is less than %min% characters long" => getGS("'%value%' is less than %min% characters long"),
-                "'%value%' is more than %max% characters long" => getGS("'%value%' is more than %max% characters long"),
-                "The two given tokens do not match" => getGS("Security token expired. Please resubmit the form."),
-                "No token was provided to match against" => getGS("Security token expired. Please resubmit the form."),
+                "Value is required and can't be empty" => $this->translator->trans("Value is required and can't be empty"),
+                "'%value%' is less than %min% characters long" => $this->translator->trans("'%value%' is less than %min% characters long"),
+                "'%value%' is more than %max% characters long" => $this->translator->trans("'%value%' is more than %max% characters long"),
+                "The two given tokens do not match" => $this->translator->trans("Security token expired. Please resubmit the form."),
+                "No token was provided to match against" => $this->translator->trans("Security token expired. Please resubmit the form."),
             ),
         ));
 

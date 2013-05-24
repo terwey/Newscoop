@@ -1,9 +1,9 @@
-<?php $this->placeholder('title')->set(getGS('Languages')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('Languages')); ?>
 
 <?php $this->renderActions(); ?>
 
 <?php if (empty($this->languages)) { // no languages
-    $this->renderMessage(getGS('No languages.'));
+    $this->renderMessage($this->translator->trans('No languages.'));
     return;
 } ?>
 

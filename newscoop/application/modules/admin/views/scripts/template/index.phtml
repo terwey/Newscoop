@@ -32,7 +32,7 @@
 
     <?php if ($this->doCache) : ?>
     <span id="template-caching-status" style="float:right; text-align:right; width:680px; color:#BFBFBF">
-    	<?php echo getGS('Caching templates in:') ?>
+    	<?php echo $this->translator->trans('Caching templates in:') ?>
     	<strong></strong>
     </span>
 	<?php endif; ?>
@@ -147,10 +147,10 @@ $(function() {
 		modal: true,
 		position:'center',
 		buttons: {
-            <?php echo json_encode(getGS('Save')); ?>: function() {
+            <?php echo json_encode($this->translator->trans('Save')); ?>: function() {
                 var name = $('[name="name"]', $(this)).not(':hidden').val();
                 if (!name.length) {
-                    alert(<?php echo json_encode(getGS("Name can't be empty")); ?>);
+                    alert(<?php echo json_encode($this->translator->trans("Name can't be empty")); ?>);
                     return;
                 }
 
@@ -158,7 +158,7 @@ $(function() {
                 $('input[name="name"]', form).val(name);
                 form.submit();
 			},
-            <?php echo json_encode(getGS('Cancel')); ?>: function() {
+            <?php echo json_encode($this->translator->trans('Cancel')); ?>: function() {
 				$(this).dialog("close");
 			}
         }
@@ -194,7 +194,7 @@ $(function() {
             { 'iDataSort': [7], 'aTargets': [4] }
         ],
         'oLanguage': {
-            'sLoadingRecords': <?php echo json_encode(getGS('Directory is empty')); ?>,
+            'sLoadingRecords': <?php echo json_encode($this->translator->trans('Directory is empty')); ?>,
         },
         'sDom': 't',
         'bPaginate': false,
@@ -249,7 +249,7 @@ $(function() {
 
         if (!$('tbody input:checkbox:checked').size()) {
             $(this).val('');
-            alert(<?php echo json_encode(getGS("You must select at least one template to perform an action.")); ?>);
+            alert(<?php echo json_encode($this->translator->trans("You must select at least one template to perform an action.")); ?>);
             return;
         }
 
@@ -271,17 +271,17 @@ $(function() {
             switch (action)
             {
             	case 'move' :
-            		$('#ui-dialog-title-1').html(<?php echo json_encode(getGS('Choose destination')); ?>);
+            		$('#ui-dialog-title-1').html(<?php echo json_encode($this->translator->trans('Choose destination')); ?>);
                     $('.dialogPopup select').show();
                     $('.dialogPopup input').hide();
                    	break;
             	case 'rename' :
-            		$('#ui-dialog-title-1').html(<?php echo json_encode(getGS('Rename file')); ?>);
+            		$('#ui-dialog-title-1').html(<?php echo json_encode($this->translator->trans('Rename file')); ?>);
                     $('.dialogPopup select').hide();
                     $('.dialogPopup input').show().val(fn);
                 	break;
             	default :
-            		$('#ui-dialog-title-1').html(<?php echo json_encode(getGS('Set new name to')); ?>+' '+fn);
+            		$('#ui-dialog-title-1').html(<?php echo json_encode($this->translator->trans('Set new name to')); ?>+' '+fn);
                 	$('.dialogPopup select').hide();
                 	$('.dialogPopup input').show();
                 	break;
@@ -299,7 +299,7 @@ $(function() {
 		var path = cachePathList.shift();
 		if ( typeof path == 'undefined' )
 		{
-			$('#template-caching-status').text('<?php echo getGS('Caching templates finished') ?>');
+			$('#template-caching-status').text('<?php echo $this->translator->trans('Caching templates finished') ?>');
 			return;
 		}
 		$('#template-caching-status strong').text(path);

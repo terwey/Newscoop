@@ -22,8 +22,8 @@ class Admin_View_Helper_LinkBan extends Zend_View_Helper_Abstract
     public function linkBan( $p_url, $p_params = null)
     {
         $params = array_merge(array(
-            'name'  => getGS('Ban'),
-            'title' => getGS('Ban'),
+            'name'  => $this->translator->trans('Ban'),
+            'title' => $this->translator->trans('Ban'),
             'class' => array('ban','confirm'),
             'attributes' => array()
         ),is_null($p_params)? array():$p_params);

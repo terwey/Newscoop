@@ -16,7 +16,7 @@ class Admin_Form_Ingest extends Zend_Form
         $this->addElement('hash', 'csrf');
 
         $this->addElement('select', 'type', array(
-            'label' => getGS('Type'),
+            'label' => $this->translator->trans('Type'),
             'required' => true,
             'multioptions' => array(
                 'reuters' => 'Thomson Reuters',
@@ -26,7 +26,7 @@ class Admin_Form_Ingest extends Zend_Form
         $config = new Zend_Form_SubForm();
 
         $config->addElement('text', 'username', array(
-            'label' => getGS('Username'),
+            'label' => $this->translator->trans('Username'),
             'required' => true,
             'filters' => array(
                 'stringTrim',
@@ -34,7 +34,7 @@ class Admin_Form_Ingest extends Zend_Form
         ));
 
         $config->addElement('text', 'password', array(
-            'label' => getGS('Password'),
+            'label' => $this->translator->trans('Password'),
             'required' => true,
             'filters' => array(
                 'stringTrim',
@@ -44,7 +44,7 @@ class Admin_Form_Ingest extends Zend_Form
         $this->addSubForm($config, 'config');
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Add'),
+            'label' => $this->translator->trans('Add'),
             'ignore' => true,
         ));
     }

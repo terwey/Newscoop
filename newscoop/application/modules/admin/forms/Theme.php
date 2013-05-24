@@ -5,19 +5,19 @@ class Admin_Form_Theme extends Zend_Form
     public function init()
     {
         $this->addElement('text', 'name', array(
-            'label' => getGS('Theme name'),
+            'label' => $this->translator->trans('Theme name'),
             'required' => True,
         ));
 
         $this->addElement('text', 'required-version', array(
-            'label' => getGS('Required Newscoop version'),
-            'description' => getGS( 'or higher' ),
+            'label' => $this->translator->trans('Required Newscoop version'),
+            'description' => $this->translator->trans( 'or higher' ),
             'class' => 'small',
             'readonly' => True,
         ));
 
         $this->addElement('text', 'theme-version', array(
-            'label' => getGS( 'Theme version' ),
+            'label' => $this->translator->trans( 'Theme version' ),
             'class' => 'small',
             'readonly' => True,
         ));

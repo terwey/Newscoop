@@ -18,21 +18,21 @@ class Admin_Form_User extends Zend_Form
         $this->addElement('hash', 'csrf');
 
         $this->addElement('text', 'first_name', array(
-            'label' => getGS('First Name'),
+            'label' => $this->translator->trans('First Name'),
             'filters' => array(
                 'stringTrim',
             ),
         ));
 
         $this->addElement('text', 'last_name', array(
-            'label' => getGS('Last Name'),
+            'label' => $this->translator->trans('Last Name'),
             'filters' => array(
                 'stringTrim',
             ),
         ));
 
         $this->addElement('text', 'email', array(
-            'label' => getGS('Email'),
+            'label' => $this->translator->trans('Email'),
             'required' => TRUE,
             'filters' => array(
                 'stringTrim',
@@ -43,7 +43,7 @@ class Admin_Form_User extends Zend_Form
         ));
 
         $this->addElement('text', 'username', array(
-            'label' => getGS('Username'),
+            'label' => $this->translator->trans('Username'),
             'required' => TRUE,
             'filters' => array(
                 'stringTrim',
@@ -54,7 +54,7 @@ class Admin_Form_User extends Zend_Form
         ));
 
         $this->addElement('password', 'password', array(
-            'label' => getGS('Password'),
+            'label' => $this->translator->trans('Password'),
             'filters' => array(
                 'stringTrim',
             ),
@@ -64,27 +64,27 @@ class Admin_Form_User extends Zend_Form
         ));
 
         $this->addElement('checkbox', 'status', array(
-            'label' => getGS('User account is active'),
+            'label' => $this->translator->trans('User account is active'),
         ));
 
         $this->addElement('checkbox', 'is_admin', array(
-            'label' => getGS('Allow user access to login to site backend'),
+            'label' => $this->translator->trans('Allow user access to login to site backend'),
         ));
 
         $this->addElement('checkbox', 'is_public', array(
-            'label' => getGS("Allow user's profile to be publicly displayed"),
+            'label' => $this->translator->trans("Allow user's profile to be publicly displayed"),
         ));
 
         $this->addElement('multiCheckbox', 'user_type', array(
-            'label' => getGS('User Type'),
+            'label' => $this->translator->trans('User Type'),
         ));
 
         $this->addElement('select', 'author', array(
-            'label' => getGS('Author'),
+            'label' => $this->translator->trans('Author'),
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
             'ignore' => true,
             'id' => 'save_button'
         ));

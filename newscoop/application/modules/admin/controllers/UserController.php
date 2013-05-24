@@ -107,7 +107,8 @@ class Admin_UserController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->actions = array(
             array(
-                'label' => getGS('Create new account'),
+                /** @Desc("Create new account") */
+                'label' => 'user.create.account',
                 'module' => 'admin',
                 'controller' => 'user',
                 'action' => 'create',
@@ -167,7 +168,7 @@ class Admin_UserController extends Zend_Controller_Action
     {
         $form = new Admin_Form_User();
         $form->user_type->setMultioptions($this->userTypeService->getOptions());
-        $form->author->setMultioptions(array('' => getGS('None')) + $this->_helper->service('author')->getOptions());
+        $form->author->setMultioptions(array('' => $this->translator->trans('None')) + $this->_helper->service('author')->getOptions());
         $form->setDefaults(array(
             'is_admin' => $this->_getParam('is_admin', 0),
             'is_public' => $this->_getParam('is_public', 0),
@@ -177,18 +178,18 @@ class Admin_UserController extends Zend_Controller_Action
         if ($request->isPost() && $form->isValid($request->getPost())) {
             try {
                 $user = $this->userService->save($form->getValues());
-                $this->_helper->flashMessenger(getGS("User '$1' created", $user->getUsername()));
+                $this->_helper->flashMessenger($this->translator->trans("User '$1' created", $user->getUsername()));
                 $this->_helper->redirector('edit', 'user', 'admin', array(
                     'user' => $user->getId(),
                 ));
             } catch (\InvalidArgumentException $e) {
                 switch ($e->getMessage()) {
                     case 'username_conflict':
-                        $form->username->addError(getGS('Username is used already'));
+                        $form->username->addError($this->translator->trans('Username is used already'));
                         break;
 
                     case 'email_conflict':
-                        $form->email->addError(getGS('Email is used already'));
+                        $form->email->addError($this->translator->trans('Email is used already'));
                         break;
                 }
             }
@@ -201,7 +202,7 @@ class Admin_UserController extends Zend_Controller_Action
     {
         $form = new Admin_Form_User();
         $form->user_type->setMultioptions($this->userTypeService->getOptions());
-        $form->author->setMultioptions(array('' => getGS('None')) + $this->_helper->service('author')->getOptions());
+        $form->author->setMultioptions(array('' => $this->translator->trans('None')) + $this->_helper->service('author')->getOptions());
 
         $user = $this->getUser();
         $form->setDefaultsFromEntity($user);
@@ -210,18 +211,18 @@ class Admin_UserController extends Zend_Controller_Action
         if ($request->isPost() && $form->isValid($request->getPost())) {
             try {
                 $this->userService->save($form->getValues(), $user);
-                $this->_helper->flashMessenger(getGS("User saved"));
+                $this->_helper->flashMessenger($this->translator->trans("User saved"));
                 $this->_helper->redirector('edit', 'user', 'admin', array(
                     'user' => $user->getId(),
                 ));
             } catch (\InvalidArgumentException $e) {
                 switch ($e->getMessage()) {
                     case 'username_conflict':
-                        $form->username->addError(getGS('Username is used already'));
+                        $form->username->addError($this->translator->trans('Username is used already'));
                         break;
 
                     case 'email_conflict':
-                        $form->email->addError(getGS('Email is used already'));
+                        $form->email->addError($this->translator->trans('Email is used already'));
                         break;
                 }
             }
@@ -232,7 +233,8 @@ class Admin_UserController extends Zend_Controller_Action
         $this->view->image = $this->_helper->service('image')->getSrc('images/' . $user->getImage(), 80, 80, 'crop');
         $this->view->actions = array(
             array(
-                'label' => getGS('Edit permissions'),
+                /** @Desc("Edit permissions") */
+                'label' => 'user.edit.permissions',
                 'module' => 'admin',
                 'controller' => 'acl',
                 'action' => 'edit',
@@ -242,7 +244,8 @@ class Admin_UserController extends Zend_Controller_Action
                 ),
             ),
             array(
-                'label' => getGS('Edit subscriptions'),
+                /** @Desc("Edit subscriptions") */
+                'label' => 'user.edit.subscriptions',
                 'module' => 'admin',
                 'controller' => 'subscription',
                 'action' => 'index',
@@ -267,13 +270,13 @@ class Admin_UserController extends Zend_Controller_Action
 
             try {
                 $this->_helper->service('user')->renameUser($values);
-                $this->_helper->flashMessenger->addMessage(getGS("User renamed."));
+                $this->_helper->flashMessenger->addMessage($this->translator->trans("User renamed."));
                 $this->_helper->redirector('rename', 'user', 'admin', array(
                     'user' => $user->id,
                     'filter' => $this->_getParam('filter'),
                 ));
             } catch (InvalidArgumentException $e) {
-                $form->username->addError(getGS("Username is used already"));
+                $form->username->addError($this->translator->trans("Username is used already"));
             }
         }
 
@@ -334,7 +337,7 @@ class Admin_UserController extends Zend_Controller_Action
         $request = $this->getRequest();
         if ($request->isPost() && $form->isValid($request->getPost())) {
             $this->_helper->service('user')->save($form->getValues(), $user);
-            $this->_helper->flashMessenger(getGS('Password updated'));
+            $this->_helper->flashMessenger($this->translator->trans('Password updated'));
             $this->_helper->redirector('edit-password', 'user', 'admin');
         }
 
@@ -350,13 +353,13 @@ class Admin_UserController extends Zend_Controller_Action
     {
         $id = (int) $this->_getParam('user', false);
         if (!$id) {
-            $this->_helper->flashMessenger(array('error', getGS('User id not specified')));
+            $this->_helper->flashMessenger(array('error', $this->translator->trans('User id not specified')));
             $this->_helper->redirector('index');
         }
 
         $user = $this->userService->find($id);
         if (empty($user)) {
-            $this->_helper->flashMessenger(array('error', getGS("User with id '$1' not found", $id)));
+            $this->_helper->flashMessenger(array('error', $this->translator->trans("User with id '$1' not found", $id)));
             $this->_helper->redirector('index');
         }
 
@@ -420,7 +423,7 @@ class Admin_UserController extends Zend_Controller_Action
                 $acceptanceRepository->unban($p_publication, $unbanValues);
                 $acceptanceRepository->flush();
                 
-                $this->_helper->flashMessenger(getGS('Ban for user "$1" saved.', $p_user->getName()));
+                $this->_helper->flashMessenger($this->translator->trans('Ban for user "$1" saved.', $p_user->getName()));
                 
                 if ($parameters['delete_messages'] == 1) {
 					$feedbackRepository = $this->_helper->entity->getRepository('Newscoop\Entity\Feedback');
@@ -444,10 +447,11 @@ class Admin_UserController extends Zend_Controller_Action
     private function addUserAttributesSubForm(Zend_Form $form, User $user)
     {
         $subForm = new Zend_Form_SubForm();
-        $subForm->setLegend(getGS('User attributes'));
+        $subForm->setLegend($this->translator->trans('User attributes'));
 
         foreach ($user->getRawAttributes() as $key => $val) {
             $subForm->addElement('text', $key, array(
+                /** @Ignore */
                 'label' => $key,
             ));
         }

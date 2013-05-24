@@ -14,17 +14,17 @@ class Admin_Form_SlideshowCreate extends Zend_Form
     public function init()
     {
         $this->addElement('text', 'headline', array(
-            'label' => getGS('Headline'),
+            'label' => $this->translator->trans('Headline'),
             'required' => true,
         ));
 
         $this->addElement('select', 'rendition', array(
-            'label' => getGS('Slideshow rendition'),
+            'label' => $this->translator->trans('Slideshow rendition'),
             'required' => true,
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Create'),
+            'label' => $this->translator->trans('Create'),
             'ignore' => true,
         ));
     }

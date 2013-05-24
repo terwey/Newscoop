@@ -1,8 +1,8 @@
-<?php $this->placeholder('title')->set(getGS('User types')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('User types')); ?>
 
 <?php
 if (empty($this->groups)) {
-    $this->renderMessage(getGS('No user types.'));
+    $this->renderMessage($this->translator->trans('No user types.'));
     return;
 }
 ?>

@@ -64,7 +64,7 @@ $(function() {
             // if no file, then at least url shall be provided (if some at that page)
             var url_str = $.trim($('#form-url').val());
             if ('' == url_str) {
-                alert(<?php echo json_encode(getGS('You must at least upload one file.')); ?>);
+                alert(<?php echo json_encode($this->translator->trans('You must at least upload one file.')); ?>);
                 if (e && e.preventDefault) {
                     e.preventDefault();
                 }

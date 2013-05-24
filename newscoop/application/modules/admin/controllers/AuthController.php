@@ -27,7 +27,7 @@ class Admin_AuthController extends Zend_Controller_Action
             unset($_SESSION['statDisplayed']);
         }
 
-        $this->_helper->FlashMessenger(getGS('You were logged out.'));
+        $this->_helper->FlashMessenger($this->translator->trans('You were logged out.'));
         $this->_helper->redirector('index', 'index');
     }
 }

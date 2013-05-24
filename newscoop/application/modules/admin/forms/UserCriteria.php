@@ -17,15 +17,15 @@ class Admin_Form_UserCriteria extends Zend_Form
 
         $this->addElement('select', 'status', array(
             'multioptions' => array(
-                User::STATUS_ACTIVE => getGS('active'),
-                User::STATUS_INACTIVE => getGS('pending'),
-                User::STATUS_DELETED => getGS('deleted'),
+                User::STATUS_ACTIVE => $this->translator->trans('active'),
+                User::STATUS_INACTIVE => $this->translator->trans('pending'),
+                User::STATUS_DELETED => $this->translator->trans('deleted'),
             ),
         ));
 
         $this->addElement('select', 'groups', array(
             'multioptions' => array(
-                null => getGS('Any group'),
+                null => $this->translator->trans('Any group'),
             ),
         ));
     }

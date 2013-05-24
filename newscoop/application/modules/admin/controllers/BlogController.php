@@ -7,6 +7,7 @@
 
 use Newscoop\Annotations\Acl;
 
+require_once APPLICATION_PATH . '/../bin/newscoop_bootstrap.php';
 require_once APPLICATION_PATH . '/../admin-files/libs/ArticleList/ArticleList.php';
 
 /**

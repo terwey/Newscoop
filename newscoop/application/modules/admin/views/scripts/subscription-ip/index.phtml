@@ -1,9 +1,9 @@
-<?php $this->placeholder('title')->set(getGS('IP Access')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('IP Access')); ?>
 
 <?php $this->renderActions(); ?>
 
 <?php if (!$this->subscriber->hasIps()) {
-    $this->renderMessage(getGS('No IP Addresses'));
+    $this->renderMessage($this->translator->trans('No IP Addresses'));
     return;
 } ?>
 

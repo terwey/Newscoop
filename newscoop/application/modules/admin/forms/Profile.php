@@ -14,7 +14,7 @@ class Admin_Form_Profile extends Zend_Form
         $this->setAttrib('enctype', 'multipart/form-data');
 
         $this->addElement('file', 'image', array(
-            'label' => getGS('Picture'),
+            'label' => $this->translator->trans('Picture'),
         ));
 
         $this->addElement('submit', 'submit', array(

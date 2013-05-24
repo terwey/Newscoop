@@ -1,4 +1,4 @@
-<?php $this->placeholder('title')->set(getGS('Subscribed sections: $1', $this->subscription->getPublicationName())); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('Subscribed sections: $1', $this->subscription->getPublicationName())); ?>
 
 <?php $this->renderActions(); ?>
 
@@ -17,7 +17,7 @@
         'action' => 'edit',
         'section' => $section->getId(),
     )); ?>"><?php echo $this->sections[$section->getSectionNumber()]; ?></a></td>
-    <td><?php echo $section->getLanguageName() ?: getGS('All languages'); ?></td>
+    <td><?php echo $section->getLanguageName() ?: $this->translator->trans('All languages'); ?></td>
     <td><?php echo $section->getStartDate()->format('Y-m-d'); ?></td>
     <td><?php echo $section->getDays(); ?></td>
     <td><?php echo $section->getPaidDays(); ?></td>

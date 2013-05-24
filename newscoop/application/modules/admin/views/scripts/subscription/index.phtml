@@ -1,4 +1,4 @@
-<?php $this->placeholder('title')->set(getGS('Subscriptions')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('Subscriptions')); ?>
 <header>
     <h1><?php putGS('Subscriptions'); ?></h1>
     <button id="close-button" class="prime"><?php putGS('Done'); ?></button>
@@ -59,8 +59,8 @@
 <script type="text/template" id="subscription-row-template">
 <td class="publication"><a href="<%= link.href %>"><%= publication.name %></a></td>
 <td class="toPay"><input type="number" step="0.01" min="0" value="<%= toPay.toFixed(1) %>" /></td>
-<td class="type"><%= type === 'P' ? <?php echo json_encode(getGS('Paid')), ':', json_encode(getGS('Trial')); ?> %></td>
-<td class="active"><%= active ? <?php echo json_encode(getGS('Yes')), ':', json_encode(getGS('No')); ?> %></td>
+<td class="type"><%= type === 'P' ? <?php echo json_encode($this->translator->trans('Paid')), ':', json_encode($this->translator->trans('Trial')); ?> %></td>
+<td class="active"><%= active ? <?php echo json_encode($this->translator->trans('Yes')), ':', json_encode($this->translator->trans('No')); ?> %></td>
 <td class="delete"><button><?php putGS('Delete'); ?></button></td>
 </script>
 
@@ -162,18 +162,18 @@
 
         validate: function(attrs) {
             var ip = attrs.ip.split('.');
-            <?php foreach (array(getGS('first'), getGS('second'), getGS('third'), getGS('forth')) as $id => $order) { ?>
+            <?php foreach (array($this->translator->trans('first'), $this->translator->trans('second'), $this->translator->trans('third'), $this->translator->trans('forth')) as $id => $order) { ?>
             if (isNaN(parseInt(ip[<?php echo $id; ?>])) || parseInt(ip[<?php echo $id; ?>]) < 1 || parseInt(ip[<?php echo $id; ?>]) > 255) {
-                throw <?php echo json_encode(getGS("You must input a number between 0 and 255 into the Start IP address' $1 field.", $order)); ?>;
+                throw <?php echo json_encode($this->translator->trans("You must input a number between 0 and 255 into the Start IP address' $1 field.", $order)); ?>;
             }
             <?php } ?>
 
             if (isNaN(attrs.number) || attrs.number < 1) {
-                throw <?php echo json_encode(getGS("You must input a number greater than 0 into the Number of addresses field.")); ?>;
+                throw <?php echo json_encode($this->translator->trans("You must input a number greater than 0 into the Number of addresses field.")); ?>;
             }
 
             if (window.ips.where({ip: attrs.ip}).length) {
-                throw <?php echo json_encode(getGS("The IP address group conflicts with another existing group.")); ?>;
+                throw <?php echo json_encode($this->translator->trans("The IP address group conflicts with another existing group.")); ?>;
             }
         }
     });
@@ -244,7 +244,7 @@
             });
 
             if (this.collection.length === 0) {
-                tbody.html('<tr><td colspan="5">' + <?php echo json_encode(getGS('No subscriptions')); ?> + '</td></tr>');
+                tbody.html('<tr><td colspan="5">' + <?php echo json_encode($this->translator->trans('No subscriptions')); ?> + '</td></tr>');
             }
 
             return this;
@@ -426,7 +426,7 @@
             });
 
             if (this.collection.length === 0) {
-                tbody.append('<tr />').html('<td colspan="3">' + <?php echo json_encode(getGS('No records.')); ?> + '</td>');
+                tbody.append('<tr />').html('<td colspan="3">' + <?php echo json_encode($this->translator->trans('No records.')); ?> + '</td>');
             }
 
             return this;
@@ -492,7 +492,7 @@
             if (available.length !== 0) {
                 $('#app').html(this.addView.render(available).el);
             } else {
-                alert(<?php echo json_encode(getGS("You have subscription for all available publications")); ?>);
+                alert(<?php echo json_encode($this->translator->trans("You have subscription for all available publications")); ?>);
                 this.navigate('');
             }
         }

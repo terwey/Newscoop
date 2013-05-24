@@ -122,7 +122,8 @@ class Admin_TemplateController extends Zend_Controller_Action
 
         $this->view->actions = array(
             array(
-                'label' => getGS('Upload'),
+                /** @Desc("Upload") */
+                'label' => 'upload',
                 'module' => 'admin',
                 'controller' => 'template',
                 'action' => 'upload',
@@ -130,12 +131,14 @@ class Admin_TemplateController extends Zend_Controller_Action
                 'reset_params' => false
             ),
             array(
-                'label' => getGS('Create folder'),
+                /** @Desc("Create folder") */
+                'label' => 'folder.create',
                 'uri' => '#create-folder',
                 'class' => 'add',
             ),
             array(
-                'label' => getGS('Create file'),
+                /** @Desc("Create file") */
+                'label' => 'file.create',
                 'uri' => '#create-file',
                 'class' => 'add',
             ),
@@ -158,7 +161,7 @@ class Admin_TemplateController extends Zend_Controller_Action
 
         $form = new Admin_Form_Upload;
         $form->setMethod('post');
-        $form->getElement('submit')->setLabel(getGS('Done uploading'));
+        $form->getElement('submit')->setLabel($this->translator->trans('Done uploading'));
 
         $request = $this->getRequest();
         if ($request->isPost() && $form->isValid($request->getPost())) {
@@ -167,7 +170,7 @@ class Admin_TemplateController extends Zend_Controller_Action
             foreach ($files as $basename => $tmp) {
                 $this->service->storeItem("$path/$basename", file_get_contents($tmp));
             }
-            $this->_helper->flashMessenger($this->formatMessage(array_keys($files), getGS('uploaded')));
+            $this->_helper->flashMessenger($this->formatMessage(array_keys($files), $this->translator->trans('uploaded')));
 
             // redirect by next parameter
             if(!is_null($nextRedirect->next)) {
@@ -192,7 +195,7 @@ class Admin_TemplateController extends Zend_Controller_Action
         $item = $this->service->fetchMetadata($key);
         $this->view->item = $item;
         $this->view->placeholder('title')
-            ->set(getGS("Edit template: $1", $item->name));
+            ->set($this->translator->trans("Edit template: $1", $item->name));
 
         switch ($item->type) {
             case 'jpg':
@@ -222,7 +225,7 @@ class Admin_TemplateController extends Zend_Controller_Action
             try {
                 $form->getValues(); // upload
                 $this->service->replaceItem($key, $form->file);
-	            $this->_helper->flashMessenger(getGS("File '$1' was replaced.", basename($key)));
+	            $this->_helper->flashMessenger($this->translator->trans("File '$1' was replaced.", basename($key)));
             } catch (\InvalidArgumentException $e) {
                 $this->_helper->flashMessenger(array('error', $e->getMessage()));
             }
@@ -260,7 +263,7 @@ class Admin_TemplateController extends Zend_Controller_Action
                 $this->_helper->entity->flushManager();
             }
 
-            $this->_helper->flashMessenger(getGS("Template '$1' $2.", basename($key), getGS('updated')));
+            $this->_helper->flashMessenger($this->translator->transChoice("Template '$1' $2.", basename($key), $this->translator->trans('updated')));
             $this->_redirect(urldecode($this->_getParam('next')), array(
                 'prependBase' => false,
             ));
@@ -288,7 +291,7 @@ class Admin_TemplateController extends Zend_Controller_Action
             $files = (array) $this->_getParam('file', array());
             foreach ($files as $file) {
                 $s = $this->service->moveItem("$path/$file", $dest);
-                $this->_helper->flashMessenger->addMessage(getGS("Template '$1' $2.", $file, getGS('moved')));
+                $this->_helper->flashMessenger->addMessage($this->translator->transChoice("Template '$1' $2.", $file, $this->translator->trans('moved')));
             }
         } catch (\InvalidArgumentException $e) {
             $this->_helper->flashMessenger->addMessage(array('error', $e->getMessage()));
@@ -311,7 +314,7 @@ class Admin_TemplateController extends Zend_Controller_Action
             $nameExt = pathinfo($this->_getParam('name'),PATHINFO_EXTENSION);
             $name = $this->formatName($this->_getParam('name'), ($nameExt==''?pathinfo($file, PATHINFO_EXTENSION):null) );
             $this->service->copyItem("$path/$file", $name);
-		    $this->_helper->flashMessenger(getGS("Template '$1' was duplicated into '$2'.", $file, $name));
+		    $this->_helper->flashMessenger($this->translator->transChoice("Template '$1' was duplicated into '$2'.", $file, $name));
         } catch (\InvalidArgumentException $e) {
             $this->_helper->flashMessenger(array('error', $e->getMessage()));
         }
@@ -333,7 +336,7 @@ class Admin_TemplateController extends Zend_Controller_Action
             $name = $this->formatName($this->_getParam('name'), null);
             $this->service->renameItem("$path/$file", $name);
             $this->clearCompiledTemplate("$path/$file");
-		    $this->_helper->flashMessenger(getGS("Template object '$1' was renamed to '$2'.", $file, $name));
+		    $this->_helper->flashMessenger($this->translator->transChoice("Template object '$1' was renamed to '$2'.", $file, $name));
         } catch (\InvalidArgumentException $e) {
             $this->_helper->flashMessenger(array('error', $e->getMessage()));
         }
@@ -356,7 +359,7 @@ class Admin_TemplateController extends Zend_Controller_Action
                 $this->service->deleteItem($key);
                 $this->_helper->entity->flushManager();
                 $this->clearCompiledTemplate($key);
-			    $this->_helper->flashMessenger(getGS("Template object '$1' was deleted.", $file));
+			    $this->_helper->flashMessenger($this->translator->trans("Template object '$1' was deleted.", $file));
             }
         } catch (\InvalidArgumentException $e) {
             $this->_helper->flashMessenger(array('error', $e->getMessage()));
@@ -374,7 +377,7 @@ class Admin_TemplateController extends Zend_Controller_Action
 
         try {
             $this->service->createFolder(ltrim("$path/$name", ' /'));
-		    $this->_helper->flashMessenger(getGS("Directory '$1' created.", $name));
+		    $this->_helper->flashMessenger($this->translator->trans("Directory '$1' created.", $name));
         } catch (\InvalidArgumentException $e) {
 	        $this->_helper->flashMessenger(array('error', $e->getMessage()));
         }
@@ -391,7 +394,7 @@ class Admin_TemplateController extends Zend_Controller_Action
 
         try {
             $this->service->createFile(ltrim("$path/$name", ' /'));
-	        $this->_helper->flashMessenger(getGS("New template '$1' created.", $name));
+	        $this->_helper->flashMessenger($this->translator->trans("New template '$1' created.", $name));
         } catch (\InvalidArgumentException $e) {
             $this->_helper->flashMessenger(array('error', $e->getMessage()));
         }
@@ -421,6 +424,7 @@ class Admin_TemplateController extends Zend_Controller_Action
         }
 
         return array(
+            /** @Ignore */ 
             'label' => $pieces[$level],
             'module' => 'admin',
             'controller' => $this->_getParam('controller'),
@@ -485,10 +489,10 @@ class Admin_TemplateController extends Zend_Controller_Action
         $files = (array) $files;
         $count = sizeof($files);
         if ($count == 1) {
-            return getGS("'$1' $2", current($files), $action);
+            return $this->translator->transChoice("'$1' $2", current($files), $action);
         }
 
-        return getGS("$1 files $2", $count, $action);
+        return $this->translator->transChoice("$1 files $2", $count, $action);
     }
 
     /**
@@ -528,9 +532,9 @@ class Admin_TemplateController extends Zend_Controller_Action
             (
             	'multioptions' => array
                 (
-                	'' => getGS('Actions'),
-                	'move' => getGS('Move'),
-                	'delete' => getGS('Delete'),
+                	'' => $this->translator->trans('Actions'),
+                	'move' => $this->translator->trans('Move'),
+                	'delete' => $this->translator->trans('Delete'),
                 ),
                 'decorators' => array( 'ViewHelper' )
             )),

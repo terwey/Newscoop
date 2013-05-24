@@ -53,27 +53,27 @@ class Admin_CommentAcceptanceController extends Zend_Controller_Action
 
         $table->setDataSource($this->repository);
         $table->setOption('oLanguage', array('oPaginate' => array(
-                'sFirst' => getGS('First'),
-                'sLast' => getGS('Last'),
-                'sNext' => getGS('Next'),
-                'sPrevious' => getGS('Previous'),
+                'sFirst' => $this->translator->trans('First'),
+                'sLast' => $this->translator->trans('Last'),
+                'sNext' => $this->translator->trans('Next'),
+                'sPrevious' => $this->translator->trans('Previous'),
             ),
-            'sZeroRecords' => getGS('No records found.'),
-            'sSearch' => getGS('Search'),
-            'sInfo' => getGS('Showing _START_ to _END_ of _TOTAL_ entries'),
-            'sEmpty' => getGS('No entries to show'),
-            'sInfoFiltered' => getGS(' - filtering from _MAX_ records'),
-            'sLengthMenu' => getGS('Display _MENU_ records'),
+            'sZeroRecords' => $this->translator->trans('No records found.'),
+            'sSearch' => $this->translator->trans('Search'),
+            'sInfo' => $this->translator->trans('Showing _START_ to _END_ of _TOTAL_ entries'),
+            'sEmpty' => $this->translator->trans('No entries to show'),
+            'sInfoFiltered' => $this->translator->trans(' - filtering from _MAX_ records'),
+            'sLengthMenu' => $this->translator->trans('Display _MENU_ records'),
             'sInfoEmpty' => '')
         );
         $table->setCols(array(
-            'id' => getGS('ID'),
-            'for_column' => getGS('For Column'),
-            'type' => getGS('Type'),
-            'search' => getGS('Search'),
-            'search_type'   => getGS('Search Type'),
-            'edit' => getGS('Edit'),
-            'delete' => getGS('Delete')
+            'id' => $this->translator->trans('ID'),
+            'for_column' => $this->translator->trans('For Column'),
+            'type' => $this->translator->trans('Type'),
+            'search' => $this->translator->trans('Search'),
+            'search_type'   => $this->translator->trans('Search Type'),
+            'edit' => $this->translator->trans('Edit'),
+            'delete' => $this->translator->trans('Delete')
         ));
 
         $view = $this->view;
@@ -139,7 +139,7 @@ class Admin_CommentAcceptanceController extends Zend_Controller_Action
             $this->repository->delete($acceptance);
             $this->repository->flush();
 
-            $this->_helper->flashMessenger(getGS('Acceptance "$1" deleted.',$acceptance->getSearch()));
+            $this->_helper->flashMessenger($this->translator->trans('Acceptance "$1" deleted.',$acceptance->getSearch()));
             $this->_helper->redirector->gotoSimple('index');
         }
     }
@@ -156,7 +156,7 @@ class Admin_CommentAcceptanceController extends Zend_Controller_Action
             $values = $p_form->getValues();
             $this->repository->save($p_acceptance, $values);
             $this->repository->flush();
-            $this->_helper->flashMessenger(getGS('Acceptance "$1" saved.',$p_acceptance->getSearch()));
+            $this->_helper->flashMessenger($this->translator->trans('Acceptance "$1" saved.',$p_acceptance->getSearch()));
             $this->_helper->redirector->gotoSimple('index');
         }
     }

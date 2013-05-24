@@ -34,7 +34,7 @@ class Admin_Form_Staff extends Admin_Form_User
         }
 
         $this->addElement('multiCheckbox', 'groups', array(
-            'label' => getGS('User Type'),
+            'label' => $this->translator->trans('User Type'),
             'order' => 61, // $this->getEelement('phone')->getOrder() + 1;
         ));
     }

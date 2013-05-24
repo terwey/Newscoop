@@ -16,26 +16,26 @@ class Admin_Form_IngestSettings extends Zend_Form
         $this->addElement('hash', 'csrf');
 
         $this->addElement('text', 'article_type', array(
-            'label' => getGS('Article Type'),
+            'label' => $this->translator->trans('Article Type'),
             'required' => true,
         ));
 
         $this->addElement('select', 'publication', array(
-            'label' => getGS('Publication'),
+            'label' => $this->translator->trans('Publication'),
             'multioptions' => array(
-                null => getGS('None'),
+                null => $this->translator->trans('None'),
             ),
         ));
 
         $this->addElement('select', 'section', array(
-            'label' => getGS('Section'),
+            'label' => $this->translator->trans('Section'),
             'multioptions' => array(
-                null => getGS('None'),
+                null => $this->translator->trans('None'),
             ),
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
             'ignore' => true,
         ));
     }

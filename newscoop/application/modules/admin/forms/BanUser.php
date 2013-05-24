@@ -50,30 +50,30 @@ class Admin_Form_BanUser extends Zend_Form
     {
 
         $this->addElement('checkbox', 'name', array(
-            'label' => getGS(getGS('Name').":"),
+            'label' => $this->translator->trans($this->translator->trans('Name').":"),
             'required' => false,
             'order' => 10,
         ));
 
         $this->addElement('checkbox', 'email', array(
-            'label' => getGS(getGS('Email').":"),
+            'label' => $this->translator->trans($this->translator->trans('Email').":"),
             'required' => false,
             'order' => 20,
         ));
 
         $this->addElement('checkbox', 'delete_messages', array(
-            'label' => getGS('Delete feedback messages?'),
+            'label' => $this->translator->trans('Delete feedback messages?'),
             'required' => false,
             'order' => 40,
         ));
 
         $this->addElement('submit', 'cancel', array(
-            'label' => getGS('Cancel'),
+            'label' => $this->translator->trans('Cancel'),
             'order' => 98,
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
             'order' => 99,
         ));
     }
@@ -87,10 +87,10 @@ class Admin_Form_BanUser extends Zend_Form
     public function setValues($p_user, $p_values)
     {
         /* @var $name Zend_Form_Element_CheckBox */
-        $this->name->setLabel(getGS('Name').":".$p_user->getName())
+        $this->name->setLabel($this->translator->trans('Name').":".$p_user->getName())
                     ->setChecked($p_values['name']);
 
-        $this->email->setLabel(getGS('Email').":".$p_user->getEmail())
+        $this->email->setLabel($this->translator->trans('Email').":".$p_user->getEmail())
                     ->setChecked($p_values['email']);
     }
 

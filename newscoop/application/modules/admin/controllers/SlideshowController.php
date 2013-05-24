@@ -76,7 +76,7 @@ class Admin_SlideshowController extends Zend_Controller_Action
             } catch (\InvalidArgumentException $e) {
                 switch ($e->getCode()) {
                     case PackageService::CODE_UNIQUE_SLUG:
-                        $form->slug->addError(getGS('Slug must be unique'));
+                        $form->slug->addError($this->translator->trans('Slug must be unique'));
                         break;
                 }
             }
@@ -98,7 +98,7 @@ class Admin_SlideshowController extends Zend_Controller_Action
             ));
         } catch (\InvalidArgumentException $e) {
             $this->_helper->json(array(
-                'error_message' => sprintf(getGS('Sorry that image is too small. Image needs to be at least %dx%d.'), $slideshow->getRendition()->getWidth(), $slideshow->getRendition()->getHeight()),
+                'error_message' => sprintf($this->translator->trans('Sorry that image is too small. Image needs to be at least %dx%d.'), $slideshow->getRendition()->getWidth(), $slideshow->getRendition()->getHeight()),
             ));
         }
     }

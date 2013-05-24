@@ -122,7 +122,7 @@ class Admin_PlaylistController extends Zend_Controller_Action
             }
         } else {
             $playlist = new Playlist();
-            $playlist->setName(trim($playlistName)!='' ? $playlistName:getGS('Playlist').strftime('%F') );
+            $playlist->setName(trim($playlistName)!='' ? $playlistName:$this->translator->trans('Playlist').strftime('%F') );
         }
 
         $playlist = $this->playlistRepository->save($playlist, $this->_request->getParam('articles'));

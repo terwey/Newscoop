@@ -67,14 +67,18 @@ class Admin_LogController extends Zend_Controller_Action
         $actionTypes = $this->auditService->getActionTypes();
         
         $form->addElement('select', 'resource_type', array(
-            'multioptions' => array('' => getGS('All')) + $resourceTypes,
-            'label' => getGS('Resource Type:'),
+            /** @Desc("All") */
+            'multioptions' => array('' => $this->translator->trans('all')) + $resourceTypes,
+            /** @Desc("Resource type") */
+            'label' => 'type.resource',
             'onChange' => 'this.form.submit();',
         ));
         
         $form->addElement('select', 'action_type', array(
-            'multioptions' => array('' => getGS('All')) + $actionTypes,
-            'label' => getGS('Action Type:'),
+            /** @Desc("All") */
+            'multioptions' => array('' => $this->translator->trans('all')) + $actionTypes,
+            /** @Desc("Action type") */
+            'label' => 'type.action',
             'onChange' => 'this.form.submit();',
         ));
         

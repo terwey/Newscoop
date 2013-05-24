@@ -37,7 +37,7 @@ class Admin_SupportController extends Zend_Controller_Action
 
             SystemPref::set('stat_ask_time', $askTime->getTimestamp());
             SystemPref::set('support_send', $values['support_send']);
-            $this->_helper->flashMessenger(getGS('Support settings saved.'));
+            $this->_helper->flashMessenger($this->translator->trans('Support settings saved.'));
             if ($this->_getParam('action') === 'popup') {
                 $this->_helper->redirector('index', '');
             } else {

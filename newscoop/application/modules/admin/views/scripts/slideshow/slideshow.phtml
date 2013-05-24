@@ -1,7 +1,7 @@
 <dl class="slideshow-preview">
     <dt><?php echo $this->escape($this->helperSlideshow->getHeadline()); ?> (<?php echo $this->helperSlideshow->getItemsCount(), ' ',  $this->translate(array(
-        getGS('Item'),
-        getGS('Items'),
+        $this->translator->trans('Item'),
+        $this->translator->trans('Items'),
         $this->helperSlideshow->getItemsCount(),
     )); ?>)</dt>
     <?php $counter = 0; ?>

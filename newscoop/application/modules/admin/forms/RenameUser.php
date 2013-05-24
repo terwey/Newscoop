@@ -16,7 +16,7 @@ class Admin_Form_RenameUser extends Zend_Form
         $this->addElement('hash', 'csrf');
 
         $this->addElement('text', 'username', array(
-            'label' => getGS('Username'),
+            'label' => $this->translator->trans('Username'),
             'required' => true,
             'filters' => array(
                 'stringTrim',
@@ -28,7 +28,7 @@ class Admin_Form_RenameUser extends Zend_Form
 
         $this->addElement('submit', 'submit', array(
             'id' => 'save_button',
-            'label' => getGS('Save'),
+            'label' => $this->translator->trans('Save'),
             'ignore' => true,
         ));
     }

@@ -214,8 +214,8 @@ class Admin_ThemesController extends Zend_Controller_Action
             ->setCols( array
             (
                 'image'        => '',
-                'name'         => getGS( 'Theme name / version' ),
-                'description'  => getGS( 'Compatibility' ),
+                'name'         => $this->translator->trans( 'Theme name / version' ),
+                'description'  => $this->translator->trans( 'Compatibility' ),
                 'actions'      => ''
             ))
             ->buildColumnDefs()
@@ -276,7 +276,7 @@ class Admin_ThemesController extends Zend_Controller_Action
                 'media'	=> 'screen',
                 'rel'	=> 'stylesheet'
             ) );
-            $this->view->placeholder( 'title' )->set( getGS( 'Theme management' ) );
+            $this->view->placeholder( 'title' )->set( $this->translator->trans( 'Theme management' ) );
         }
     }
 
@@ -373,7 +373,7 @@ class Admin_ThemesController extends Zend_Controller_Action
         $params = $this->getRequest()->getParams();
         $this->view->templatesParams = $params;
 
-        $this->view->placeholder( 'title' )->set( getGS( 'Theme management' ) );
+        $this->view->placeholder( 'title' )->set( $this->translator->trans( 'Theme management' ) );
 
         $themeMngService = $this->getThemeService();
         /* @var $themeMngService Newscoop\Service\Implementation\ThemeManagementServiceLocal */
@@ -445,7 +445,7 @@ class Admin_ThemesController extends Zend_Controller_Action
 
                     $this->getThemeService()->assignOutputSetting( $settings, $theme );
 
-                    $msg = getGS( 'Theme settings saved.' ) ;
+                    $msg = $this->translator->trans( 'Theme settings saved.' ) ;
                     $this->view->success = $msg;
                     $this->_helper->flashMessenger( $msg );
                 }
@@ -456,7 +456,7 @@ class Admin_ThemesController extends Zend_Controller_Action
         }
         catch( \Exception $e )
         {
-//            $this->_helper->flashMessenger( ( $this->view->error = getGS( 'Saving settings failed.' ) ) );
+//            $this->_helper->flashMessenger( ( $this->view->error = $this->translator->trans( 'Saving settings failed.' ) ) );
         }
         $this->view->outputForm = $outputForm;
 
@@ -573,7 +573,7 @@ class Admin_ThemesController extends Zend_Controller_Action
 
         $this->view->response = $thmServ->assignArticleTypes( $updateArticleTypes, $theme );
 
-        $this->_helper->flashMessenger(getGS('Theme settings updated.'));
+        $this->_helper->flashMessenger($this->translator->trans('Theme settings updated.'));
 
     }
 
@@ -610,20 +610,20 @@ class Admin_ThemesController extends Zend_Controller_Action
                 $this->getThemeService()->removeTheme($themeId);
                 $this->_helper->service('image.rendition')->reloadRenditions();
                 $this->view->status = true;
-                $this->view->response = getGS( "Unassign successful" );
+                $this->view->response = $this->translator->trans( "Unassign successful" );
             }
             catch( RemoveThemeException $e )
             {
                 $this->view->status = false;
-                $this->view->response = getGS("The theme can not be unassigned because it is in use by issues ($1) in this publication", $e->getMessage());
+                $this->view->response = $this->translator->trans("The theme can not be unassigned because it is in use by issues ($1) in this publication", $e->getMessage());
             }
             catch( Exception $e )
             {
                 $this->view->status = false;
                 if( $e->getCode() == 500) {
-                    $this->view->response = getGS( "Theme is assigned and can not be deleted" );
+                    $this->view->response = $this->translator->trans( "Theme is assigned and can not be deleted" );
                 } else {
-                    $this->view->response = getGS( "Failed unassigning theme" );
+                    $this->view->response = $this->translator->trans( "Failed unassigning theme" );
                 }
 
             }
@@ -651,7 +651,7 @@ class Admin_ThemesController extends Zend_Controller_Action
 
     public function exportAction()
     {
-        $erro_msg = getGS('Theme export was not successful. Check please that the server is not out of disk space.');
+        $erro_msg = $this->translator->trans('Theme export was not successful. Check please that the server is not out of disk space.');
 
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
@@ -698,16 +698,16 @@ class Admin_ThemesController extends Zend_Controller_Action
 
 		    if( $this->getThemeService()->assignTheme( $theme, $pub ) ) {
                 $this->_helper->service('image.rendition')->reloadRenditions();
-		        $this->view->response =  getGS( 'Assigned successfully' );
+		        $this->view->response =  $this->translator->trans( 'Assigned successfully' );
 		    } else {
     		    throw new Exception();
 		    }
         }
         catch( DuplicateNameException $e ) {
-            $this->view->exception = array( "code" => $e->getCode(), "message" => getGS( 'Duplicate assignment' ) );
+            $this->view->exception = array( "code" => $e->getCode(), "message" => $this->translator->trans( 'Duplicate assignment' ) );
         }
         catch( \Exception $e ) {
-            $this->view->exception = array( "code" => $e->getCode(), "message" => getGS( 'Something broke' ) );
+            $this->view->exception = array( "code" => $e->getCode(), "message" => $this->translator->trans( 'Something broke' ) );
         }
     }
 
@@ -716,16 +716,16 @@ class Admin_ThemesController extends Zend_Controller_Action
         try {
             $theme = $this->getThemeService()->getById($this->_getParam('theme-id'));
             $this->getThemeService()->copyToUnassigned($theme);
-            $this->view->response = getGS('Copied successfully');
+            $this->view->response = $this->translator->trans('Copied successfully');
         } catch (DuplicateNameException $e) {
             $this->view->exception = array(
                 'code' => $e->getCode(),
-                'message' => getGS('Duplicate assignment'),
+                'message' => $this->translator->trans('Duplicate assignment'),
             );
         } catch(\Exception $e) {
             $this->view->exception = array(
                 'code' => $e->getCode(),
-                'message' => getGS('Something broke')
+                'message' => $this->translator->trans('Something broke')
             );
         }
     }
@@ -735,7 +735,7 @@ class Admin_ThemesController extends Zend_Controller_Action
         $this->_repository->install( $this->_getParam( 'offset' ) );
         $this->_helper->entity->flushManager();
 
-        $this->_helper->flashMessenger( getGS( 'Theme $1', getGS( 'installed' ) ) );
+        $this->_helper->flashMessenger( $this->translator->trans( 'Theme $1', $this->translator->trans( 'installed' ) ) );
         $this->_helper->redirector( 'index' );
     }
 
@@ -744,7 +744,7 @@ class Admin_ThemesController extends Zend_Controller_Action
         $this->_repository->uninstall( $this->_getParam( 'id' ) );
         $this->_helper->entity->flushManager();
 
-        $this->_helper->flashMessenger( getGS( 'Theme $1', getGS( 'deleted' ) ) );
+        $this->_helper->flashMessenger( $this->translator->trans( 'Theme $1', $this->translator->trans( 'deleted' ) ) );
         $this->_helper->redirector( 'index' );
     }
 

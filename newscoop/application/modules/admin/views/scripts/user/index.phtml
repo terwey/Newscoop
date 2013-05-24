@@ -139,10 +139,10 @@ function fnCreateSelect( aData )
 
 $(function() {
     window.translate = <?php echo json_encode(array(
-        'No users found.' => getGS('No users found.'),
-        'Are you sure you want to {action}?' => getGS('Are you sure you want to {action}?'),
-        'New confirmation email was sent to user.' => getGS('New confirmation email was sent to user.'),
-        'User was deleted.' => getGS('User was deleted.'),
+        'No users found.' => $this->translator->trans('No users found.'),
+        'Are you sure you want to {action}?' => $this->translator->trans('Are you sure you want to {action}?'),
+        'New confirmation email was sent to user.' => $this->translator->trans('New confirmation email was sent to user.'),
+        'User was deleted.' => $this->translator->trans('User was deleted.'),
     )); ?>;
 
     $('#userDataTable').hide(); // hide the table so it doesn't look jaggy
@@ -305,7 +305,7 @@ $(document).ready(function(){
 
         // Set chart options
         var options = {
-            'title':<?php echo json_encode(getGS('Active Logins')); ?>,
+            'title':<?php echo json_encode($this->translator->trans('Active Logins')); ?>,
             'width':180,
             'height':180,
             'legend': {

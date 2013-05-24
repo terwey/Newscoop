@@ -35,7 +35,7 @@ class Admin_LanguagesController extends Zend_Controller_Action
 
         $this->view->actions = array(
             array(
-                'label' => getGS('Add new Language'),
+                'label' => $this->translator->trans('Add new Language'),
                 'module' => 'admin',
                 'controller' => 'languages',
                 'action' => 'add',
@@ -56,10 +56,10 @@ class Admin_LanguagesController extends Zend_Controller_Action
             try {
                 $language = new Language;
                 $this->repository->save($language, $form->getValues());
-                $this->_helper->flashMessenger->addMessage(getGS('Language added.'));
+                $this->_helper->flashMessenger->addMessage($this->translator->trans('Language added.'));
                 $this->_helper->redirector('index');
             } catch (Exception $e) {
-                $form->getElement('name')->addError(getGS('Name taken.'));
+                $form->getElement('name')->addError($this->translator->trans('Name taken.'));
             }
         }
 
@@ -79,7 +79,7 @@ class Admin_LanguagesController extends Zend_Controller_Action
             try {
                 $this->repository->save($language, $form->getValues());
 
-                $this->_helper->flashMessenger->addMessage(getGS('Language saved.'));
+                $this->_helper->flashMessenger->addMessage($this->translator->trans('Language saved.'));
                 $this->_helper->redirector('edit', 'languages', 'admin', array('language' => $language->getId()));
             } catch (InvalidArgumentException $e) {
                 $this->view->error = $e->getMessage();
@@ -99,18 +99,18 @@ class Admin_LanguagesController extends Zend_Controller_Action
 
         $language = $this->getLanguage();
         if ($language->getCode() === 'en') {
-            $this->_helper->flashMessenger->addMessage(getGS('English language cannot be removed.'));
+            $this->_helper->flashMessenger->addMessage($this->translator->trans('English language cannot be removed.'));
             $this->_helper->redirector('index', 'languages', 'admin');
         }
 
         if ($this->repository->isUsed($language)) {
-            $this->_helper->flashMessenger->addMessage(getGS('Language is in use and cannot be removed.'));
+            $this->_helper->flashMessenger->addMessage($this->translator->trans('Language is in use and cannot be removed.'));
             $this->_helper->redirector('index', 'languages', 'admin');
         }
 
         Localizer::DeleteLanguageFiles($language->getCode());
         $this->repository->delete($language->getId());
-        $this->_helper->flashMessenger->addMessage(getGS('Language removed.'));
+        $this->_helper->flashMessenger->addMessage($this->translator->trans('Language removed.'));
         $this->_helper->redirector('index', 'languages', 'admin');
     }
 
@@ -123,13 +123,13 @@ class Admin_LanguagesController extends Zend_Controller_Action
     {
         $id = (int) $this->getRequest()->getParam('language');
         if (!$id) {
-            $this->_helper->flashMessenger(array('error', getGS('Language id not specified')));
+            $this->_helper->flashMessenger(array('error', $this->translator->trans('Language id not specified')));
             $this->_helper->redirector('index');
         }
 
         $language = $this->repository->findOneBy(array('id' => $id));
         if (empty($language)) {
-            $this->_helper->flashMessenger->addMessage(getGS('Language not found.'));
+            $this->_helper->flashMessenger->addMessage($this->translator->trans('Language not found.'));
             $this->_helper->redirector('index');
         }
 

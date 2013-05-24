@@ -10,7 +10,7 @@
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/jquery.version.js')); ?>
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/feedback.js')); ?>
 
-<?php $this->placeholder('title')->set(getGS('Feedback Messages')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('Feedback Messages')); ?>
 <script>
     function putGS(str) {
         var msg = serverObj.translateObj[serverObj.languageObj.indexOf(str)]
@@ -58,9 +58,9 @@
         '<?php putGS('Starred'); ?>',
         '<?php putGS('Deleted'); ?>',
         '<?php putGS('Unable to reach Newscoop. Please check your internet connection.'); ?>',
-        <?php echo json_encode(getGS("You are about to permanently delete a message.")); ?>,
-        <?php echo json_encode(getGS("You are about to permanently delete multiple messages.")); ?>,
-        <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>
+        <?php echo json_encode($this->translator->trans("You are about to permanently delete a message.")); ?>,
+        <?php echo json_encode($this->translator->trans("You are about to permanently delete multiple messages.")); ?>,
+        <?php echo json_encode($this->translator->trans("Are you sure you want to do it?")); ?>
     ];
 </script>
 <table>

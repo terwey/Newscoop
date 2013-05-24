@@ -18,7 +18,7 @@ class Admin_Form_Comment_EditForm extends Form
         /** Id of the comment */
         $this->addElement('hidden', 'id',
                 array(
-            'label' => getGS('Comment id'),
+            'label' => $this->translator->trans('Comment id'),
             'required' => true,
             'validators' => array(
                 array('NotEmpty', true),
@@ -32,7 +32,7 @@ class Admin_Form_Comment_EditForm extends Form
          */
         $this->addElement('text', 'subject',
                 array(
-            'label' => getGS('Subject'),
+            'label' => $this->translator->trans('Subject'),
             'required' => false,
             'filters' => array(
                 'stringTrim',
@@ -40,14 +40,14 @@ class Admin_Form_Comment_EditForm extends Form
             'validators' => array(
                 array('stringLength', false, array(1, 140)),
             ),
-            'errorMessages' => array(getGS('Subject is not $1 characters long',
+            'errorMessages' => array($this->translator->trans('Subject is not $1 characters long',
                         '1-140')),
         ));
 
         /** Message input */
         $this->addElement('textarea', 'message',
                 array(
-            'label' => getGS('Comment'),
+            'label' => $this->translator->trans('Comment'),
             'class' => 'comment',
             'required' => false,
         ));
@@ -55,14 +55,14 @@ class Admin_Form_Comment_EditForm extends Form
         /** Cancel button */
         $this->addElement('reset', 'cancel',
                 array(
-            'label' => getGS('Cancel'),
+            'label' => $this->translator->trans('Cancel'),
             'class' => 'button edit-cancel'
         ));
 
         /** Save Button */
         $this->addElement('submit', 'save',
                 array(
-            'label' => getGS('Update comment'),
+            'label' => $this->translator->trans('Update comment'),
             'class' => 'save-button-small update'
         ));
 

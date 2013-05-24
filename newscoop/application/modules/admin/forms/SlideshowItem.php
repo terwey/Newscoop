@@ -16,11 +16,11 @@ class Admin_Form_SlideshowItem extends Zend_Form
         $this->addElement('hidden', 'coords');
 
         $this->addElement('text', 'url', array(
-            'label' => getGS('URL'),
+            'label' => $this->translator->trans('URL'),
         ));
 
         $this->addElement('text', 'caption', array(
-            'label' => getGS('Caption'),
+            'label' => $this->translator->trans('Caption'),
         ));
     }
 

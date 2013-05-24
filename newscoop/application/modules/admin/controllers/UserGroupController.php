@@ -27,7 +27,8 @@ class Admin_UserGroupController extends Zend_Controller_Action
         $this->view->groups = $this->repository->findAll();
 
         $this->_helper->sidebar(array(
-            'label' => getGS('Add new user type'),
+            /** @Desc("Add new user type") */
+            'label' => 'user.type.add.new',
             'controller' => 'user-group',
             'action' => 'add',
         ));
@@ -43,10 +44,10 @@ class Admin_UserGroupController extends Zend_Controller_Action
                 $this->repository->save($group, $form->getValues());
                 $this->_helper->entity->getManager()->flush();
 
-                $this->_helper->flashMessenger->addMessage(getGS('User type added.'));
+                $this->_helper->flashMessenger->addMessage($this->translator->trans('User type added.'));
                 $this->_helper->redirector('index');
             } catch (Exception $e) {
-                $form->getElement('name')->addError(getGS('That type name already exists, please choose a different name.'));
+                $form->getElement('name')->addError($this->translator->trans('That type name already exists, please choose a different name.'));
             }
         }
 
@@ -63,9 +64,9 @@ class Admin_UserGroupController extends Zend_Controller_Action
             try {
                 $this->repository->save($group, $form->getValues());
                 $this->_helper->entity->flushManager();
-                $this->_helper->flashMessenger->addMessage(getGS('User type saved.'));
+                $this->_helper->flashMessenger->addMessage($this->translator->trans('User type saved.'));
             } catch (Exception $e) {
-                $this->_helper->flashMessenger(getGS('That type name already exists, please choose a different name.'));
+                $this->_helper->flashMessenger($this->translator->trans('That type name already exists, please choose a different name.'));
             }
         }
 
@@ -106,9 +107,9 @@ class Admin_UserGroupController extends Zend_Controller_Action
         
         if (count($users) == 0) {
             $this->repository->delete($groupId);
-            $this->_helper->flashMessenger->addMessage(getGS('User type deleted.'));
+            $this->_helper->flashMessenger->addMessage($this->translator->trans('User type deleted.'));
         } else {
-            $this->_helper->flashMessenger->addMessage(getGS('Can not delete a user type with assigned users.'));
+            $this->_helper->flashMessenger->addMessage($this->translator->trans('Can not delete a user type with assigned users.'));
         }
         $this->_helper->redirector('index');
     }
@@ -123,12 +124,14 @@ class Admin_UserGroupController extends Zend_Controller_Action
         $form = new Zend_Form;
 
         $form->addElement('text', 'name', array(
-            'label' => getGS('Name'),
+            /** @Desc("Name") */
+            'label' => 'user.group.name',
             'required' => true,
         ));
 
         $form->addElement('submit', 'submit', array(
-            'label' => getGS('Save'),
+            /** @Desc("Save") */
+            'label' => 'user.group.save',
             'ignore' => true,
         ));
 

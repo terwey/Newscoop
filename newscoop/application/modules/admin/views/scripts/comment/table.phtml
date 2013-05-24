@@ -9,7 +9,7 @@
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/jquery.version.js')); ?>
 <?php $this->headScript()->appendFile($this->baseUrl('/js/jquery/comment.js')); ?>
 
-<?php $this->placeholder('title')->set(getGS('Comments')); ?>
+<?php $this->placeholder('title')->set($this->translator->trans('Comments')); ?>
 <script>
     function putGS(str) {
         var msg = serverObj.translateObj[serverObj.languageObj.indexOf(str)]
@@ -58,9 +58,9 @@
         '<?php putGS('Hidden'); ?>',
         '<?php putGS('Deleted'); ?>',
         '<?php putGS('Unable to reach Newscoop. Please check your internet connection.'); ?>',
-        <?php echo json_encode(getGS("You are about to permanently delete a comment.")); ?>,
-        <?php echo json_encode(getGS("You are about to permanently delete multiple comments.")); ?>,
-        <?php echo json_encode(getGS("Are you sure you want to do it?")); ?>,
+        <?php echo json_encode($this->translator->trans("You are about to permanently delete a comment.")); ?>,
+        <?php echo json_encode($this->translator->trans("You are about to permanently delete multiple comments.")); ?>,
+        <?php echo json_encode($this->translator->trans("Are you sure you want to do it?")); ?>,
         '<?php putGS('Close'); ?>',
     ];
 </script>
@@ -85,7 +85,7 @@
                             <p>
                                 <p class="{% if (commenter.is.banned.name) %}user-blocked-avatar{% endif %}">
                                     {% if (commenter.username) %}<a href="<?php echo($this->baseUrl('/profile/')); ?>{{commenter.usernameEncoded}}">{{commenter.username}}</a>{% endif %}
-                                    {% if (!commenter.username) %}{{commenter.name}} (<?php echo getGS('Anonymous') ?>){% endif %}
+                                    {% if (!commenter.username) %}{{commenter.name}} (<?php echo $this->translator->trans('Anonymous') ?>){% endif %}
                                 </p>
                                 <p class="{% if (commenter.is.banned.ip) %}user-blocked-avatar{% endif %}"><a target="_blank" href="{{commenter.trace.ip}}">{{commenter.ip}}</a></p>
                                 <p class="{% if (commenter.is.banned.email) %}user-blocked-avatar{% endif %}"><a href="mailto:{{commenter.email}}">{{commenter.email}}</a></p>

@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
+            new JMS\TranslationBundle\JMSTranslationBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new Newscoop\GimmeBundle\NewscoopGimmeBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),

@@ -16,11 +16,11 @@ class Admin_Form_ReplaceTemplate extends Zend_Form
         ));
 
         $this->addElement('reset', 'reset', array(
-            'label' => getGS('Cancel')
+            'label' => $this->translator->trans('Cancel')
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => getGS('Replace'),
+            'label' => $this->translator->trans('Replace'),
             'ignore' => TRUE
         ));
     }

@@ -26,7 +26,7 @@ class Admin_SubscriberController extends Zend_Controller_Action
         $this->form->setAction('')->setMethod('post');
 
         // set form countries
-        $countries = array('' => getGS('Select country'));
+        $countries = array('' => $this->translator->trans('Select country'));
         foreach (Country::GetCountries(1) as $country) {
             $countries[$country->getCode()] = $country->getName();
         }
@@ -46,9 +46,9 @@ class Admin_SubscriberController extends Zend_Controller_Action
             $this->handleForm($this->form, $subscriber);
         } catch (InvalidArgumentException $e) {
             $field = $e->getMessage();
-            $this->form->getElement($field)->addError(getGS("That $1 already exists, please choose a different $2.", $field, $field));
+            $this->form->getElement($field)->addError($this->translator->trans("That $1 already exists, please choose a different $2.", $field, $field));
         } catch (PDOException $e) {
-            $this->form->getElement('username')->addError(getGS('That user name already exists, please choose a different login name.'));
+            $this->form->getElement('username')->addError($this->translator->trans('That user name already exists, please choose a different login name.'));
         }
 
         $this->view->form = $this->form;
@@ -63,11 +63,11 @@ class Admin_SubscriberController extends Zend_Controller_Action
             $this->handleForm($this->form, $subscriber);
         } catch (InvalidArgumentException $e) {
             $field = $e->getMessage();
-            $this->form->getElement($field)->addError(getGS("That $1 already exists, please choose a different $2.", $field, $field));
+            $this->form->getElement($field)->addError($this->translator->trans("That $1 already exists, please choose a different $2.", $field, $field));
         }
 
         $this->_helper->sidebar(array(
-            'label' => getGS('Subscriptions'),
+            'label' => $this->translator->trans('Subscriptions'),
             'controller' => 'subscription',
             'action' => 'index',
             'user' => $subscriber->getId(),
@@ -75,7 +75,7 @@ class Admin_SubscriberController extends Zend_Controller_Action
         ));
 
         $this->_helper->sidebar(array(
-            'label' => getGS('Subscription IP Addresses'),
+            'label' => $this->translator->trans('Subscription IP Addresses'),
             'controller' => 'subscription-ip',
             'action' => 'index',
             'user' => $subscriber->getId(),
@@ -92,7 +92,7 @@ class Admin_SubscriberController extends Zend_Controller_Action
 
         $this->_helper->entity->getManager()->flush();
 
-        $this->_helper->flashMessenger(getGS('Subscriber deleted.'));
+        $this->_helper->flashMessenger($this->translator->trans('Subscriber deleted.'));
         $this->_helper->redirector->gotoSimple('index');
     }
 
@@ -103,12 +103,12 @@ class Admin_SubscriberController extends Zend_Controller_Action
         $table->setEntity('Newscoop\Entity\User\Subscriber');
 
         $table->setCols(array(
-            'name' => getGS('Full Name'),
-            'username' => getGS('Accout Name'),
-            'email' => getGS('E-Mail'),
-            'subscription' => getGS('Subscriptions'),
-            'timeCreated' => getGS('Creation Date'),
-            'delete' => getGS('Delete'),
+            'name' => $this->translator->trans('Full Name'),
+            'username' => $this->translator->trans('Accout Name'),
+            'email' => $this->translator->trans('E-Mail'),
+            'subscription' => $this->translator->trans('Subscriptions'),
+            'timeCreated' => $this->translator->trans('Creation Date'),
+            'delete' => $this->translator->trans('Delete'),
         ));
 
         $view = $this->view;
@@ -119,7 +119,7 @@ class Admin_SubscriberController extends Zend_Controller_Action
                     'user' => $user->getId(),
                     'format' => NULL,
                 )),
-                getGS('Edit subscriber $1', $user->getName()),
+                $this->translator->trans('Edit subscriber $1', $user->getName()),
                 $user->getName()
             );
 
@@ -129,8 +129,8 @@ class Admin_SubscriberController extends Zend_Controller_Action
                     'user' => $user->getId(),
                     'format' => NULL,
                 )),
-                getGS('Edit subscriptions'),
-                getGS('Edit subscriptions')
+                $this->translator->trans('Edit subscriptions'),
+                $this->translator->trans('Edit subscriptions')
             );
 
             $deleteLink = sprintf('<a href="%s" class="delete confirm" title="%s">%s</a>',
@@ -139,8 +139,8 @@ class Admin_SubscriberController extends Zend_Controller_Action
                     'user' => $user->getId(),
                     'format' => NULL,
                 )),
-                getGS('Delete subscriber $1', $user->getName()),
-                getGS('Delete')
+                $this->translator->trans('Delete subscriber $1', $user->getName()),
+                $this->translator->trans('Delete')
             );
 
             return array(
@@ -157,7 +157,7 @@ class Admin_SubscriberController extends Zend_Controller_Action
 
         $this->view->actions = array(
             array(
-                'label' => getGS('Add new subscriber'),
+                'label' => $this->translator->trans('Add new subscriber'),
                 'module' => 'admin',
                 'controller' => 'subscriber',
                 'action' => 'add',
@@ -174,7 +174,7 @@ class Admin_SubscriberController extends Zend_Controller_Action
             $this->repository->save($subscriber, $form->getValues());
             $this->_helper->entity->getManager()->flush();
 
-            $this->_helper->flashMessenger(getGS('Subscriber saved.'));
+            $this->_helper->flashMessenger($this->translator->trans('Subscriber saved.'));
             $this->_helper->redirector->gotoSimple('edit', 'subscriber', 'admin', array(
                 'user' => $subscriber->getId(),
             ));
