@@ -5,7 +5,7 @@
  */
 
 /**
- * Builds the Solr FQ query
+ * Builds a Calendar in HTML using Ordered Lists.
  *
  * Type:     function
  * Name:     date_filter
