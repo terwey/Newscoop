@@ -54,14 +54,14 @@ function smarty_function_date_filter($p_params = array(), &$p_smarty)
 
     for ($year=$cleanParam['start']['year']; $year <= $cleanParam['end']['year']; $year++) { 
         $yearString = '<li><h2>'.$year.'</h2>';
-        $monthString = '<ol class="y'.$year.'">';
+        $monthString = '<ol class="year y'.$year.'">';
 
         $month = ($year == $cleanParam['start']['year']) ? $cleanParam['start']['month'] : 1;
         $endmonth = ($year == $cleanParam['end']['year']) ? $cleanParam['end']['month'] : 12;
 
         for ($month; $month <= $endmonth; $month++) {
             $monthString .= '<li><h3>'.date($cleanParam['rangeformatmonth'], strtotime($year.'-'.$month)).'</h3>';
-            $dayString = '<ol class="m'.$month.'">';
+            $dayString = '<ol class="month m'.$month.'">';
             $maxDay = date('t',strtotime($year.'-'.$month));
             $beginDay = 1;
             if ($year == $cleanParam['start']['year'] && $month == $cleanParam['start']['month'] && $beginDay <= $cleanParam['start']['day']) {
@@ -75,7 +75,7 @@ function smarty_function_date_filter($p_params = array(), &$p_smarty)
                 $dayString .= '<li';
                 $week = 'w'.date('W', strtotime($currIterateDate));
                 $dayoftheweek = 'd'.date('N', strtotime($currIterateDate));
-                $dayString .= ' class="'.$week.' '.$dayoftheweek.'"';
+                $dayString .= ' class="day '.$week.' '.$dayoftheweek.'"';
                 $dayString .= '>'. date($cleanParam['rangeformatday'], strtotime($currIterateDate)).'</li>';
             }
             $dayString .= '</ol>';
