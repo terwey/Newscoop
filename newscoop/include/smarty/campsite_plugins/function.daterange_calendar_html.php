@@ -8,7 +8,7 @@
  * Builds a Calendar in HTML using Ordered Lists.
  *
  * Type:     function
- * Name:     date_filter
+ * Name:     daterange_calendar_html
  * Purpose:
  *
  * @param array $p_params
@@ -17,14 +17,14 @@
  *      The requested calendar as HTML
  *
  * @example
- *  {{ date_filter rangestart="2013-10-30" rangeend="2014-10-30" rangeformatmonth="m" rangeformatday="d" }}
+ *  {{ daterange_calendar_html rangestart="2013-10-30" rangeend="2014-10-30" rangeformatmonth="m" rangeformatday="d" locale="de-DE"}}
  *
  */
 
-function smarty_function_date_filter($p_params = array(), &$p_smarty)
+function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty)
 {
     // The $p_params override the $_GET
-    $acceptedParams = array('rangestart', 'rangeend', 'rangeformat', 'rangeformatmonth', 'rangeformatday');
+    $acceptedParams = array('rangestart', 'rangeend', 'rangeformat', 'rangeformatmonth', 'rangeformatday', 'locale');
     $cleanParam = array();
 
     foreach ($acceptedParams as $key) {
@@ -40,6 +40,8 @@ function smarty_function_date_filter($p_params = array(), &$p_smarty)
 
     $cleanParam['rangestart'] = (!array_key_exists('rangestart', $cleanParam)) ? date('Y-m-d', strtotime('-1 month')) : $cleanParam['rangestart'];
     $cleanParam['rangeend'] = (!array_key_exists('rangeend', $cleanParam)) ? date('Y-m-d', time('now')) : $cleanParam['rangeend'];
+
+    $cleanParam['locale'] = (!array_key_exists('locale', $cleanParam)) ? 'en-US' : $cleanParam['locale'];
 
     $html = '<div id="archive_list">';
     
@@ -68,7 +70,14 @@ function smarty_function_date_filter($p_params = array(), &$p_smarty)
             if ($year == $cleanParam['end']['year'] && $month == $cleanParam['end']['month'] && $maxDay >= $cleanParam['end']['day']) {
                 $maxDay = $cleanParam['end']['day'];
             }
-            $monthString .= '<li><h3><a href="?from='.$year.'-'.$month.'-'.$beginDay.'&to='.$year.'-'.$month.'-'.$maxDay.'">'.date($cleanParam['rangeformatmonth'], strtotime($year.'-'.$month)).'</h3>';
+
+            $fmt = datefmt_create( $cleanParam['locale'] ,IntlDateFormatter::FULL,IntlDateFormatter::FULL,'America/Los_Angeles',IntlDateFormatter::GREGORIAN  );
+            echo "Second Formatted output is ".datefmt_format( $fmt , 0);
+
+            $monthString .= '<li><h3><a href="?from='.$year.'-'.$month.'-'.$beginDay.'&to='.$year.'-'.$month.'-'.$maxDay.'">';
+            $monthString .= date($cleanParam['rangeformatmonth'], strtotime($year.'-'.$month));
+            $monthString .= '</h3>';
+
             $dayString = '<ol class="month m'.$month.'">';
             for ($day=$beginDay; $day <= $maxDay; $day++) { 
                 $currIterateDate = $year.'-'.$month.'-'.$day;
