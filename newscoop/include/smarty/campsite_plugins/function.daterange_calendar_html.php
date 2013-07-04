@@ -17,14 +17,14 @@
  *      The requested calendar as HTML
  *
  * @example
- *  {{ daterange_calendar_html rangestart="2013-10-30" rangeend="2014-10-30" rangeformatmonth="m" rangeformatday="d" locale="de-DE"}}
+ *  {{ daterange_calendar_html rangestart="2013-10-30" rangeend="2014-10-30" rangeformatmonth="m" rangeformatday="d"}}
  *
  */
 
 function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty)
 {
     // The $p_params override the $_GET
-    $acceptedParams = array('rangestart', 'rangeend', 'rangeformat', 'rangeformatmonth', 'rangeformatday', 'locale');
+    $acceptedParams = array('rangestart', 'rangeend', 'rangeformat', 'rangeformatmonth', 'rangeformatday');
     $cleanParam = array();
 
     foreach ($acceptedParams as $key) {
@@ -70,9 +70,6 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
             if ($year == $cleanParam['end']['year'] && $month == $cleanParam['end']['month'] && $maxDay >= $cleanParam['end']['day']) {
                 $maxDay = $cleanParam['end']['day'];
             }
-
-            $fmt = datefmt_create( $cleanParam['locale'] ,IntlDateFormatter::FULL,IntlDateFormatter::FULL,'America/Los_Angeles',IntlDateFormatter::GREGORIAN  );
-            echo "Second Formatted output is ".datefmt_format( $fmt , 0);
 
             $monthString .= '<li><h3><a href="?from='.$year.'-'.$month.'-'.$beginDay.'&to='.$year.'-'.$month.'-'.$maxDay.'">';
             $monthString .= date($cleanParam['rangeformatmonth'], strtotime($year.'-'.$month));
