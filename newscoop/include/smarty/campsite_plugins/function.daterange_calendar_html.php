@@ -80,8 +80,9 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
     );
 
     $html  = '<div id="archive_list" data-weekdays="';
-    for ($i=0; $i < 7; $i++) { 
-        $html .= $dateFormatter['dayName']->format(strtotime("Monday +$i days")).' ';
+    for ($i=0; $i <= 6; $i++) {
+        $html .= substr($dateFormatter['dayName']->format(strtotime("Monday +$i days")), 0, 2);
+        $html .= ($i != 6) ? ' ' : '';
     }
     $html .= '">';
 
