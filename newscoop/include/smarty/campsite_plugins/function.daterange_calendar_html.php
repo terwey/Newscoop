@@ -6,6 +6,7 @@
 
 /**
  * Builds a Calendar in HTML using Ordered Lists.
+ * php5-intl is required for this to run
  *
  * Type:     function
  * Name:     daterange_calendar_html
@@ -43,8 +44,6 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
     $cleanParam['rangeend'] = (!array_key_exists('rangeend', $cleanParam)) ? date('Y-m-d', time('now')) : $cleanParam['rangeend'];
 
     $cleanParam['locale'] = (!array_key_exists('locale', $cleanParam)) ? 'en-GB' : $cleanParam['locale'];
-
-    $html = '<div id="archive_list">';
     
     $cleanParam['start']['year'] = date('Y', strtotime($cleanParam['rangestart']));
     $cleanParam['start']['month'] = date('m', strtotime($cleanParam['rangestart']));
@@ -52,6 +51,15 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
     $cleanParam['end']['year'] = date('Y', strtotime($cleanParam['rangeend']));
     $cleanParam['end']['month'] = date('m', strtotime($cleanParam['rangeend']));
     $cleanParam['end']['day'] = date('d', strtotime($cleanParam['rangeend']));
+
+    $dateFormatter['dayName'] = \IntlDateFormatter::create(
+      $cleanParam['locale'],
+      \IntlDateFormatter::NONE,
+      \IntlDateFormatter::NONE,
+      \date_default_timezone_get(),
+      \IntlDateFormatter::GREGORIAN,
+      'EEE'
+    );
 
     $dateFormatter['day'] = \IntlDateFormatter::create(
       $cleanParam['locale'],
@@ -70,6 +78,12 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
       \IntlDateFormatter::GREGORIAN,
       $cleanParam['rangeformatmonth']
     );
+
+    $html  = '<div id="archive_list" data-weekdays="';
+    for ($i=0; $i < 7; $i++) { 
+        $html .= $dateFormatter['dayName']->format(strtotime("Monday +$i days")).' ';
+    }
+    $html .= '">';
 
     $html .= '<ol>';
 
