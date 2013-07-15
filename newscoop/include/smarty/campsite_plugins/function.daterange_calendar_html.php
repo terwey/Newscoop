@@ -105,7 +105,7 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
                 $maxDay = $cleanParam['end']['day'];
             }
 
-            $monthString .= '<li><h3><a href="?from='.$year.'-'.$month.'-'.$beginDay.'&to='.$year.'-'.$month.'-'.$maxDay.'">';
+            $monthString .= '<li><h3><a href="?fqfrom='.$year.'-'.$month.'-'.$beginDay.'&fqto='.$year.'-'.$month.'-'.$maxDay.'">';
             $monthString .= $dateFormatter['month']->format(new \DateTime($year.'-'.$month));
             $monthString .= '</h3>';
 
@@ -116,7 +116,7 @@ function smarty_function_daterange_calendar_html($p_params = array(), &$p_smarty
                 $week = 'w'.date('W', strtotime($currIterateDate));
                 $dayoftheweek = 'd'.date('N', strtotime($currIterateDate));
                 $dayString .= ' class="day '.$week.' '.$dayoftheweek.'"';
-                $dayString .= '><a href="?from='.$currIterateDate.'&to='.$currIterateDate.'">'.$dateFormatter['day']->format(new \DateTime($currIterateDate)).'</a></li>';
+                $dayString .= '><a href="?fqfrom='.$currIterateDate.'&fqto='.$currIterateDate.'">'.$dateFormatter['day']->format(new \DateTime($currIterateDate)).'</a></li>';
             }
             $dayString .= '</ol>';
             $monthString .= $dayString;
