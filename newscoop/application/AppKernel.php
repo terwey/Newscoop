@@ -28,11 +28,13 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new NoiseLabs\Bundle\SmartyBundle\SmartyBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Newscoop\ZendBridgeBundle\NewscoopZendBridgeBundle(),
-            new Newscoop\NewscoopBundle\NewscoopNewscoopBundle(),
+            new EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle(),
             new RaulFraile\Bundle\LadybugBundle\RaulFraileLadybugBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle(),
+            new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
+            new Newscoop\ZendBridgeBundle\NewscoopZendBridgeBundle(),
+            new Newscoop\NewscoopBundle\NewscoopNewscoopBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

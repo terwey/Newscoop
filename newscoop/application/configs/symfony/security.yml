@@ -22,12 +22,26 @@ security:
             security: false
 
         password_recovery:
-            pattern: ^/admin/password_recovery.php
+            pattern: ^/admin/password-recovery
             security: false
 
         password_check_token:
-            pattern: ^/admin/password_check_token.php
+            pattern: ^/admin/password-check-token
             security: false
+
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern:    ^/oauth/v2/auth
+            anonymous: true
+
+        api:
+            pattern:    ^/api
+            fos_oauth:  true
+            stateless:  true
+            anonymous:  true
 
         admin_area:
             pattern:    ^/admin
@@ -44,3 +58,4 @@ security:
 
     access_control:
         - { path: ^/admin/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/oauth/v2/auth, role: IS_AUTHENTICATED_ANONYMOUSLY }

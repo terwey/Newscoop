@@ -17,7 +17,6 @@ class OmniboxController extends Zend_Controller_Action
     {
         $this->_helper->layout->disableLayout();
         $this->auth = Zend_Auth::getInstance();
-        $this->view->translate = Zend_Registry::get('Zend_Translate');
     }
 
     public function indexAction()
@@ -30,6 +29,7 @@ class OmniboxController extends Zend_Controller_Action
     {
         $this->getHelper('contextSwitch')->addActionContext('login', 'json')->initContext();
 
+        $translator = Zend_Registry::get('container')->getService('translator');
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getParams();
@@ -39,11 +39,23 @@ class OmniboxController extends Zend_Controller_Action
             $result = $this->auth->authenticate($adapter);
 
             if ($result->getCode() == Zend_Auth_Result::SUCCESS) {
+                $user = Zend_Registry::get('container')->getService('user')->getCurrentUser();
+                $metaUser = new \MetaUser($user);
+                $width = array_key_exists("imageWidth", $params) ? $params['imageWidth'] : 80;
+                $height = array_key_exists("imageHeight", $params) ? $params['imageHeight'] : 80;
+                $specification = array_key_exists("imageSpecification", $params) ? $params['imageSpecification'] : 'fit';
+
+                $this->view->userData = array(
+                    'realName' => $user->getRealName(),
+                    'username' => $user->getUsername(),
+                    'avatar' => $metaUser->image($width, $height, $specification)
+                );
+
                 $this->view->response = 'OK';
             } else {
-                $this->view->response = $this->view->translate('Login failed.');
+                $this->view->response = $translator->trans('Login failed.');
             }
-	}
+       }
     }
 
 	public function logoutAction()

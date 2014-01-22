@@ -143,16 +143,28 @@ class User implements \Zend_Acl_Role_Interface, UserInterface, \Serializable, Eq
     protected $commenters;
 
     /**
-     * @ORM\Column(type="integer", nullable=True)
+     * @ORM\Column(type="integer", name="password_reset_token", length=85, nullable=True)
+     * @var string
+     */
+    protected $resetToken;
+
+    /**
+     * @ORM\Column(type="string", nullable=True)
      * @var int
      */
     protected $subscriber;
 
     /**
-     * @ORM\OneToOne(targetEntity="Author")
+     * @ORM\OneToOne(targetEntity="Author", inversedBy="user")
      * @var Newscoop\Entity\Author
      */
-    protected $author;
+    private $author;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=True)
+     * @var DateTime
+     */
+    private $indexed;
 
     /**
      * @param string $email
@@ -546,9 +558,40 @@ class User implements \Zend_Acl_Role_Interface, UserInterface, \Serializable, Eq
     }
 
     /**
+     * Get group names
+     *
+     * @return array
+     */
+    public function getGroupNames()
+    {
+        return $this->groups->map(function ($group) {
+            return $group->getName();
+        })->toArray();
+    }
+
+    /**
+     * Test if user has group
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasGroup($name)
+    {
+        foreach ($this->groups as $group) {
+            if ($group->getName() === $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Add user type
      *
      * @param Newscoop\Entity\User\Group $type
+     *
      * @return Newscoop\Entity\User
      */
     public function addUserType(Group $type)
@@ -724,7 +767,7 @@ class User implements \Zend_Acl_Role_Interface, UserInterface, \Serializable, Eq
 
                 return true;
             } else {
-            	return FALSE;
+                return FALSE;
             }
         } catch (\Exception $e) {
             return FALSE;
@@ -824,6 +867,29 @@ class User implements \Zend_Acl_Role_Interface, UserInterface, \Serializable, Eq
     public function getSubscriber()
     {
         return $this->subscriber;
+    }
+
+    /**
+     * Set password reset token
+     *
+     * @param integer $resetToken
+     * @return string
+     */
+    public function setResetToken($resetToken)
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    /**
+     * Get password reset token
+     *
+     * @return string
+     */
+    public function getResetToken()
+    {
+        return $this->resetToken;
     }
 
     /**
