@@ -40,12 +40,12 @@ class Comment
 
     /**
      * Constants for status
+     */
 
     const STATUS_APPROVED   = 0;
     const STATUS_PENDING    = 1;
     const STATUS_HIDDEN     = 2;
     const STATUS_DELETED    = 3;
-     */
     /**
      * @var string to code mapper for status
     static $status_enum = array(
@@ -61,7 +61,7 @@ class Comment
     static $status_enum = array('approved', 'pending', 'hidden', 'deleted');
 
     /**
-     * @ORM\Id 
+     * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @var int
@@ -69,7 +69,7 @@ class Comment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Newscoop\Entity\Comment\Commenter", inversedBy="comments" )
+     * @ORM\ManyToOne(targetEntity="Newscoop\Entity\Comment\Commenter", inversedBy="comments", cascade={"persist"})
      * @ORM\JoinColumn(name="fk_comment_commenter_id", referencedColumnName="id")
      * @var Newscoop\Entity\Comment\Commenter
      */
@@ -177,11 +177,22 @@ class Comment
      */
     private $recommended = 0;
 
+    public function __construct()
+    {
+        $this->setTimeCreated(new \DateTime());
+    }
+
     /**
      * @ORM\Column(type="datetime", nullable=True)
      * @var DateTime
      */
     private $indexed;
+
+    /**
+     * @ORM\Column(type="string", length=60, name="source", nullable=true)
+     * @var string
+     */
+    private $source;
 
     /**
      * Set id
@@ -602,7 +613,7 @@ class Comment
         if (is_object($p_comment)) {
             return $p_comment->getId() == $this->getId();
         }
-        
+
         return false;
     }
 
@@ -763,5 +774,29 @@ class Comment
     public function getIndexed()
     {
         return $this->indexed;
+    }
+
+    /**
+     * Get comment source
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Set comment source
+     *
+     * @param  string $source
+     *
+     * @return string
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
     }
 }
