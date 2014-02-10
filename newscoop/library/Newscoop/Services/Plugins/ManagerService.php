@@ -91,7 +91,7 @@ class ManagerService
             throw new \Exception("Plugin name is invalid, try \"vendor/plugin-name\"", 1);
         }
 
-        $process = new Process('cd ' . $this->newsoopDir . ' && php composer.phar require --no-update ' . $pluginName .':' . $version .' && php composer.phar update ' . $pluginName .'  --prefer-dist --no-dev');
+        $process = new Process('cd ' . $this->newsoopDir . ' && php composer.phar require --no-update ' . $pluginName .':' . $version .' && php composer.phar update ' . $pluginName .'  --prefer-dist --no-dev -n');
 
         $process->setTimeout(3600);
         $process->run(function ($type, $buffer) use ($output) {
@@ -394,7 +394,7 @@ class ManagerService
      */
     public function getInstalledPlugins()
     {
-        $cachedAvailablePlugins = $this->pluginsDir . '/avaiable_plugins.json';
+        $cachedAvailablePlugins = $this->pluginsDir . '/available_plugins.json';
         if (!file_exists($cachedAvailablePlugins)) {
             return array();
         }
@@ -488,7 +488,7 @@ class ManagerService
     {
         $plugins = $this->findAvaiablePlugins();
 
-        file_put_contents($this->pluginsDir . '/avaiable_plugins.json', json_encode($plugins));
+        file_put_contents($this->pluginsDir . '/available_plugins.json', json_encode($plugins));
     }
 
     private function prepareCacheDir()
