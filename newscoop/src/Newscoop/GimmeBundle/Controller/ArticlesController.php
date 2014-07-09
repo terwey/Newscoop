@@ -40,7 +40,7 @@ class ArticlesController extends FOSRestController
      *     }
      * )
      *
-     * @Route("/articles/{number}/{language}.{_format}", defaults={"_format"="json", "language"="en"})
+     * @Route(options={expose=true}, "/articles/{number}/{language}.{_format}", defaults={"_format"="json", "language"="en"})
      * @Method("PATCH")
      */
     public function patchArticleAction(Request $request, $number, $language)
@@ -241,7 +241,7 @@ class ArticlesController extends FOSRestController
      *     }
      * )
      *
-     * @Route("/articles.{_format}", defaults={"_format"="json"})
+     * @Route(options={expose=true}, "/articles.{_format}", defaults={"_format"="json"})
      * @Method("GET")
      * @View(serializerGroups={"list"})
      *
@@ -279,7 +279,7 @@ class ArticlesController extends FOSRestController
      *     output="\Newscoop\Entity\Article"
      * )
      *
-     * @Route("/articles/{number}.{_format}", defaults={"_format"="json"})
+     * @Route(options={expose=true}, "/articles/{number}.{_format}", defaults={"_format"="json"})
      * @Method("GET")
      * @View(serializerGroups={"details"})
      *
@@ -318,7 +318,7 @@ class ArticlesController extends FOSRestController
      *     }
      * )
      *
-     * @Route("/articles/{number}/{language}.{_format}", defaults={"_format"="json"})
+     * @Route(options={expose=true}, "/articles/{number}/{language}.{_format}", defaults={"_format"="json"})
      * @Method("LINK")
      * @View(statusCode=201)
      *
@@ -381,7 +381,7 @@ class ArticlesController extends FOSRestController
      *     }
      * )
      *
-     * @Route("/articles/{number}/{language}.{_format}", defaults={"_format"="json"})
+     * @Route(options={expose=true}, "/articles/{number}/{language}.{_format}", defaults={"_format"="json"})
      * @Method("UNLINK")
      * @View(statusCode=204)
      *
@@ -452,7 +452,7 @@ class ArticlesController extends FOSRestController
      *     }
      * )
      *
-     * @Route("/articles/{number}/{language}/{status}.{_format}", defaults={"_format"="json", "language"="en"})
+     * @Route(options={expose=true}, "/articles/{number}/{language}/{status}.{_format}", defaults={"_format"="json", "language"="en"})
      * @Method("PATCH")
      */
     public function changeArticleStatus(Request $request, $number, $language, $status)

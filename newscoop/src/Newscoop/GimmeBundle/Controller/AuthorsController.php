@@ -31,7 +31,7 @@ class AuthorsController extends FOSRestController
      *     output="\Newscoop\Entity\Author"
      * )
      *
-     * @Route("/author/{id}.{_format}", defaults={"_format"="json"})
+     * @Route(options={expose=true}, "/author/{id}.{_format}", defaults={"_format"="json"})
      * @Method("GET")
      * @View()
      */
