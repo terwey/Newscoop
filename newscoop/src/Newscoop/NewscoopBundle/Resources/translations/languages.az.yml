@@ -1,0 +1,72 @@
+'Language id not specified': 'Dil id-si bildirilməyib'
+'No languages.': 'Dil yoxdur.'
+'Native Name': 'Əsl adı'
+'Name taken.': 'Ad götürüldü.'
+'Language saved.': 'Dil saxlandı.'
+'Language removed.': 'Dil silindi.'
+'Language not found.': 'Dil tapılmadı.'
+'Language is in use and cannot be removed.': 'Dil istifadədədir və xaric edilə bilməz.'
+'Language added.': 'Dil əlavə olundu.'
+'English language cannot be removed.': 'İngilis dili xaric edilə bilməz.'
+'Edit short month names': 'Ayların qısa adlarını redaktə et.'
+'Edit short day names': 'Günlərin qısa adlarını dəyiş'
+'Edit month names': 'Ay adlarını dəyiş'
+'Edit language: $1': '$1 dili redaktə et'
+'Edit day names': 'Gün adlarını redaktə et'
+'Code Page': 'Səhifə kodu'
+'Add new Language': 'Yeni dil əlavə et'
+'Add Language': 'Dil əlavə et'
+We: Çə
+Tu: Ç.a
+Th: C.a
+Su: Ba
+Sep: Sen
+Sa: Şə
+'Please enter the translation for week day short names.': 'Zəhmət olmasa, həftə günlərini qısa adlarını yazın.'
+'Please enter the translation for month short names.': 'Ayların qısa adlarını yazın.'
+Oct: Okt
+Nov: Noy
+Mo: B.e
+Mar: Mar
+Jun: İyn
+Jul: İyl
+Jan: Yan
+Fr: Cü
+Feb: Fev
+Dec: Dek
+Aug: Avq
+Apr: Apr
+'No language.': 'Dil yoxdur.'
+'Delete language $1': '$1 dilini sil'
+'You do not have the right to add languages.': 'Dil əlavə etməyə ixtiyarın yoxdur.'
+'Please enter the translation for time units.': 'Lütfən, vaxt göstəricilərinin tərcümələrini daxil et.'
+'You do not have the right to delete languages.': 'Dil silməyə ixtiyarın yoxdur.'
+'Are you sure you want to delete the language $1?': '$1 dilini silmək istədiyinə əminsən?'
+'Deleting language': 'Dilin silinməsi'
+'The language $1 could not be deleted.': '$1 dil silinə bilməz.'
+'Edit language': 'Dili dəyiş'
+'You do not have the right to edit languages.': 'Dilə dəyişiklik etməyə ixtiyarın yoxdur.'
+'Please enter the translation for month names.': 'Zəhmət olmasa ay adlarını yazın.'
+'Please enter the translation for week day names.': 'Lütfən, həftə günləri üçün adların tərcüməsini daxil et.'
+January: Yanvar
+February: Fevral
+March: Mart
+April: Aprel
+May: May
+June: İyun
+July: İyul
+August: Avqust
+September: Sentyabr
+October: Oktyabr
+November: Noyabr
+December: Dekabr
+Monday: 'Bazar ertəsi'
+Tuesday: 'Çərşənbə axşamı'
+Wednesday: Çərşənbə
+Thursday: 'Cümə axşamı'
+Friday: Cümə
+Saturday: Şənbə
+Sunday: Bazar
+'You do not have the right to add new languages.': 'Yeni dil əlavə etməyə ixtiyarın yoxdur.'
+'There are $1 issue(s) left.': 'Geriyə $1 məsələ(lər) qalıb.'
+'Native name': 'Əsl adı'

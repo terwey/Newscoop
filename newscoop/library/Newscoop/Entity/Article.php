@@ -1357,3 +1357,8 @@ class Article implements DocumentInterface
         return $this;
 	}
 }
+    public function getObject()
+    {
+        return clone $this;
+    }
+}

@@ -1,0 +1,37 @@
+newscoop.plugins_manager.manager: 'Plaqin idarəçisi'
+newscoop.plugins_manager.legacy_manager: 'Varislik Plaqin İdarəçisi'
+newscoop.plugins_manager.public_plugins: 'İctimai plaqinlər'
+newscoop.plugins_manager.private_plugins: 'Şəxsi plaqinlər'
+newscoop.plugins_manager.install.public: 'Yeni plaqinləri quraşdır'
+newscoop.plugins_manager.installed_table.name: Ad
+newscoop.plugins_manager.installed_table.description: İzah
+newscoop.plugins_manager.installed_table.enabled: Aktivləşdirildi
+newscoop.plugins_manager.installed_table.version: Versiya
+newscoop.plugins_manager.installed_table.license: Lisenziya
+newscoop.plugins_manager.installed_table.installed_at: 'Bu vaxt Quraşdırılıb'
+newscoop.plugins_manager.installed_table.updated_at: 'Bu vaxt Yüklənib'
+newscoop.plugins_manager.installed_table.actions: Addımlar
+newscoop.plugins_manager.installed_table.update_plugin: Yenilə
+newscoop.plugins_manager.installed_table.remove_plugin: 'Xaric Et'
+newscoop.plugins_manager.installed_table.install_plugin: Quraşdır
+newscoop.plugins_manager.installed_table.plugin_installed: Quraşdırıldı
+newscoop.plugins_manager.upload.private: 'Şəxsi plaqin yüklə'
+newscoop.plugins_manager.search_for_plugins: 'Plaqin axtar'
+newscoop.plugins_manager.form.package: 'Paket zip fayl olmalıdır.'
+newscoop.plugins_manager.form.submit: Yüklə
+newscoop:
+    datatable:
+        table:
+            info: BÜTÜN_girişlərin_BAŞDAN_SONA_kimi_nümayişi
+            noentries: 'Nümayiş üçün firiş yoxdur'
+            filtering: '- _MAX_ yazılarından filterləmə'
+            menu: '_MENYU_ yazılarını göstər'
+        label:
+            search: Axtar
+            filter: Filtr
+            processing: İcradadır...
+            last: Son
+            next: Növbəti
+            first: İlk
+            previous: Əvvəlki
+            norecords: 'Yazı tapılmadı.'

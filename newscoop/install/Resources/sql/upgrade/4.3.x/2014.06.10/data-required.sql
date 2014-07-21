@@ -83,3 +83,4 @@ VALUES
 	(16, '360', 1, 16, 'thumbnail_height'),
 	(17, 'http://www.youtube.com/user/Sourcefabric', 1, 17, 'author_url');
 --- End of Embed.ly Snippet sample
+INSERT INTO `SystemPreferences` (`varname`, `value`, `last_modified`) VALUES ('SmartyUseProtocol', 'Y', NULL);

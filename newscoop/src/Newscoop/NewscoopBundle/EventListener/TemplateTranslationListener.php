@@ -21,18 +21,36 @@ class TemplateTranslationListener
 {
     protected $translator;
 
+    protected $cacheService;
+
     /**
      * @param Translator $translator
      */
-    public function __construct(Translator $translator)
+    public function __construct(Translator $translator, $cacheService)
     {
         $this->translator = $translator;
+        $this->cacheService = $cacheService;
     }
 
-    public function onRequest(GetResponseEvent $event) {
-
+    /**
+     * @param  GetResponseEvent $event
+     */
+    public function onRequest(GetResponseEvent $event)
+    {
         $request = $event->getRequest();
         $locale = $request->getLocale();
+        $cacheKey = $this->cacheService->getCacheKey(array('templates_translations', \CampSite::GetURIInstance()->getThemePath(), $locale), 'templates_translations');
+        $templateTranslations = array();
+
+        if ($this->cacheService->contains($cacheKey)) {
+            $templateTranslations = $this->cacheService->fetch($cacheKey);
+            foreach ($templateTranslations as $translation) {
+                $this->translator->addResource('yaml', $translation[0], $translation[1], $translation[2]);
+            }
+
+            return;
+        }
+
         $filesystem = new Filesystem();
         $dir = __DIR__.'/../../../../themes/'.\CampSite::GetURIInstance()->getThemePath().'translations';
 
@@ -46,7 +64,10 @@ class TemplateTranslationListener
             foreach ($finder as $file) {
                 $domain = substr($file->getFileName(), 0, -1 * strlen($extension) - 1);
                 $this->translator->addResource('yaml', $file->getRealpath(), $locale, $domain);
+                $templateTranslations[] = array($file->getRealpath(), $locale, $domain);
             }
         }
+
+        $this->cacheService->save($cacheKey, $templateTranslations);
     }
 }

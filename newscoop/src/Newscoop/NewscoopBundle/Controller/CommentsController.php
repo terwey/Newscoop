@@ -18,6 +18,7 @@ use Newscoop\Entity\Comment;
 use Newscoop\NewscoopBundle\Form\Type\CommentsFilterType;
 use Newscoop\NewscoopBundle\Form\Type\CommentSearchType;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Comments controller.
@@ -31,6 +32,13 @@ class CommentsController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $userService = $this->get('user');
+        $blogService = $this->get('blog');
+        $user = $userService->getCurrentUser();
+        if ($blogService->isBlogger($user)) {
+            throw new AccessDeniedException();
+        }
+
         $em = $this->container->get('em');
         $translator = $this->container->get('translator');
         $imageService = $this->container->get('image');
@@ -455,32 +463,36 @@ class CommentsController extends Controller
             $commentIds[] = $value[0]->getId();
         }
 
-        $qb = $em->createQueryBuilder();
-        $comments = $qb
-            ->from('Newscoop\Entity\Comment', 'c', 'c.id')
-            ->select('c', 't', 'cc', 'u')
-            ->leftJoin('c.thread', 't')
-            ->leftJoin('c.commenter', 'cc')
-            ->leftJoin('cc.user', 'u')
-            ->where($qb->expr()->in('c.id', $commentIds))
-            ->getQuery()
-            ->getResult();
+        if (!empty($commentIds)) {
+            $qb = $em->createQueryBuilder();
+            $comments = $qb
+                ->from('Newscoop\Entity\Comment', 'c', 'c.id')
+                ->select('c', 't', 'cc', 'u')
+                ->leftJoin('c.thread', 't')
+                ->leftJoin('c.commenter', 'cc')
+                ->leftJoin('cc.user', 'u')
+                ->where($qb->expr()->in('c.id', $commentIds))
+                ->getQuery()
+                ->getResult();
 
-        foreach ($pagination as $comment) {
-            $comment = $comment[0];
-            $commentsArray[] = array(
-                'banned' => $commentService->isBanned($comments[$comment->getId()]->getCommenter()),
-                'avatarHash' => md5($comments[$comment->getId()]->getCommenter()->getEmail()),
-                'user' =>  $comments[$comment->getId()]->getCommenter()->getUser() ? new \MetaUser($comments[$comment->getId()]->getCommenter()->getUser()) : null,
-                'issueNumber' => $comments[$comment->getId()]->getThread()->getIssueId(),
-                'section' => $comments[$comment->getId()]->getThread()->getSection()->getName(),
-                'comment' => $comment,
-                'index' => $counter,
-            );
+            foreach ($pagination as $comment) {
+                $comment = $comment[0];
+                $commentsArray[] = array(
+                    'banned' => $commentService->isBanned($comments[$comment->getId()]->getCommenter()),
+                    'avatarHash' => md5($comments[$comment->getId()]->getCommenter()->getEmail()),
+                    'user' =>  $comments[$comment->getId()]->getCommenter()->getUser() ? new \MetaUser($comments[$comment->getId()]->getCommenter()->getUser()) : null,
+                    'issueNumber' => $comments[$comment->getId()]->getThread()->getIssueId(),
+                    'section' => $comments[$comment->getId()]->getThread()->getSection()->getName(),
+                    'comment' => $comment,
+                    'index' => $counter,
+                );
 
-            $counter++;
+                $counter++;
+            }
+
+            return $commentsArray;
         }
 
-        return $commentsArray;
+        return $commentIds;
     }
 }

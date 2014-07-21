@@ -5,17 +5,29 @@ Newscoop\Entity\Section:
             expose: true
             read_only: true
             type: integer
-            groups: ["list"]
+            groups: ["list", "details"]
             serialized_name: number
         name:
             expose: true
             read_only: true
             type: string
-            groups: ["list"]
+            groups: ["list", "details"]
             serialized_name: title
-        articlesLink:
+        publication:
             expose: true
             read_only: true
-            type: articles_link
-            groups: ["list"]
-            serialized_name: articlesLink
+            type: string
+            groups: ["details"]
+            accessor:
+                getter: getPublicationName
+            serialized_name: publicationName
+            since_version: 1.1
+        issue:
+            expose: true
+            read_only: true
+            type: string
+            groups: ["details"]
+            accessor:
+                getter: getIssueName
+            serialized_name: issueName
+            since_version: 1.1

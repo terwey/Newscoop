@@ -1,20 +1,19 @@
-Newscoop
-========
+<a href="http://www.sourcefabric.org/en/newscoop/">![Logo](newscoop/admin-style/images/newscoop_logo_big.png)
+===
+[![Build Status](https://travis-ci.org/sourcefabric/Newscoop.svg?branch=master)](https://travis-ci.org/sourcefabric/Newscoop)
 
 [Newscoop][1] is the open content management system for professional journalists.
 
 Features for the modern newsroom include multiple author management, issue-and-section based publishing, geolocation and multilingual content management. The enterprise-standard journalist’s dashboard and a templating engine supporting anything from HTML5 to mobile complete this fast production and publishing system. Read more about Newscoop history on his [wikipedia page][5].
-
-Short Newscoop features [overview](newscoop/README.md).
 
 Quick links to our resources are:
 
 * Manuals for Newscoop [http://manuals.sourcefabric.org][6]
 * Forums and mailing lists: [http://forum.sourcefabric.org][7]
 * Bug Tracking: [http://dev.sourcefabric.org/browse/CS][8]
-* Public source code hosting: [http://github.com/sourcefabric][9]
+* Public source code hosting: [http://github.com/sourcefabric/Newscoop][9]
 * Download link: [https://sourceforge.net/projects/newscoop/][10]
-* Developer's wiki: [https://wiki.sourcefabric.org/display/CS/Wiki][11]
+* Developer's wiki: [https://wiki.sourcefabric.org/display/CS/][11]
 
 ## Installation
 
@@ -23,6 +22,10 @@ Just run the composer:
     
     curl -s https://getcomposer.org/installer | php
     php composer.phar create-project sourcefabric/newscoop path/to/install dev-master
+
+## REST API documentation
+
+REST API documentation will be available under the link: `http://www.domain.com/documentation/rest-api/` after Newscoop installation is done.
 
 ## How to contribute
 
@@ -45,6 +48,6 @@ Newscoop is licensed under the GPL3 license.
 [6]: http://manuals.sourcefabric.org
 [7]: http://forum.sourcefabric.org
 [8]: http://dev.sourcefabric.org/browse/CS
-[9]: http://github.com/sourcefabric
+[9]: http://github.com/sourcefabric/Newscoop
 [10]: https://sourceforge.net/projects/newscoop/
-[11]: https://wiki.sourcefabric.org/display/CS/Wiki
+[11]: https://wiki.sourcefabric.org/display/CS/

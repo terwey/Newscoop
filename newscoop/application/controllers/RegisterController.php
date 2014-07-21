@@ -41,7 +41,8 @@ class RegisterController extends Zend_Controller_Action
             if (count($users) > 0) {
                 $user = array_pop($users);
             } else {
-                $user = $this->_helper->service('user')->createPending($values['email']);
+                $publicationService = \Zend_Registry::get('container')->getService('newscoop_newscoop.publication_service');
+                $user = $this->_helper->service('user')->createPending($values['email'], null, null, null, $publicationService->getPublication()->getId());
             }
 
             if (!$user->isPending()) {
@@ -124,8 +125,10 @@ class RegisterController extends Zend_Controller_Action
                     $adapter = $this->_helper->service('auth.adapter');
                     $adapter->setEmail($user->getEmail())->setPassword($values['password']);
                     $result = $auth->authenticate($adapter);
-                    $token = $this->_helper->service('user')->loginUser($user);
+                    $token = $this->_helper->service('user')->loginUser($user, 'frontend_area');
                     $session->set('_security_frontend_area', serialize($token));
+                    $OAuthtoken = $this->_helper->service('user')->loginUser($user, 'oauth_authorize');
+                    $session->set('_security_oauth_authorize', serialize($OAuthtoken));
                     $this->_helper->redirector('index', 'dashboard', 'default', array('first' => 1));
                 }
             } catch (InvalidArgumentException $e) {

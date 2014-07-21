@@ -11,7 +11,6 @@ namespace Newscoop\Installer\Services;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Newscoop\Entity\User;
 use Crontab\Crontab;
 use Crontab\Job;
@@ -43,6 +42,8 @@ class FinishService
         if (!$phpPath) {
             throw new \RuntimeException('The php executable could not be found, add it to your PATH environment variable and try again');
         }
+
+        exec('rm -rf '.$this->newscoopDir.'/cache/*', $output, $code);
 
         $php = escapeshellarg($phpPath);
         $doctrine = escapeshellarg($this->newscoopDir.'/scripts/doctrine.php');
@@ -91,7 +92,7 @@ class FinishService
         $assetsInstall = new Process("$php $newscoopConsole assets:install $this->newscoopDir/public", null, null, null, 300);
         $assetsInstall->run();
         if (!$assetsInstall->isSuccessful()) {
-            throw new \RuntimeException('An error occurred when executing the assets install command.');
+            throw new \RuntimeException($assetsInstall->getErrorOutput());
         }
     }
 
@@ -174,11 +175,20 @@ class FinishService
             hash(User::HASH_ALGO, $salt . $config['recheck_user_password']),
         ));
 
-
         $sql = "UPDATE liveuser_users SET Password = ?, EMail = ?, time_updated = NOW(), time_created = NOW(), status = '1', is_admin = '1' WHERE id = 1";
         $stmt = $connection->prepare($sql);
         $stmt->bindValue(1, $password);
         $stmt->bindValue(2, $config['user_email']);
+        $stmt->execute();
+
+        $sql = "UPDATE SystemPreferences SET value = ? WHERE varname = 'SiteSecretKey'";
+        $stmt = $connection->prepare($sql);
+        $stmt->bindValue(1, sha1($config['site_title'] . mt_rand()));
+        $stmt->execute();
+
+        $sql = "INSERT INTO SystemPreferences (`varname`, `value`, `last_modified`) VALUES ('installation_id', ?, NOW())";
+        $stmt = $connection->prepare($sql);
+        $stmt->bindValue(1, sha1($config['site_title'] . mt_rand()));
         $stmt->execute();
     }
 }

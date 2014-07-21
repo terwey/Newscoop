@@ -63,16 +63,7 @@ class LegacyController extends Zend_Controller_Action
         // dispatches campsite
         $campsite->dispatch();
 
-        // triggers an event before render the page.
-        // looks for preview language if any.
-        $previewLang = $campsite->event('beforeRender');
-        if (!is_null($previewLang)) {
-            require_once($GLOBALS['g_campsiteDir'].'/template_engine/classes/SyntaxError.php');
-            set_error_handler('templateErrorHandler');
-
-        } else {
-	        set_error_handler(create_function('', 'return true;'));
-        }
+        set_error_handler(create_function('', 'return true;'));
 
         // renders the site
         $campsite->render();
@@ -89,6 +80,7 @@ class LegacyController extends Zend_Controller_Action
         header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
         header("Cache-Control: no-store, no-cache, must-revalidate");
 
+        $year = _(date("Y"));
         $message = <<<EOF
 <!doctype html>
 <html lang="en">
@@ -168,7 +160,7 @@ class LegacyController extends Zend_Controller_Action
         <a href="http://newscoop.sourcefabric.org/" target="_blank">
             Newscoop</a>, the open content management system for professional journalists.
          <br>
-            ©&nbsp;2013&nbsp;<a href="http://www.sourcefabric.org" target="_blank">Sourcefabric o.p.s.</a>&nbsp;Newscoop       is distributed under GNU GPL v.3    
+            ©&nbsp;$year&nbsp;<a href="http://www.sourcefabric.org" target="_blank">Sourcefabric z.ú.</a>&nbsp;Newscoop       is distributed under GNU GPL v.3    
     </div>
 </div>
 </body>

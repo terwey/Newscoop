@@ -105,7 +105,7 @@ class PreferencesType extends AbstractType
         $builder
         ->add('siteonline', 'choice', array(
             'choices'   => array(
-                'Y' => 'newscoop.preferences.label.yesoption', 
+                'Y' => 'newscoop.preferences.label.yesoption',
                 'N' => 'newscoop.preferences.label.nooption'
             ),
             'error_bubbling' => true,
@@ -157,7 +157,7 @@ class PreferencesType extends AbstractType
         ))
         ->add('allow_recovery', 'choice', array(
             'choices'   => array(
-                'Y' => 'newscoop.preferences.label.yesoption', 
+                'Y' => 'newscoop.preferences.label.yesoption',
                 'N' => 'newscoop.preferences.label.nooption'
             ),
             'error_bubbling' => true,
@@ -168,10 +168,10 @@ class PreferencesType extends AbstractType
         ->add('secret_key', null, array(
             'attr' => array('maxlength' => '32', 'size' => '64'),
             'error_bubbling' => true,
-            'required' => true
+            'required' => false
         ))
         ->add('session_lifetime', 'integer', array(
-            'attr' => array('maxlength' => '4', 'max' => '99999', 'min' => 0),
+            'attr' => array('maxlength' => '5', 'max' => '86400', 'min' => 0),
             'error_bubbling' => true,
             'required' => true
         ))
@@ -192,7 +192,7 @@ class PreferencesType extends AbstractType
         ))
         ->add('automatic_collection', 'choice', array(
             'choices'   => array(
-                'Y' => 'newscoop.preferences.label.yesoption', 
+                'Y' => 'newscoop.preferences.label.yesoption',
                 'N' => 'newscoop.preferences.label.nooption'
             ),
             'error_bubbling' => true,
@@ -232,7 +232,7 @@ class PreferencesType extends AbstractType
         ))
         ->add('zoom', 'choice', array(
             'choices'   => array(
-                'Y' => 'newscoop.preferences.label.yesoption', 
+                'Y' => 'newscoop.preferences.label.yesoption',
                 'N' => 'newscoop.preferences.label.nooption'
             ),
             'error_bubbling' => true,
@@ -242,7 +242,7 @@ class PreferencesType extends AbstractType
         ))
         ->add('use_replication', 'choice', array(
             'choices'   => array(
-                'Y' => 'newscoop.preferences.label.yesoption', 
+                'Y' => 'newscoop.preferences.label.yesoption',
                 'N' => 'newscoop.preferences.label.nooption'
             ),
             'error_bubbling' => true,
@@ -332,7 +332,7 @@ class PreferencesType extends AbstractType
         ))
         ->add('map_provider_default', 'choice', array(
             'choices'   => array(
-                'GoogleV3' => 'Google Maps', 
+                'GoogleV3' => 'Google Maps',
                 'MapQuest' => 'MapQuest Open',
                 'OSM' => 'OpenStreetMap',
             ),
@@ -431,7 +431,7 @@ class PreferencesType extends AbstractType
         ))
         ->add('userGarbageActive', 'choice', array(
             'choices'   => array(
-                'Y' => 'newscoop.preferences.label.yesoption', 
+                'Y' => 'newscoop.preferences.label.yesoption',
                 'N' => 'newscoop.preferences.label.nooption'
             ),
             'error_bubbling' => true,
@@ -442,6 +442,16 @@ class PreferencesType extends AbstractType
         ->add('userGarbageDays', 'integer', array(
             'attr' => array('max' => 999, 'min' => 1),
             'required' => true
+        ))
+        ->add('smartyUseProtocol', 'choice', array(
+            'choices'   => array(
+                'Y' => 'newscoop.preferences.label.yesoption',
+                'N' => 'newscoop.preferences.label.nooption'
+            ),
+            'error_bubbling' => true,
+            'multiple' => false,
+            'expanded' => true,
+            'required' => true,
         ));
     }
 
@@ -454,7 +464,6 @@ class PreferencesType extends AbstractType
         $resolver->setRequired(array(
             'cacheService',
         ));
-
 
     }
 
